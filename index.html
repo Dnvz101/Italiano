@@ -84,7 +84,7 @@ const WEEKS=[
 {n:1,title:"Ci vuole un fiore",artist:"Sergio Endrigo",year:1974,level:"Iniciante",lv:1,
 theme:"Ci vuole / ci vogliono (é preciso)",
 about:"Canção infantil clássica, em forma de corrente: cada coisa depende de outra, até chegar numa flor. Melodia lenta e dicção limpíssima.",
-why:"Ótima primeira semana para toda a família (especialmente para sua filha). A estrutura repetitiva fixa uma construção que os italianos usam o dia inteiro.",
+why:"Parece simples demais, e é de propósito: ritmo lento e repetição pura para a primeira semana. A estrutura fixa uma construção que os italianos usam o dia inteiro.",
 hunt:["fiore","albero","seme","frutto","terra","legno","tavolo","monte"],
 lesson:"<p><b>Ci vuole</b> + singular e <b>ci vogliono</b> + plural significam <i>é preciso / precisa de</i>.</p><p>Também serve para tempo: <b>Ci vogliono due ore</b> = leva duas horas.</p><p>Repare como a música encadeia: <i>per fare X ci vuole Y</i>. Tente criar a sua própria corrente em português e depois em italiano.</p>",
 cards:[
@@ -273,7 +273,7 @@ const ROTEIRO=[
 ["Cards + escuta","Estude os cards da semana na aba Cards e ouça a música mais 2 vezes."],
 ["Escuta passiva","Deixe a música em loop por uns 30 minutos enquanto faz outras coisas (cozinhar, dirigir, arrumar)."],
 ["Shadowing","Cante junto, imitando ritmo, entonação e pronúncia. Pode ser no chuveiro!"],
-["Produção","Escreva 3 frases suas com as expressões da semana na aba Frases. Leia em voz alta."],
+["Substituição guiada","Pegue uma estrutura da semana e troque só uma palavra (ex.: Ci vogliono tre uova → Ci vogliono due ore). Anote na aba Frases. Falar em voz alta é opcional nas primeiras semanas."],
 ["Escuta final","Ouça sem letra e compare com o dia 1. Quanto você entende agora?"]
 ];
 
@@ -284,7 +284,11 @@ const today=()=>new Date().toLocaleDateString('sv');
 const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('sv')};
 const IV=[0,1,3,7,14,30,60,120];
 const KEY='ascolto-familia-v1';
-const blank=name=>({name,started:[1],checks:{},srs:{},mine:[],days:[]});
+const blank=name=>({name,started:[1],checks:{},srs:{},mine:[],days:[],imm:{}});
+const IMM_GOAL=30;
+function immDay(p,d){return (p.imm||{})[d]||0}
+function immWeek(p){let s=0,d=today();for(let i=0;i<7;i++){s+=immDay(p,d);d=addDays(d,-1)}return s}
+function addImm(m){const p=P();p.imm=p.imm||{};const t=today();p.imm[t]=Math.max(0,(p.imm[t]||0)+m);markDay();save();render()}
 let db=null;
 try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!db||!Array.isArray(db.profiles))db={active:0,dir:'it',profiles:[blank('Leandro'),blank('Esposa'),blank('Filha')]};
@@ -345,6 +349,11 @@ function home(){
   <div class="card"><div class="mut">Semana ${cur} · ${esc(w.level)}</div><h3 style="margin-top:4px">🎵 ${esc(w.title)} <span class="mut">— ${esc(w.artist)}</span></h3>
   <div class="prog"><i style="width:${done/7*100}%"></i></div><div class="mut" style="margin-bottom:12px">Roteiro: ${done}/7 dias</div>
   <button class="btn" onclick="go('week',${cur})">Continuar semana ${cur}</button></div>
+  <div class="card"><h3>🎧 Imersão de hoje</h3><p class="mut" style="margin-top:0">Desenhos, podcasts, séries ou música italiana de fundo, sem se preocupar em entender tudo. Meta: ${IMM_GOAL} min/dia.</p>
+  <div class="prog"><i style="width:${Math.min(100,immDay(p,today())/IMM_GOAL*100)}%"></i></div>
+  <div class="mut" style="margin-bottom:10px">Hoje: <b>${immDay(p,today())} min</b> · Últimos 7 dias: <b>${Math.round(immWeek(p)/6)/10} h</b></div>
+  <div class="row"><button class="btn ghost sm" onclick="addImm(10)">+10</button><button class="btn ghost sm" onclick="addImm(20)">+20</button><button class="btn ghost sm" onclick="addImm(30)">+30</button><button class="btn ghost sm" onclick="addImm(-10)">−10</button></div>
+  <button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('method')">O que assistir/ouvir?</button></div>
   <div class="card"><h3>🃏 Revisão de hoje</h3><p class="mut">${n?`${due.length} para revisar e ${Math.min(fresh.length,10)} novos.`:'Tudo em dia! Volte amanhã ou faça uma revisão extra.'}</p>
   <button class="btn ${n?'':'ghost'}" onclick="startReview()">${n?'Revisar agora':'Revisão extra'}</button></div>
   ${done===7&&cur<WEEKS.length&&!p.started.includes(cur+1)?`<div class="card"><h3>🎉 Semana ${cur} completa!</h3><button class="btn" onclick="startWeek(${cur+1})">Começar semana ${cur+1}</button></div>`:''}
@@ -384,7 +393,8 @@ function makeSession(extra){
   if(!q.length&&extra)q=deck(p).sort(()=>Math.random()-.5).slice(0,20);
   return {queue:q,done:0,shown:false};
 }
-function startReview(extra){session=makeSession(extra);go('review')}
+function startReview(extra){session=makeSession(extra);go('review');autoSay()}
+function autoSay(){if(db.dir==='audio'&&session&&session.queue.length&&!session.shown){const c=getCard(session.queue[0]);if(c)setTimeout(()=>say(c.it),150)}}
 function review(){
   if(!session)session=makeSession(false);
   if(!session.queue.length){
@@ -392,13 +402,14 @@ function review(){
     <h3>${session.done?`Ótimo! ${session.done} respostas hoje.`:'Nada para revisar agora.'}</h3>
     <p class="mut">A revisão espaçada traz cada card de volta na hora certa. Volte amanhã.</p>
     <button class="btn ghost" onclick="startReview(true)">Revisão extra (20 aleatórios)</button></div>
-    <div class="card"><h3>Direção dos cards</h3><div class="row"><button class="btn ${db.dir==='it'?'':'ghost'} sm" onclick="setDir('it')">Italiano → Português</button><button class="btn ${db.dir==='pt'?'':'ghost'} sm" onclick="setDir('pt')">Português → Italiano</button></div></div>`;
+    <div class="card"><h3>Direção dos cards</h3><div class="row"><button class="btn ${db.dir==='it'?'':'ghost'} sm" onclick="setDir('it')">Italiano → Português</button><button class="btn ${db.dir==='pt'?'':'ghost'} sm" onclick="setDir('pt')">Português → Italiano</button></div><button class="btn ${db.dir==='audio'?'':'ghost'} sm" style="margin-top:8px;width:100%" onclick="setDir('audio')">🎧 Só áudio (sem texto na frente)</button></div>`;
   }
   const c=getCard(session.queue[0]);if(!c){session.queue.shift();return review()}
-  const s=P().srs[c.id],isNew=!s,front=db.dir==='pt'?c.pt:c.it,back=db.dir==='pt'?c.it:c.pt;
+  const s=P().srs[c.id],isNew=!s,au=db.dir==='audio';
+  const front=au?'🎧 Ouça e tente entender':db.dir==='pt'?c.pt:c.it,back=db.dir==='pt'?c.it:au?`${c.it} — ${c.pt}`:c.pt;
   return `<div class="row" style="align-items:center;margin-bottom:10px"><div class="mut">${session.queue.length} restantes ${isNew?'· <b style="color:var(--acc2)">novo</b>':''}</div><div style="text-align:right" class="mut">${c.w?`Semana ${c.w}`:'Minha frase'}</div></div>
   <div class="card flash" onclick="${session.shown?'':'reveal()'}">
-    <div class="front">${esc(front)}</div>${db.dir==='it'?spk(c.it):''}
+    <div class="front" style="${au?'font-size:20px':''}">${esc(front)}</div>${db.dir!=='pt'?spk(c.it):''}
     ${session.shown?`<div class="back">${esc(back)}</div>${db.dir==='pt'?spk(c.it):''}
       ${c.ex?`<div class="ex">${esc(c.ex)} ${c.w?spk(c.ex):''}</div>`:''}${c.exPt?`<div class="mut">${esc(c.exPt)}</div>`:''}`
     :`<div class="mut" style="margin-top:16px">Toque para ver a resposta</div>`}
@@ -413,7 +424,7 @@ function grade(g){
   const p=P(),id=session.queue.shift(),s=p.srs[id]||{box:0};
   if(g===0){s.box=0;s.due=today();session.queue.push(id)}
   else{s.box=nextBox(g,p.srs[id]);s.due=addDays(today(),IV[s.box])}
-  p.srs[id]=s;session.done++;session.shown=false;markDay();save();render();
+  p.srs[id]=s;session.done++;session.shown=false;markDay();save();render();autoSay();
 }
 function setDir(d){db.dir=d;save();render()}
 
@@ -423,7 +434,7 @@ function mine(){
   <div class="card"><p class="mut" style="margin-top:0">Anote frases e expressões que você pegou de ouvido (músicas, séries, conversas) ou que você mesmo criou com as palavras da semana. Elas entram nos seus cards.</p>
   <label>Em italiano</label><input id="fIt" placeholder="ex.: Non ce la faccio più">
   <label>Significado</label><input id="fPt" placeholder="ex.: Não aguento mais">
-  <label>Nota (onde ouviu, contexto)</label><input id="fNote" placeholder="ex.: Sere nere, refrão">
+  <label>Cena / contexto (onde ouviu, quem disse, qual emoção)</label><input id="fNote" placeholder="ex.: personagem gritou quando derrubou o café">
   <div style="margin-top:12px"><button class="btn" onclick="addMine()">Adicionar card</button></div></div>
   ${p.mine.length?`<div class="card">${p.mine.slice().reverse().map(m=>`<div class="vc">${spk(m.it)}<div style="flex:1"><div class="it">${esc(m.it)}</div><div class="mut">${esc(m.pt)}</div>${m.note?`<div class="mut" style="font-size:13px">📝 ${esc(m.note)}</div>`:''}</div><button class="del" onclick="delMine('${m.id}')">apagar</button></div>`).join('')}</div>`
   :'<p class="mut" style="text-align:center">Nenhuma frase ainda.</p>'}`;
@@ -445,6 +456,12 @@ function method(){
   <p>🗂️ <b>Cards com revisão espaçada</b> como apoio: cada expressão volta no dia certo para não ser esquecida.</p>
   <p>✍️ <b>Frases suas</b>: o que você pega de ouvido vale mais do que qualquer lista pronta.</p>
   <p style="margin-bottom:0">👨‍👩‍👧 <b>Em família</b>: cada um tem seu perfil e progresso. Conversar em italiano em casa, mesmo com frases simples, é o melhor exercício.</p></div>
+  <div class="card"><h3>🎧 Imersão: o volume que falta</h3>
+  <p>A música da semana é o estudo <b>intensivo</b>. Krashen também pede volume: horas de escuta <b>extensiva</b>, sem pausar nem traduzir. Registre os minutos na tela Início.</p>
+  <p><b>Para começar (fala lenta e visual):</b> <a href="https://www.youtube.com/results?search_query=peppa+pig+italiano" target="_blank" rel="noopener">Peppa Pig em italiano</a>. Parece bobo, mas é o input mais compreensível que existe para as primeiras semanas.</p>
+  <p><b>Séries e filmes (TV, com legenda em italiano):</b> séries italianas da Netflix, como Summertime, e qualquer filme ou série que vocês já gostam com o áudio trocado para italiano.</p>
+  <p><b>Para o carro (adultos):</b> <a href="https://www.youtube.com/results?search_query=easy+italian" target="_blank" rel="noopener">Easy Italian</a> (entrevistas de rua), <a href="https://www.youtube.com/results?search_query=podcast+italiano+davide+gemello" target="_blank" rel="noopener">Podcast Italiano</a> (tem episódios para iniciantes), <a href="https://www.youtube.com/results?search_query=italiano+automatico" target="_blank" rel="noopener">Italiano Automatico</a>.</p>
+  <p style="margin-bottom:0"><b>Truque:</b> filmes que vocês já conhecem de cor em português, assistidos em italiano. Como vocês já sabem a história, quase tudo vira input compreensível.</p></div>
   <div class="card"><h3>Regras de ouro</h3><p>1. Todo dia, nem que sejam 10 minutos.<br>2. Não pare para traduzir tudo. Deixe a música te levar.<br>3. Repita a mesma música até ela ficar "transparente".<br>4. Use as expressões em voz alta, mesmo sozinho.</p></div>`;
 }
 

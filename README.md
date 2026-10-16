@@ -1,6 +1,6 @@
 # Ascolto em Família
 
-App de estudo de italiano pelo método natural (Stephen Krashen): uma música por semana, roteiro de escuta de 7 dias, cards com revisão espaçada e frases próprias. Perfis separados para cada pessoa da família.
+App de estudo de idiomas (italiano e alemão) pelo método natural (Stephen Krashen): uma música por semana, roteiro de escuta de 7 dias, cards com revisão espaçada e frases próprias. Perfis separados para cada pessoa da família.
 
 ## Publicar na Vercel
 
@@ -22,6 +22,7 @@ Depois abra o link no celular e use "Adicionar à tela de início" para ficar co
 
 ## Como funciona
 
+- **Idiomas**: a tela inicial escolhe entre 🇮🇹 Italiano e 🇩🇪 Deutsch (troque pela bandeira no topo). Cada perfil tem progresso separado por idioma.
 - **Perfis**: troque no seletor do topo. Renomeie em ⚙️.
 - **Progresso**: salvo no navegador de cada aparelho (localStorage). Cada um usa no próprio celular. Para trocar de aparelho, use Exportar/Importar em ⚙️.
 - **Áudio**: os cards usam a voz italiana do próprio celular (🔊).
@@ -29,4 +30,4 @@ Depois abra o link no celular e use "Adicionar à tela de início" para ficar co
 
 ## Adicionar novas semanas
 
-Edite o array `WEEKS` no `index.html`. Cada card é `["italiano", "português", "exemplo IT", "exemplo PT"]`.
+Edite `COURSES.it.weeks` ou `COURSES.de.weeks` no `index.html`. Para um idioma novo, adicione uma entrada em `COURSES` (nome, bandeira, código de voz e semanas). Cada card é `["italiano", "português", "exemplo IT", "exemplo PT"]`.

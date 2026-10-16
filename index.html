@@ -67,11 +67,17 @@ h3{font-size:16px;margin:0 0 8px}
 label{font-size:14px;color:var(--mut);display:block;margin:8px 0 4px}
 .del{background:none;border:0;color:var(--bad);cursor:pointer;font-size:14px}
 a{color:var(--acc)}
+.langcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;font:inherit;color:inherit;cursor:pointer}
+.langcard .flag{font-size:40px;line-height:1}
+.langcard .t{flex:1;display:flex;flex-direction:column}
+.langcard .t b{font-size:20px}
+.langcard .go{font-size:28px;color:var(--acc)}
 </style>
 </head>
 <body>
 <header>
-  <h1>Ascolto <span>em Família</span></h1>
+  <h1 id="ttl">Ascolto <span>em Família</span></h1>
+  <button class="spk" id="langBtn" onclick="go('lang')" aria-label="Trocar idioma">🌍</button>
   <select id="who" aria-label="Perfil"></select>
   <button class="spk" onclick="go('settings')" aria-label="Configurações">⚙️</button>
 </header>
@@ -79,8 +85,12 @@ a{color:var(--acc)}
 <nav id="nav"></nav>
 
 <script>
-/* ===================== CONTEÚDO DO CURSO ===================== */
-const WEEKS=[
+/* ===================== CURSOS ===================== */
+const COURSES={
+it:{name:"Italiano",flag:"🇮🇹",lang:"it",hello:"Ciao",lyr:"testo",
+ test:"Ciao! Come stai? Oggi studiamo italiano insieme.",
+ day6:"Ci vogliono tre uova → Ci vogliono due ore",
+ weeks:[
 {n:1,title:"Ci vuole un fiore",artist:"Sergio Endrigo",year:1974,level:"Iniciante",lv:1,
 theme:"Ci vuole / ci vogliono (é preciso)",
 about:"Canção infantil clássica, em forma de corrente: cada coisa depende de outra, até chegar numa flor. Melodia lenta e dicção limpíssima.",
@@ -265,147 +275,365 @@ cards:[
 ["la terrazza","o terraço","Ceniamo in terrazza.","Jantamos no terraço."],
 ["il golfo","o golfo","Il golfo di Napoli è bellissimo.","O golfo de Nápoles é lindíssimo."],
 ["Che bello!","Que lindo! / Que bom!","Che bello rivederti!","Que bom te rever!"]]}
-];
+],
+ imm:`<p><b>Para começar (fala lenta e visual):</b> <a href="https://www.youtube.com/results?search_query=peppa+pig+italiano" target="_blank" rel="noopener">Peppa Pig em italiano</a>. Parece bobo, mas é o input mais compreensível que existe para as primeiras semanas.</p>
+ <p><b>Para o carro:</b> <a href="https://www.youtube.com/results?search_query=easy+italian" target="_blank" rel="noopener">Easy Italian</a> (entrevistas de rua), <a href="https://www.youtube.com/results?search_query=podcast+italiano+davide+gemello" target="_blank" rel="noopener">Podcast Italiano</a> (tem episódios para iniciantes), <a href="https://www.youtube.com/results?search_query=italiano+automatico" target="_blank" rel="noopener">Italiano Automatico</a>.</p>
+ <p><b>Séries e filmes (TV, com legenda em italiano):</b> séries italianas da Netflix, como Summertime, e qualquer filme ou série que vocês já gostam com o áudio trocado para italiano.</p>`},
+de:{name:"Deutsch",flag:"🇩🇪",lang:"de",hello:"Hallo",lyr:"songtext",
+ test:"Hallo! Wie geht's? Heute lernen wir zusammen Deutsch.",
+ day6:"Ich muss heute arbeiten → Ich muss heute kochen",
+ weeks:[
+{n:1,title:"Lieblingsmensch",artist:"Namika",year:2015,level:"Iniciante",lv:1,
+theme:"Pronomes e o verbo sein",
+about:"Uma declaração carinhosa para a pessoa favorita: aquela com quem dá para ser 100% você, rir de bobeira e não precisar fingir nada.",
+why:"Voz clara, ritmo tranquilo e vocabulário afetivo do dia a dia. Um dos maiores hits pop alemães da última década.",
+hunt:["Lieblingsmensch","Hallo","du","ich"],
+lesson:"<p><b>sein</b> (ser/estar): <i>ich bin, du bist, er/sie ist, wir sind, ihr seid, sie sind</i>.</p><p>O alemão adora juntar palavras: <b>Lieblings-</b> + qualquer coisa = favorito. <i>Lieblingsessen</i> (comida favorita), <i>Lieblingsfilm</i>, <i>Lieblingsmensch</i> (pessoa favorita).</p><p>Todo substantivo começa com letra maiúscula.</p>",
+cards:[
+["ich bin","eu sou / estou","Ich bin müde.","Estou cansado."],
+["du bist","você é / está","Du bist sehr nett.","Você é muito legal."],
+["der Lieblingsmensch","a pessoa favorita","Meine Mutter ist mein Lieblingsmensch.","Minha mãe é minha pessoa favorita."],
+["Lieblings-","favorito (prefixo)","Pizza ist mein Lieblingsessen.","Pizza é minha comida favorita."],
+["Hallo!","Oi!","Hallo, wie geht's?","Oi, tudo bem?"],
+["Wie geht's dir?","Como você está?","Wie geht's dir heute?","Como você está hoje?"],
+["mit dir","com você","Ich gehe gern mit dir spazieren.","Gosto de passear com você."],
+["verstehen","entender","Ich verstehe dich.","Eu te entendo."],
+["lachen","rir","Wir lachen viel zusammen.","Rimos muito juntos."],
+["zusammen","juntos","Wir essen zusammen.","Comemos juntos."],
+["genau","exatamente","Genau, das meine ich!","Exatamente, é isso que quero dizer!"]]},
 
-const ROTEIRO=[
+{n:2,title:"Sonne",artist:"Rammstein",year:2001,level:"Iniciante",lv:1,
+theme:"Números de 1 a 10 e os artigos der/die/das",
+about:"Uma contagem lenta e pesada até o sol aparecer. Imagem forte, quase épica, e uma das músicas alemãs mais conhecidas no mundo.",
+why:"Cantada devagar, com consoantes bem marcadas. A contagem fixa os números de vez e treina o som duro do alemão.",
+hunt:["eins","zwei","drei","vier","fünf","sechs","sieben","acht","neun","Sonne"],
+lesson:"<p>Números: <i>eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn</i>.</p><p>Três artigos: <b>der</b> (masculino), <b>die</b> (feminino), <b>das</b> (neutro). Não dá para adivinhar: aprenda sempre a palavra junto com o artigo. <i>die Sonne</i> é feminino, <i>der Mond</i> é masculino (o contrário do português!).</p>",
+cards:[
+["eins, zwei, drei","um, dois, três","Eins, zwei, drei – los!","Um, dois, três – vai!"],
+["vier, fünf, sechs","quatro, cinco, seis","Ich habe vier Katzen.","Tenho quatro gatos."],
+["sieben, acht, neun, zehn","sete, oito, nove, dez","Der Zug kommt um acht.","O trem chega às oito."],
+["die Sonne","o sol (feminino!)","Die Sonne scheint.","O sol está brilhando."],
+["der Mond","a lua (masculino!)","Der Mond ist heute voll.","A lua está cheia hoje."],
+["scheinen","brilhar","Heute scheint die Sonne.","Hoje o sol brilha."],
+["der Himmel","o céu","Der Himmel ist blau.","O céu está azul."],
+["heiß","quente","Es ist heute sehr heiß.","Hoje está muito quente."],
+["hell / dunkel","claro / escuro","Im Winter ist es früh dunkel.","No inverno escurece cedo."],
+["das Licht","a luz","Mach bitte das Licht an.","Acenda a luz, por favor."]]},
+
+{n:3,title:"Nur noch kurz die Welt retten",artist:"Tim Bendzko",year:2011,level:"Iniciante",lv:1,
+theme:"Verbos modais: müssen, wollen, können",
+about:"O narrador adoraria encontrar a pessoa, mas antes precisa \"salvar o mundo\" e dar conta de uma pilha de e-mails. Uma ironia simpática sobre a vida corrida.",
+why:"Dicção limpíssima, frases curtas e repetidas. Os verbos modais aparecem o tempo todo, e eles estão em quase toda frase alemã.",
+hunt:["Welt","retten","muss","kurz","Mails"],
+lesson:"<p>Verbo modal na 2ª posição, infinitivo lá no <b>final</b> da frase: <i>Ich <b>muss</b> heute <b>arbeiten</b></i>.</p><p><b>müssen</b> (ter que), <b>wollen</b> (querer), <b>können</b> (poder/conseguir).</p><p><b>nur noch kurz</b> = só mais um pouquinho / rapidinho.</p>",
+cards:[
+["ich muss","eu preciso / tenho que","Ich muss heute arbeiten.","Tenho que trabalhar hoje."],
+["ich will","eu quero","Ich will nach Berlin fahren.","Quero ir a Berlim."],
+["ich kann","eu posso / sei / consigo","Ich kann gut kochen.","Sei cozinhar bem."],
+["nur noch kurz","só mais um pouquinho","Ich muss nur noch kurz telefonieren.","Só preciso dar uma ligação rápida."],
+["retten","salvar","Der Hund hat das Kind gerettet.","O cachorro salvou a criança."],
+["die Welt","o mundo","Die Welt ist klein.","O mundo é pequeno."],
+["die Zeit","o tempo","Ich habe keine Zeit.","Não tenho tempo."],
+["später","mais tarde","Ich rufe dich später an.","Te ligo mais tarde."],
+["gleich","já, num instante","Ich komme gleich!","Já vou!"],
+["warten","esperar","Kannst du kurz warten?","Pode esperar um pouco?"],
+["die E-Mail","o e-mail","Ich schreibe dir eine E-Mail.","Te escrevo um e-mail."]]},
+
+{n:4,title:"Auf uns",artist:"Andreas Bourani",year:2014,level:"Básico",lv:2,
+theme:"Brindes e a diferença entre wir e uns",
+about:"Um hino de celebração da vida e do momento presente, de levantar o copo com os amigos. Virou trilha da Copa de 2014, quando a Alemanha foi campeã.",
+why:"O refrão é cantado em coro, fácil de pegar e de cantar junto. Ótimo para o shadowing.",
+hunt:["uns","Hoch","Leben","Moment"],
+lesson:"<p><b>wir</b> = nós (quem faz a ação). <b>uns</b> = nos / a nós (quem recebe): <i>Er besucht <b>uns</b></i>.</p><p><b>Ein Hoch auf ...!</b> = um brinde a ...! E na hora de bater os copos: <b>Prost!</b></p>",
+cards:[
+["wir","nós","Wir sind eine Familie.","Somos uma família."],
+["uns","nos / a nós","Er besucht uns morgen.","Ele nos visita amanhã."],
+["Ein Hoch auf ...!","Um brinde a ...!","Ein Hoch auf die Liebe!","Um brinde ao amor!"],
+["Prost!","Saúde! (brinde)","Prost, auf deinen Geburtstag!","Saúde, ao seu aniversário!"],
+["das Leben","a vida","Das Leben ist schön.","A vida é bela."],
+["der Moment","o momento","Warte einen Moment!","Espere um momento!"],
+["feiern","comemorar / festejar","Heute feiern wir!","Hoje a gente comemora!"],
+["für immer","para sempre","Das bleibt für immer.","Isso fica para sempre."],
+["heute Nacht","hoje à noite","Heute Nacht schlafe ich wenig.","Hoje à noite vou dormir pouco."],
+["die Freunde","os amigos","Ich treffe meine Freunde.","Encontro meus amigos."]]},
+
+{n:5,title:"Chöre",artist:"Mark Forster",year:2016,level:"Básico",lv:2,
+theme:"für + dich, e a diferença entre dich e dir",
+about:"Uma música de incentivo para alguém que se acha comum: o cantor diz que essa pessoa merece aplausos e coros cantando para ela.",
+why:"Pop moderno, alegre, com frases curtas. Mark Forster é uma das vozes mais tocadas nas rádios alemãs hoje.",
+hunt:["Chöre","für dich","singen"],
+lesson:"<p><b>dich</b> = te (objeto direto): <i>Ich liebe <b>dich</b></i>, <i>für <b>dich</b></i>.</p><p><b>dir</b> = a ti / com você (objeto indireto): <i>Ich danke <b>dir</b></i>, <i>mit <b>dir</b></i>.</p><p>Dica: <b>für</b> sempre pede <i>dich</i>; <b>mit</b> sempre pede <i>dir</i>.</p>",
+cards:[
+["für dich","para você","Das ist für dich.","Isto é para você."],
+["ich liebe dich","eu te amo","Ich liebe dich, Schatz.","Te amo, amor."],
+["mit dir","com você","Ich komme mit dir.","Vou com você."],
+["ich danke dir","eu te agradeço","Ich danke dir für alles.","Te agradeço por tudo."],
+["singen","cantar","Wir singen im Auto.","Cantamos no carro."],
+["der Chor / die Chöre","o coro / os coros","Sie singt im Chor.","Ela canta no coral."],
+["stolz auf","orgulhoso de","Ich bin stolz auf dich.","Tenho orgulho de você."],
+["klatschen","bater palmas","Alle klatschen.","Todos batem palmas."],
+["etwas Besonderes","algo especial","Du bist etwas Besonderes.","Você é alguém especial."],
+["manchmal","às vezes","Manchmal bin ich traurig.","Às vezes fico triste."]]},
+
+{n:6,title:"Wolke 4",artist:"Philipp Dittberner & Marv",year:2015,level:"Básico",lv:2,
+theme:"lieber e comparativos",
+about:"Em vez de voar alto na \"nuvem 7\" (estar nas nuvens de paixão) e cair de novo, o casal prefere ficar na nuvem 4: um amor menos perfeito, mas seguro.",
+why:"Voz suave e lenta, melodia tranquila. Ensina uma expressão muito usada e o jeito alemão de dizer o que se prefere.",
+hunt:["Wolke","sieben","vier","lieber"],
+lesson:"<p><b>gern → lieber → am liebsten</b> = gosto → prefiro → o que mais gosto. <i>Ich trinke gern Kaffee, lieber Tee, am liebsten Wasser.</i></p><p>Comparativo com <b>-er</b> + <b>als</b>: <i>schnell → schneller als</i>.</p><p><b>auf Wolke sieben sein</b> = estar nas nuvens (apaixonado).</p>",
+cards:[
+["die Wolke","a nuvem","Am Himmel ist keine Wolke.","Não há nenhuma nuvem no céu."],
+["auf Wolke sieben sein","estar nas nuvens (apaixonado)","Seit dem Date ist sie auf Wolke sieben.","Desde o encontro ela está nas nuvens."],
+["lieber","de preferência / prefiro","Ich trinke lieber Tee.","Prefiro tomar chá."],
+["gern","com gosto (gostar de fazer)","Ich lese gern.","Gosto de ler."],
+["am liebsten","o que eu mais gosto","Am liebsten esse ich Nudeln.","O que mais gosto de comer é macarrão."],
+["als","do que (comparação)","Er ist älter als ich.","Ele é mais velho do que eu."],
+["höher","mais alto","Der Berg ist höher als das Haus.","A montanha é mais alta que a casa."],
+["fallen","cair","Pass auf, du fällst!","Cuidado, você vai cair!"],
+["sicher","seguro / com certeza","Bist du sicher?","Tem certeza?"],
+["bleiben","ficar","Bleib bei mir.","Fica comigo."]]},
+
+{n:7,title:"Haus am See",artist:"Peter Fox",year:2008,level:"Intermediário",lv:3,
+theme:"Futuro e planos com werden",
+about:"O narrador sai pelo mundo atrás de sucesso, mas o sonho mesmo é voltar e envelhecer numa casa à beira do lago, cercado de família.",
+why:"Meio falado, meio cantado, com batida marcante. As frases são completas e bem pronunciadas. Um clássico moderno que todo alemão sabe cantar.",
+hunt:["Haus","See","Kinder","alt"],
+lesson:"<p><b>werden</b> + infinitivo no final = futuro: <i>Ich <b>werde</b> Deutsch <b>lernen</b></i>.</p><p>Na fala do dia a dia, o alemão usa muito o presente com marcador de tempo: <i>Morgen fahre ich</i> (amanhã eu vou).</p><p><b>alt werden</b> = envelhecer.</p>",
+cards:[
+["ich werde","eu vou (futuro)","Ich werde Deutsch lernen.","Vou aprender alemão."],
+["das Haus","a casa","Wir haben ein kleines Haus.","Temos uma casa pequena."],
+["der See","o lago","Im Sommer schwimmen wir im See.","No verão nadamos no lago."],
+["alt werden","envelhecer","Ich will mit dir alt werden.","Quero envelhecer com você."],
+["die Kinder","as crianças / os filhos","Die Kinder spielen draußen.","As crianças brincam lá fora."],
+["die Straße","a rua","Die Straße ist sehr laut.","A rua é muito barulhenta."],
+["irgendwann","algum dia","Irgendwann fahre ich nach Italien.","Algum dia vou para a Itália."],
+["zurückkommen","voltar","Wann kommst du zurück?","Quando você volta?"],
+["das Glück","a sorte / a felicidade","Viel Glück!","Boa sorte!"],
+["reich","rico","Er ist nicht reich, aber glücklich.","Ele não é rico, mas é feliz."]]},
+
+{n:8,title:"Tage wie diese",artist:"Die Toten Hosen",year:2012,level:"Intermediário",lv:3,
+theme:"Perfekt: o passado falado",
+about:"Um hino sobre aquelas noites com os amigos que parecem não ter fim. Toca em todo show, festa e estádio da Alemanha.",
+why:"Refrão para cantar gritando, ritmo de rock. Ótimo para sentir a musicalidade do alemão e treinar o passado.",
+hunt:["Tage","Nacht","wie diese"],
+lesson:"<p><b>Perfekt</b> = <i>haben/sein</i> + particípio (geralmente <b>ge-...-t</b> ou <b>ge-...-en</b>) no final: <i>Ich <b>habe</b> gewartet</i>, <i>Ich <b>bin</b> gekommen</i>.</p><p>Verbos de movimento ou mudança usam <b>sein</b>: <i>gehen, kommen, fahren, fliegen</i>.</p>",
+cards:[
+["Tage wie diese","dias como estes","Ich liebe Tage wie diese.","Adoro dias como estes."],
+["ich habe gewartet","eu esperei","Ich habe lange gewartet.","Esperei muito tempo."],
+["ich bin gekommen","eu vim","Ich bin mit dem Zug gekommen.","Vim de trem."],
+["Was hast du gemacht?","O que você fez?","Was hast du gestern gemacht?","O que você fez ontem?"],
+["wir sind gegangen","nós fomos","Wir sind früh nach Hause gegangen.","Fomos cedo para casa."],
+["die Nacht","a noite","Gute Nacht!","Boa noite!"],
+["endlos","sem fim","Der Weg war endlos.","O caminho não acabava."],
+["Glück haben","ter sorte","Wir hatten Glück mit dem Wetter.","Tivemos sorte com o tempo."],
+["auf ... warten","esperar por","Ich warte auf dich.","Espero por você."],
+["lauter","mais alto (som)","Mach die Musik lauter!","Aumenta a música!"]]},
+
+{n:9,title:"Einmal um die Welt",artist:"Cro",year:2012,level:"Avançado",lv:4,
+theme:"Verbos separáveis",
+about:"Um jovem sonha em largar tudo e dar a volta ao mundo. Tom leve, brincalhão e otimista, com o estilo que Cro chama de \"raop\" (rap + pop).",
+why:"É rap, mas descontraído e bem articulado. É o seu \"Penso positivo\" do alemão: a semana do salto de compreensão.",
+hunt:["Welt","einmal"],
+lesson:"<p><b>Verbos separáveis</b>: o prefixo se solta e vai para o <b>final</b>. <i>anrufen</i> → <i>Ich <b>rufe</b> dich morgen <b>an</b></i>. <i>aufstehen</i> → <i>Ich <b>stehe</b> früh <b>auf</b></i>.</p><p>Prefixos comuns: <b>an, auf, mit, los, ein, zurück</b>.</p>",
+cards:[
+["einmal","uma vez","Ich war einmal in Wien.","Estive uma vez em Viena."],
+["um die Welt","ao redor do mundo","Sie reist um die Welt.","Ela viaja pelo mundo."],
+["anrufen","ligar (telefonar)","Ich rufe dich morgen an.","Te ligo amanhã."],
+["aufstehen","levantar-se","Ich stehe um sechs Uhr auf.","Levanto às seis."],
+["mitkommen","vir junto","Kommst du mit?","Vem junto?"],
+["losfahren","partir, sair (de carro)","Wir fahren um acht los.","Saímos às oito."],
+["einkaufen","fazer compras","Ich kaufe heute ein.","Hoje faço as compras."],
+["das Geld","o dinheiro","Ich habe kein Geld mehr.","Não tenho mais dinheiro."],
+["egal","tanto faz","Das ist mir egal.","Pra mim tanto faz."],
+["Keine Ahnung!","Não faço ideia!","Keine Ahnung, wo er ist.","Não faço ideia de onde ele está."]]},
+
+{n:10,title:"Komet",artist:"Udo Lindenberg & Apache 207",year:2023,level:"Avançado",lv:4,
+theme:"Konjunktiv II: würde, hätte, wäre",
+about:"Duas gerações, um veterano do rock alemão e um rapper jovem, cantam sobre o que fica depois que a gente se vai: como um cometa que passa e deixa um rastro de luz.",
+why:"Um dos maiores sucessos recentes da Alemanha. São duas vozes muito diferentes: Udo fala arrastado e nasal, Apache canta suave. É o desafio final do ouvido.",
+hunt:["Komet"],
+lesson:"<p><b>Konjunktiv II</b> = o nosso <i>-ria / -sse</i>: <b>ich würde</b> (eu faria), <b>ich hätte</b> (eu teria), <b>es wäre</b> (seria).</p><p>Muito usado para pedir com educação: <i>Ich <b>hätte gern</b> einen Kaffee</i>.</p><p>Hipóteses: <i>Wenn ich Zeit <b>hätte</b>, <b>würde</b> ich kommen.</i></p>",
+cards:[
+["ich würde gern","eu gostaria de","Ich würde gern nach Japan reisen.","Eu gostaria de viajar ao Japão."],
+["ich hätte gern","eu queria (pedido educado)","Ich hätte gern einen Kaffee, bitte.","Eu queria um café, por favor."],
+["Das wäre schön!","Seria ótimo!","Ein Tag am Meer? Das wäre schön!","Um dia na praia? Seria ótimo!"],
+["wenn ich ... hätte","se eu tivesse","Wenn ich Zeit hätte, würde ich kommen.","Se eu tivesse tempo, eu viria."],
+["der Komet","o cometa","Der Komet fliegt über den Himmel.","O cometa cruza o céu."],
+["die Spur","o rastro / a marca","Im Schnee sind Spuren.","Há marcas na neve."],
+["hinterlassen","deixar (para trás, de herança)","Was willst du hinterlassen?","O que você quer deixar?"],
+["vorbei","passado / acabou","Der Sommer ist vorbei.","O verão acabou."],
+["sich erinnern an","lembrar-se de","Ich erinnere mich an meine Kindheit.","Eu me lembro da minha infância."],
+["eine Ewigkeit","uma eternidade","Das dauert eine Ewigkeit!","Isso demora uma eternidade!"]]}
+],
+ imm:`<p><b>Para começar:</b> <a href="https://www.youtube.com/results?search_query=nicos+weg+deutsche+welle" target="_blank" rel="noopener">Nicos Weg</a> (série-curso gratuita da Deutsche Welle, feita para iniciantes) e <a href="https://www.youtube.com/results?search_query=easy+german" target="_blank" rel="noopener">Easy German</a> (entrevistas de rua com legenda).</p>
+ <p><b>Para o carro:</b> <a href="https://www.youtube.com/results?search_query=slow+german+podcast" target="_blank" rel="noopener">Slow German</a> (podcast falado devagar, sobre a vida na Alemanha).</p>
+ <p><b>Séries e filmes:</b> Dark (Netflix, série alemã) com legenda em alemão, e filmes que vocês já conhecem com o áudio em alemão.</p>`}
+};
+const roteiro=()=>[
 ["Escuta às cegas","Ouça 3 vezes sem letra. Anote qualquer palavra que reconhecer, sem se cobrar."],
 ["Escuta com letra","Abra a letra (botão Letra) e ouça 2 vezes acompanhando. Procure as palavras do Caça-palavras."],
 ["Cards + escuta","Estude os cards da semana na aba Cards e ouça a música mais 2 vezes."],
 ["Escuta passiva","Deixe a música em loop por uns 30 minutos enquanto faz outras coisas (cozinhar, dirigir, arrumar)."],
 ["Shadowing","Cante junto, imitando ritmo, entonação e pronúncia. Pode ser no chuveiro!"],
-["Substituição guiada","Pegue uma estrutura da semana e troque só uma palavra (ex.: Ci vogliono tre uova → Ci vogliono due ore). Anote na aba Frases. Falar em voz alta é opcional nas primeiras semanas."],
-["Escuta final","Ouça sem letra e compare com o dia 1. Quanto você entende agora?"]
-];
+["Substituição guiada",`Pegue uma estrutura da semana e troque só uma palavra (ex.: ${CO().day6}). Anote na aba Frases. Falar em voz alta é opcional nas primeiras semanas.`],
+["Escuta final","Ouça sem letra e compare com o dia 1. Quanto você entende agora?"]];
 
 /* ===================== ESTADO ===================== */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today=()=>new Date().toLocaleDateString('sv');
 const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('sv')};
-const IV=[0,1,3,7,14,30,60,120];
+const IV=[0,1,3,7,14,30,60,120],IMM_GOAL=30;
 const KEY='ascolto-familia-v1';
-const blank=name=>({name,started:[1],checks:{},srs:{},mine:[],days:[],imm:{}});
-const IMM_GOAL=30;
-function immDay(p,d){return (p.imm||{})[d]||0}
-function immWeek(p){let s=0,d=today();for(let i=0;i<7;i++){s+=immDay(p,d);d=addDays(d,-1)}return s}
-function addImm(m){const p=P();p.imm=p.imm||{};const t=today();p.imm[t]=Math.max(0,(p.imm[t]||0)+m);markDay();save();render()}
+const blankC=()=>({started:[1],checks:{},srs:{},mine:[],imm:{}});
+const blank=name=>({name,days:[],c:{it:blankC(),de:blankC()}});
 let db=null;
 try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!db||!Array.isArray(db.profiles))db={active:0,dir:'it',profiles:[blank('Leandro'),blank('Esposa'),blank('Filha')]};
+if(!db||!Array.isArray(db.profiles))db={active:0,profiles:[blank('Leandro'),blank('Esposa'),blank('Filha')]};
+function migrate(){
+  db.profiles.forEach(p=>{
+    if(!p.c){p.c={it:{started:p.started||[1],checks:p.checks||{},srs:p.srs||{},mine:p.mine||[],imm:p.imm||{}}};['started','checks','srs','mine','imm'].forEach(k=>delete p[k])}
+    Object.keys(COURSES).forEach(l=>{if(!p.c[l])p.c[l]=blankC()});
+    p.days=p.days||[];
+  });
+  if(typeof db.voice!=='object'||!db.voice)db.voice=typeof db.voice==='string'?{it:db.voice}:{};
+  db.dir=db.dir||'it';
+  if(db.lang&&!COURSES[db.lang])db.lang=null;
+}
+migrate();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 const P=()=>db.profiles[db.active]||db.profiles[0];
+const CO=()=>COURSES[db.lang];
+const C=()=>P().c[db.lang];
+const WK=()=>CO().weeks;
 
-const CARDS={};
-WEEKS.forEach(w=>w.cards.forEach((c,i)=>{const id=`w${w.n}-${i}`;CARDS[id]={id,w:w.n,it:c[0],pt:c[1],ex:c[2],exPt:c[3]}}));
-function deck(p){const ids=[];p.started.slice().sort((a,b)=>a-b).forEach(n=>{const w=WEEKS.find(x=>x.n===n);if(w)w.cards.forEach((c,i)=>ids.push(`w${n}-${i}`))});p.mine.forEach(m=>ids.push('m-'+m.id));return ids}
-function getCard(id){if(id.startsWith('m-')){const m=P().mine.find(x=>'m-'+x.id===id);return m?{id,it:m.it,pt:m.pt,ex:m.note||'',exPt:''}:null}return CARDS[id]}
-function dueList(p){const t=today(),due=[],fresh=[];deck(p).forEach(id=>{const s=p.srs[id];if(!s)fresh.push(id);else if(s.due<=t)due.push(id)});return{due,fresh}}
+function cardById(id){const m=/^w(\d+)-(\d+)$/.exec(id);if(!m)return null;const w=WK().find(x=>x.n===+m[1]);const c=w&&w.cards[+m[2]];return c?{id,w:w.n,it:c[0],pt:c[1],ex:c[2],exPt:c[3]}:null}
+function deck(c){const ids=[];c.started.slice().sort((a,b)=>a-b).forEach(n=>{const w=WK().find(x=>x.n===n);if(w)w.cards.forEach((_,i)=>ids.push(`w${n}-${i}`))});c.mine.forEach(m=>ids.push('m-'+m.id));return ids}
+function getCard(id){if(id.startsWith('m-')){const m=C().mine.find(x=>'m-'+x.id===id);return m?{id,it:m.it,pt:m.pt,ex:m.note||'',exPt:''}:null}return cardById(id)}
+function dueList(c){const t=today(),due=[],fresh=[];deck(c).forEach(id=>{const s=c.srs[id];if(!s)fresh.push(id);else if(s.due<=t)due.push(id)});return{due,fresh}}
 function markDay(){const p=P(),t=today();if(!p.days.includes(t)){p.days.push(t);if(p.days.length>400)p.days=p.days.slice(-400)}}
 function streak(p){let n=0,d=today();if(!p.days.includes(d))d=addDays(d,-1);while(p.days.includes(d)){n++;d=addDays(d,-1)}return n}
+function immDay(c,d){return (c.imm||{})[d]||0}
+function immWeek(c){let s=0,d=today();for(let i=0;i<7;i++){s+=immDay(c,d);d=addDays(d,-1)}return s}
+function addImm(m){const c=C();c.imm=c.imm||{};const t=today();c.imm[t]=Math.max(0,(c.imm[t]||0)+m);markDay();save();render()}
 
 /* ===================== VOZ ===================== */
-let itVoice=null,itVoices=[];
+let curVoice=null,langVoices=[];
 function voiceScore(v){const n=v.name.toLowerCase();let s=0;
   if(/natural|neural|online/.test(n))s+=50;
-  if(/premium|enhanced|aprimorad|migliorat/.test(n))s+=40;
+  if(/premium|enhanced|aprimorad|migliorat|erweitert/.test(n))s+=40;
   if(/google/.test(n))s+=30;
-  if(/alice|federica|luca|elsa|isabella|diego|paola|emma|giuseppe/.test(n))s+=10;
+  if(/alice|federica|luca|elsa|isabella|diego|paola|emma|giuseppe|anna|petra|markus|yannick|helena|katja|conrad|amala|seraphina|florian/.test(n))s+=10;
   if(!v.localService)s+=5;
   if(/espeak|compact|robot/.test(n))s-=60;
   return s}
 function pickVoice(){try{
-  itVoices=speechSynthesis.getVoices().filter(x=>/^it/i.test(x.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
-  itVoice=(db.voice&&itVoices.find(x=>x.voiceURI===db.voice))||itVoices[0]||null;
-  if(view==='settings')render();
+  if(!db.lang)return;
+  const re=new RegExp('^'+CO().lang,'i');
+  langVoices=speechSynthesis.getVoices().filter(x=>re.test(x.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+  curVoice=(db.voice[db.lang]&&langVoices.find(x=>x.voiceURI===db.voice[db.lang]))||langVoices[0]||null;
 }catch(e){}}
-if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>{pickVoice();if(view==='settings')render()}}
 function say(t){if(!('speechSynthesis' in window)){alert('Seu navegador não tem leitura em voz alta.');return}
-speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='it-IT';if(itVoice)u.voice=itVoice;u.rate=.88;speechSynthesis.speak(u)}
+  if(!curVoice)pickVoice();
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);
+  u.lang=curVoice?curVoice.lang:(CO().lang==='it'?'it-IT':'de-DE');if(curVoice)u.voice=curVoice;u.rate=.88;speechSynthesis.speak(u)}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){e.stopPropagation();say(b.dataset.say)}});
 const spk=t=>`<button class="spk" data-say="${esc(t)}" aria-label="Ouvir">🔊</button>`;
 
 /* ===================== NAVEGAÇÃO ===================== */
-let view='home',param=null,session=null;
+let view=db.lang?'home':'lang',param=null,session=null;
 function go(v,p){view=v;param=p??null;render();window.scrollTo(0,0)}
+function setLang(l){db.lang=l;session=null;save();pickVoice();go('home')}
 const TABS=[['home','🏠','Início'],['weeks','🎵','Semanas'],['review','🃏','Cards'],['mine','✍️','Frases'],['method','📖','Método']];
 
 function render(){
-  const who=$('#who');
-  who.innerHTML=db.profiles.map((p,i)=>`<option value="${i}" ${i===db.active?'selected':''}>${esc(p.name)}</option>`).join('');
+  if(!db.lang)view='lang';
+  $('#who').innerHTML=db.profiles.map((p,i)=>`<option value="${i}" ${i===db.active?'selected':''}>${esc(p.name)}</option>`).join('');
+  $('#langBtn').textContent=db.lang?CO().flag:'🌍';
+  $('#ttl').innerHTML=db.lang?`Ascolto <span>· ${esc(CO().name)}</span>`:`Ascolto <span>em Família</span>`;
+  $('#nav').style.display=view==='lang'?'none':'flex';
   $('#nav').innerHTML=TABS.map(([k,ic,l])=>`<button class="${(view===k||(k==='weeks'&&view==='week'))?'on':''}" onclick="${k==='review'?'startReview()':`go('${k}')`}"><b>${ic}</b>${l}</button>`).join('');
-  const V={home,weeks,week,review,mine,method,settings}[view]||home;
+  const V={lang:langView,home,weeks,week,review,mine,method,settings}[view]||home;
   $('#app').innerHTML=V();
 }
 $('#who').onchange=function(){db.active=+this.value;session=null;save();render()};
 
 /* ===================== TELAS ===================== */
+function langView(){
+  const p=P();
+  return `<h2 style="text-align:center;margin-top:24px">Qual idioma hoje?</h2>
+  <p class="mut" style="text-align:center">Perfil: <b>${esc(p.name)}</b>. Cada idioma tem seu próprio progresso.</p>
+  ${Object.entries(COURSES).map(([k,c])=>{const cc=p.c[k],learned=Object.values(cc.srs).filter(s=>s.box>=3).length,cur=Math.max(...cc.started);
+  return `<button class="langcard" onclick="setLang('${k}')"><span class="flag">${c.flag}</span><span class="t"><b>${esc(c.name)}</b><span class="mut">Semana ${cur} de ${c.weeks.length} · ${learned} cards firmes</span></span><span class="go">›</span></button>`}).join('')}`;
+}
+
 function home(){
-  const p=P(),{due,fresh}=dueList(p),cur=Math.max(...p.started),w=WEEKS.find(x=>x.n===cur);
-  const learned=Object.values(p.srs).filter(s=>s.box>=3).length;
-  const ch=p.checks[cur]||[],done=ch.filter(Boolean).length;
-  const n=due.length+Math.min(fresh.length,10);
-  return `<h2>Ciao, ${esc(p.name)}! 👋</h2>
+  const p=P(),c=C(),co=CO(),{due,fresh}=dueList(c),cur=Math.max(...c.started),w=WK().find(x=>x.n===cur);
+  const learned=Object.values(c.srs).filter(s=>s.box>=3).length;
+  const done=(c.checks[cur]||[]).filter(Boolean).length,n=due.length+Math.min(fresh.length,10);
+  return `<h2>${co.hello}, ${esc(p.name)}! 👋</h2>
   <div class="stats"><div class="stat"><b>${streak(p)}</b><span>dias seguidos</span></div><div class="stat"><b>${n}</b><span>cards hoje</span></div><div class="stat"><b>${learned}</b><span>firmes na memória</span></div></div>
   <div class="card"><div class="mut">Semana ${cur} · ${esc(w.level)}</div><h3 style="margin-top:4px">🎵 ${esc(w.title)} <span class="mut">— ${esc(w.artist)}</span></h3>
   <div class="prog"><i style="width:${done/7*100}%"></i></div><div class="mut" style="margin-bottom:12px">Roteiro: ${done}/7 dias</div>
   <button class="btn" onclick="go('week',${cur})">Continuar semana ${cur}</button></div>
-  <div class="card"><h3>🎧 Imersão de hoje</h3><p class="mut" style="margin-top:0">Desenhos, podcasts, séries ou música italiana de fundo, sem se preocupar em entender tudo. Meta: ${IMM_GOAL} min/dia.</p>
-  <div class="prog"><i style="width:${Math.min(100,immDay(p,today())/IMM_GOAL*100)}%"></i></div>
-  <div class="mut" style="margin-bottom:10px">Hoje: <b>${immDay(p,today())} min</b> · Últimos 7 dias: <b>${Math.round(immWeek(p)/6)/10} h</b></div>
+  <div class="card"><h3>🎧 Imersão de hoje</h3><p class="mut" style="margin-top:0">Séries, podcasts, vídeos ou música de fundo, sem se preocupar em entender tudo. Meta: ${IMM_GOAL} min/dia.</p>
+  <div class="prog"><i style="width:${Math.min(100,immDay(c,today())/IMM_GOAL*100)}%"></i></div>
+  <div class="mut" style="margin-bottom:10px">Hoje: <b>${immDay(c,today())} min</b> · Últimos 7 dias: <b>${Math.round(immWeek(c)/6)/10} h</b></div>
   <div class="row"><button class="btn ghost sm" onclick="addImm(10)">+10</button><button class="btn ghost sm" onclick="addImm(20)">+20</button><button class="btn ghost sm" onclick="addImm(30)">+30</button><button class="btn ghost sm" onclick="addImm(-10)">−10</button></div>
   <button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('method')">O que assistir/ouvir?</button></div>
   <div class="card"><h3>🃏 Revisão de hoje</h3><p class="mut">${n?`${due.length} para revisar e ${Math.min(fresh.length,10)} novos.`:'Tudo em dia! Volte amanhã ou faça uma revisão extra.'}</p>
-  <button class="btn ${n?'':'ghost'}" onclick="startReview()">${n?'Revisar agora':'Revisão extra'}</button></div>
-  ${done===7&&cur<WEEKS.length&&!p.started.includes(cur+1)?`<div class="card"><h3>🎉 Semana ${cur} completa!</h3><button class="btn" onclick="startWeek(${cur+1})">Começar semana ${cur+1}</button></div>`:''}
+  <button class="btn ${n?'':'ghost'}" onclick="startReview(${n?'':'true'})">${n?'Revisar agora':'Revisão extra'}</button></div>
+  ${done===7&&cur<WK().length&&!c.started.includes(cur+1)?`<div class="card"><h3>🎉 Semana ${cur} completa!</h3><button class="btn" onclick="startWeek(${cur+1})">Começar semana ${cur+1}</button></div>`:''}
   <p class="mut" style="text-align:center">Dica: ouvir um pouco todo dia vale mais que muito num dia só.</p>`;
 }
 
 function weeks(){
-  const p=P();
+  const c=C();
   return `<h2>Semanas</h2><p class="mut">Uma música por semana. A ordem vai do mais lento e claro ao mais rápido.</p>`+
-  WEEKS.map(w=>{const st=p.started.includes(w.n),d=(p.checks[w.n]||[]).filter(Boolean).length;
+  WK().map(w=>{const st=c.started.includes(w.n),d=(c.checks[w.n]||[]).filter(Boolean).length;
   return `<button class="wk" onclick="go('week',${w.n})"><div class="n">${w.n}</div><div class="t"><div>${esc(w.title)}</div><div class="mut">${esc(w.artist)} · ${w.year}</div></div>
   <div style="text-align:right"><span class="lvl l${w.lv}">${esc(w.level)}</span><div class="mut" style="font-size:12px;margin-top:4px">${st?(d===7?'✅ concluída':`${d}/7 dias`):'não iniciada'}</div></div></button>`}).join('');
 }
 
 function week(){
-  const p=P(),w=WEEKS.find(x=>x.n===param)||WEEKS[0],st=p.started.includes(w.n),ch=p.checks[w.n]||[];
+  const c=C(),w=WK().find(x=>x.n===param)||WK()[0],st=c.started.includes(w.n),ch=c.checks[w.n]||[];
   const q=encodeURIComponent(`${w.artist} ${w.title}`);
   return `<button class="btn ghost sm" onclick="go('weeks')">← Semanas</button>
   <h2 style="margin-top:12px">Semana ${w.n}</h2>
   <div class="card"><span class="lvl l${w.lv}">${esc(w.level)}</span>
   <h3 style="margin-top:10px;font-size:20px">🎵 ${esc(w.title)}</h3><div class="mut">${esc(w.artist)} · ${w.year}</div>
   <p>${esc(w.about)}</p><p class="mut"><b>Por que esta música:</b> ${esc(w.why)}</p>
-  <div class="links"><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">▶️ YouTube</a><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">🎧 Spotify</a><a href="https://www.google.com/search?q=${q}%20testo" target="_blank" rel="noopener">📄 Letra</a></div></div>
+  <div class="links"><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">▶️ YouTube</a><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">🎧 Spotify</a><a href="https://www.google.com/search?q=${q}%20${CO().lyr}" target="_blank" rel="noopener">📄 Letra</a></div></div>
   <div class="card"><h3>🔎 Caça-palavras</h3><p class="mut">Palavras para pegar de ouvido nesta música:</p>${w.hunt.map(h=>`<span class="chip">${esc(h)}</span>`).join('')}
   <p class="mut" style="margin-bottom:0">Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.</p></div>
   <div class="card lesson"><h3>💡 ${esc(w.theme)}</h3>${w.lesson}</div>
-  ${st?`<div class="card"><h3>📅 Roteiro da semana</h3>${ROTEIRO.map((r,i)=>`<div class="day ${ch[i]?'done':''}" onclick="toggleDay(${w.n},${i})"><div class="box">${ch[i]?'✓':''}</div><div class="txt"><b>Dia ${i+1} · ${r[0]}</b><div class="mut">${r[1]}</div></div></div>`).join('')}</div>`
+  ${st?`<div class="card"><h3>📅 Roteiro da semana</h3>${roteiro().map((r,i)=>`<div class="day ${ch[i]?'done':''}" onclick="toggleDay(${w.n},${i})"><div class="box">${ch[i]?'✓':''}</div><div class="txt"><b>Dia ${i+1} · ${r[0]}</b><div class="mut">${esc(r[1])}</div></div></div>`).join('')}</div>`
   :`<div class="card"><p>Comece a semana para liberar o roteiro e colocar os cards na sua revisão.</p><button class="btn" onclick="startWeek(${w.n})">Começar semana ${w.n}</button></div>`}
-  <div class="card"><h3>🗂️ Expressões da semana</h3>${w.cards.map(c=>`<div class="vc">${spk(c[0])}<div><div class="it">${esc(c[0])}</div><div class="mut">${esc(c[1])}</div><div style="font-size:14px;margin-top:4px"><i>${esc(c[2])}</i> ${spk(c[2])}<br><span class="mut">${esc(c[3])}</span></div></div></div>`).join('')}</div>`;
+  <div class="card"><h3>🗂️ Expressões da semana</h3>${w.cards.map(k=>`<div class="vc">${spk(k[0])}<div><div class="it">${esc(k[0])}</div><div class="mut">${esc(k[1])}</div><div style="font-size:14px;margin-top:4px"><i>${esc(k[2])}</i> ${spk(k[2])}<br><span class="mut">${esc(k[3])}</span></div></div></div>`).join('')}</div>`;
 }
-
-function startWeek(n){const p=P();if(!p.started.includes(n))p.started.push(n);markDay();save();go('week',n)}
-function toggleDay(n,i){const p=P();const c=p.checks[n]||Array(7).fill(false);c[i]=!c[i];p.checks[n]=c;if(c[i])markDay();save();render()}
+function startWeek(n){const c=C();if(!c.started.includes(n))c.started.push(n);markDay();save();go('week',n)}
+function toggleDay(n,i){const c=C();const k=c.checks[n]||Array(7).fill(false);k[i]=!k[i];c.checks[n]=k;if(k[i])markDay();save();render()}
 
 function makeSession(extra){
-  const p=P();const {due,fresh}=dueList(p);let q=[...due,...fresh.slice(0,10)];
-  if(!q.length&&extra)q=deck(p).sort(()=>Math.random()-.5).slice(0,20);
+  const c=C();const {due,fresh}=dueList(c);let q=[...due,...fresh.slice(0,10)];
+  if(!q.length&&extra)q=deck(c).sort(()=>Math.random()-.5).slice(0,20);
   return {queue:q,done:0,shown:false};
 }
 function startReview(extra){session=makeSession(extra);go('review');autoSay()}
 function autoSay(){if(db.dir==='audio'&&session&&session.queue.length&&!session.shown){const c=getCard(session.queue[0]);if(c)setTimeout(()=>say(c.it),150)}}
 function review(){
   if(!session)session=makeSession(false);
+  const L=CO().name;
   if(!session.queue.length){
     return `<h2>Cards</h2><div class="card" style="text-align:center"><div style="font-size:48px">🎉</div>
     <h3>${session.done?`Ótimo! ${session.done} respostas hoje.`:'Nada para revisar agora.'}</h3>
     <p class="mut">A revisão espaçada traz cada card de volta na hora certa. Volte amanhã.</p>
     <button class="btn ghost" onclick="startReview(true)">Revisão extra (20 aleatórios)</button></div>
-    <div class="card"><h3>Direção dos cards</h3><div class="row"><button class="btn ${db.dir==='it'?'':'ghost'} sm" onclick="setDir('it')">Italiano → Português</button><button class="btn ${db.dir==='pt'?'':'ghost'} sm" onclick="setDir('pt')">Português → Italiano</button></div><button class="btn ${db.dir==='audio'?'':'ghost'} sm" style="margin-top:8px;width:100%" onclick="setDir('audio')">🎧 Só áudio (sem texto na frente)</button></div>`;
+    <div class="card"><h3>Direção dos cards</h3><div class="row"><button class="btn ${db.dir==='it'?'':'ghost'} sm" onclick="setDir('it')">${L} → Português</button><button class="btn ${db.dir==='pt'?'':'ghost'} sm" onclick="setDir('pt')">Português → ${L}</button></div><button class="btn ${db.dir==='audio'?'':'ghost'} sm" style="margin-top:8px;width:100%" onclick="setDir('audio')">🎧 Só áudio (sem texto na frente)</button></div>`;
   }
   const c=getCard(session.queue[0]);if(!c){session.queue.shift();return review()}
-  const s=P().srs[c.id],isNew=!s,au=db.dir==='audio';
+  const s=C().srs[c.id],isNew=!s,au=db.dir==='audio';
   const front=au?'🎧 Ouça e tente entender':db.dir==='pt'?c.pt:c.it,back=db.dir==='pt'?c.it:au?`${c.it} — ${c.pt}`:c.pt;
   return `<div class="row" style="align-items:center;margin-bottom:10px"><div class="mut">${session.queue.length} restantes ${isNew?'· <b style="color:var(--acc2)">novo</b>':''}</div><div style="text-align:right" class="mut">${c.w?`Semana ${c.w}`:'Minha frase'}</div></div>
   <div class="card flash" onclick="${session.shown?'':'reveal()'}">
@@ -421,28 +649,28 @@ function nextBox(g,s){const b=s?s.box:0;return g===1?Math.max(1,b):Math.min(7,g=
 function lbl(g,s){const d=IV[nextBox(g,s)];return d===1?'1 dia':d+' dias'}
 function reveal(){session.shown=true;render();const c=getCard(session.queue[0]);if(c&&db.dir==='pt')say(c.it)}
 function grade(g){
-  const p=P(),id=session.queue.shift(),s=p.srs[id]||{box:0};
+  const c=C(),id=session.queue.shift(),s=c.srs[id]||{box:0};
   if(g===0){s.box=0;s.due=today();session.queue.push(id)}
-  else{s.box=nextBox(g,p.srs[id]);s.due=addDays(today(),IV[s.box])}
-  p.srs[id]=s;session.done++;session.shown=false;markDay();save();render();autoSay();
+  else{s.box=nextBox(g,c.srs[id]);s.due=addDays(today(),IV[s.box])}
+  c.srs[id]=s;session.done++;session.shown=false;markDay();save();render();autoSay();
 }
 function setDir(d){db.dir=d;save();render()}
 
 function mine(){
-  const p=P();
+  const c=C(),L=CO().name;
   return `<h2>Minhas frases</h2>
-  <div class="card"><p class="mut" style="margin-top:0">Anote frases e expressões que você pegou de ouvido (músicas, séries, conversas) ou que você mesmo criou com as palavras da semana. Elas entram nos seus cards.</p>
-  <label>Em italiano</label><input id="fIt" placeholder="ex.: Non ce la faccio più">
-  <label>Significado</label><input id="fPt" placeholder="ex.: Não aguento mais">
+  <div class="card"><p class="mut" style="margin-top:0">Anote frases e expressões que você pegou de ouvido (músicas, séries, conversas) ou que você mesmo montou com as estruturas da semana. Elas entram nos seus cards.</p>
+  <label>Em ${esc(L)}</label><input id="fIt">
+  <label>Significado</label><input id="fPt">
   <label>Cena / contexto (onde ouviu, quem disse, qual emoção)</label><input id="fNote" placeholder="ex.: personagem gritou quando derrubou o café">
   <div style="margin-top:12px"><button class="btn" onclick="addMine()">Adicionar card</button></div></div>
-  ${p.mine.length?`<div class="card">${p.mine.slice().reverse().map(m=>`<div class="vc">${spk(m.it)}<div style="flex:1"><div class="it">${esc(m.it)}</div><div class="mut">${esc(m.pt)}</div>${m.note?`<div class="mut" style="font-size:13px">📝 ${esc(m.note)}</div>`:''}</div><button class="del" onclick="delMine('${m.id}')">apagar</button></div>`).join('')}</div>`
+  ${c.mine.length?`<div class="card">${c.mine.slice().reverse().map(m=>`<div class="vc">${spk(m.it)}<div style="flex:1"><div class="it">${esc(m.it)}</div><div class="mut">${esc(m.pt)}</div>${m.note?`<div class="mut" style="font-size:13px">📝 ${esc(m.note)}</div>`:''}</div><button class="del" onclick="delMine('${m.id}')">apagar</button></div>`).join('')}</div>`
   :'<p class="mut" style="text-align:center">Nenhuma frase ainda.</p>'}`;
 }
 function addMine(){const it=$('#fIt').value.trim(),pt=$('#fPt').value.trim(),note=$('#fNote').value.trim();
-  if(!it||!pt){alert('Preencha italiano e significado.');return}
-  P().mine.push({id:Date.now().toString(36),it,pt,note});markDay();save();render()}
-function delMine(id){if(!confirm('Apagar esta frase?'))return;const p=P();p.mine=p.mine.filter(m=>m.id!==id);delete p.srs['m-'+id];save();render()}
+  if(!it||!pt){alert('Preencha a frase e o significado.');return}
+  C().mine.push({id:Date.now().toString(36),it,pt,note});markDay();save();render()}
+function delMine(id){if(!confirm('Apagar esta frase?'))return;const c=C();c.mine=c.mine.filter(m=>m.id!==id);delete c.srs['m-'+id];save();render()}
 
 function method(){
   return `<h2>O método</h2>
@@ -453,39 +681,39 @@ function method(){
   <p style="margin-bottom:0"><b>Filtro afetivo:</b> ansiedade e medo de errar bloqueiam a aquisição. Por isso música funciona tão bem: é prazeroso e você repete sem perceber.</p></div>
   <div class="card"><h3>Como este app aplica</h3>
   <p>🎵 <b>Uma música por semana</b>, ouvida todo dia de jeitos diferentes (às cegas, com letra, passiva, cantando junto).</p>
-  <p>🗂️ <b>Cards com revisão espaçada</b> como apoio: cada expressão volta no dia certo para não ser esquecida.</p>
-  <p>✍️ <b>Frases suas</b>: o que você pega de ouvido vale mais do que qualquer lista pronta.</p>
-  <p style="margin-bottom:0">👨‍👩‍👧 <b>Em família</b>: cada um tem seu perfil e progresso. Conversar em italiano em casa, mesmo com frases simples, é o melhor exercício.</p></div>
+  <p>🗂️ <b>Cards com revisão espaçada</b> como apoio, incluindo o modo só áudio para treinar o ouvido.</p>
+  <p>✍️ <b>Frases suas</b>, com a cena em que você ouviu: o que você pega de ouvido vale mais do que qualquer lista pronta.</p>
+  <p style="margin-bottom:0">👨‍👩‍👧 <b>Em família</b>: cada um tem seu perfil e progresso por idioma.</p></div>
   <div class="card"><h3>🎧 Imersão: o volume que falta</h3>
   <p>A música da semana é o estudo <b>intensivo</b>. Krashen também pede volume: horas de escuta <b>extensiva</b>, sem pausar nem traduzir. Registre os minutos na tela Início.</p>
-  <p><b>Para começar (fala lenta e visual):</b> <a href="https://www.youtube.com/results?search_query=peppa+pig+italiano" target="_blank" rel="noopener">Peppa Pig em italiano</a>. Parece bobo, mas é o input mais compreensível que existe para as primeiras semanas.</p>
-  <p><b>Séries e filmes (TV, com legenda em italiano):</b> séries italianas da Netflix, como Summertime, e qualquer filme ou série que vocês já gostam com o áudio trocado para italiano.</p>
-  <p><b>Para o carro (adultos):</b> <a href="https://www.youtube.com/results?search_query=easy+italian" target="_blank" rel="noopener">Easy Italian</a> (entrevistas de rua), <a href="https://www.youtube.com/results?search_query=podcast+italiano+davide+gemello" target="_blank" rel="noopener">Podcast Italiano</a> (tem episódios para iniciantes), <a href="https://www.youtube.com/results?search_query=italiano+automatico" target="_blank" rel="noopener">Italiano Automatico</a>.</p>
-  <p style="margin-bottom:0"><b>Truque:</b> filmes que vocês já conhecem de cor em português, assistidos em italiano. Como vocês já sabem a história, quase tudo vira input compreensível.</p></div>
+  ${CO().imm}
+  <p style="margin-bottom:0"><b>Truque:</b> filmes que vocês já conhecem de cor em português, assistidos no idioma novo. Como vocês já sabem a história, quase tudo vira input compreensível.</p></div>
   <div class="card"><h3>Regras de ouro</h3><p>1. Todo dia, nem que sejam 10 minutos.<br>2. Não pare para traduzir tudo. Deixe a música te levar.<br>3. Repita a mesma música até ela ficar "transparente".<br>4. Use as expressões em voz alta, mesmo sozinho.</p></div>`;
 }
 
 function settings(){
+  if(db.lang&&!langVoices.length)pickVoice();
   return `<h2>Configurações</h2>
   <div class="card"><h3>Perfis</h3>${db.profiles.map((p,i)=>`<label>Perfil ${i+1}</label><input value="${esc(p.name)}" onchange="renameP(${i},this.value)">`).join('')}
   <div style="margin-top:12px"><button class="btn ghost" onclick="addP()">+ Adicionar perfil</button></div></div>
-  <div class="card"><h3>Voz italiana</h3>
-  ${itVoices.length?`<select onchange="setVoice(this.value)">${itVoices.map(v=>`<option value="${esc(v.voiceURI)}" ${itVoice&&v.voiceURI===itVoice.voiceURI?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
-  <div class="row" style="margin-top:10px"><button class="btn ghost sm" onclick="say('Ciao! Come stai? Oggi studiamo italiano insieme.')">🔊 Testar voz</button></div>`
-  :`<p class="mut">Nenhuma voz italiana encontrada neste navegador.</p>`}
-  <p class="mut" style="margin-bottom:0">As vozes vêm do aparelho. Se todas soarem robóticas, abra o app no Chrome ou Safari. No iPhone, dá para baixar uma voz melhor em Ajustes → Acessibilidade → Conteúdo Falado → Vozes → Italiano (ex.: Alice Aprimorada).</p></div>
+  ${db.lang?`<div class="card"><h3>Voz (${esc(CO().name)})</h3>
+  ${langVoices.length?`<select onchange="setVoice(this.value)">${langVoices.map(v=>`<option value="${esc(v.voiceURI)}" ${curVoice&&v.voiceURI===curVoice.voiceURI?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
+  <div class="row" style="margin-top:10px"><button class="btn ghost sm" onclick="say(CO().test)">🔊 Testar voz</button></div>`
+  :`<p class="mut">Nenhuma voz deste idioma encontrada neste navegador.</p>`}
+  <p class="mut" style="margin-bottom:0">As vozes vêm do aparelho. Se todas soarem robóticas, abra o app no Chrome ou Safari. No iPhone, dá para baixar vozes melhores em Ajustes → Acessibilidade → Conteúdo Falado → Vozes.</p></div>`:''}
   <div class="card"><h3>Backup do progresso</h3><p class="mut">O progresso fica salvo neste aparelho. Exporte para guardar ou passar para outro celular.</p>
   <div class="row"><button class="btn sm" onclick="exportDb()">Exportar</button><button class="btn ghost sm" onclick="$('#imp').click()">Importar</button></div>
   <input type="file" id="imp" accept="application/json" style="display:none" onchange="importDb(this)"></div>
-  <div class="card"><h3>Zerar perfil atual</h3><p class="mut">Apaga o progresso de ${esc(P().name)}.</p><button class="btn ghost sm" style="color:var(--bad)" onclick="resetP()">Zerar ${esc(P().name)}</button></div>`;
+  ${db.lang?`<div class="card"><h3>Zerar ${esc(CO().name)} de ${esc(P().name)}</h3><p class="mut">Apaga só o progresso deste idioma neste perfil.</p><button class="btn ghost sm" style="color:var(--bad)" onclick="resetP()">Zerar</button></div>`:''}`;
 }
-function setVoice(uri){db.voice=uri;itVoice=itVoices.find(x=>x.voiceURI===uri)||itVoice;save();say('Ciao! Questa è la mia voce.')}
+function setVoice(uri){db.voice[db.lang]=uri;curVoice=langVoices.find(x=>x.voiceURI===uri)||curVoice;save();say(CO().test)}
 function renameP(i,v){v=v.trim();if(!v)return;db.profiles[i].name=v;save();render()}
 function addP(){const n=prompt('Nome do novo perfil:');if(n&&n.trim()){db.profiles.push(blank(n.trim()));save();render()}}
-function resetP(){if(!confirm('Tem certeza? Isso não pode ser desfeito.'))return;db.profiles[db.active]=blank(P().name);session=null;save();render()}
+function resetP(){if(!confirm('Tem certeza? Isso não pode ser desfeito.'))return;P().c[db.lang]=blankC();session=null;save();render()}
 function exportDb(){try{const b=new Blob([JSON.stringify(db,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ascolto-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove()}catch(e){alert('Não foi possível exportar aqui.')}}
-function importDb(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.profiles))throw 0;db=d;db.active=0;session=null;save();render();alert('Progresso importado!')}catch(e){alert('Arquivo inválido.')}};r.readAsText(f)}
+function importDb(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.profiles))throw 0;db=d;db.active=0;migrate();session=null;save();pickVoice();render();alert('Progresso importado!')}catch(e){alert('Arquivo inválido.')}};r.readAsText(f)}
 
+pickVoice();
 render();
 </script>
 </body>

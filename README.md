@@ -4,7 +4,7 @@ App de estudo de idiomas (italiano e alemão) pelo método natural (Stephen Kras
 
 ## Publicar na Vercel
 
-É um site estático (um único `index.html`, sem build).
+É um site estático (`index.html`, sem build) com uma função serverless (`api/translate.js`) para a tradução por IA. A Vercel detecta as duas coisas sozinha.
 
 **Opção 1 — GitHub**
 1. Crie um repositório e suba esta pasta.
@@ -17,6 +17,17 @@ npm i -g vercel
 cd ascolto
 vercel --prod
 ```
+
+### Ativar a tradução por IA
+1. Crie uma chave em console.anthropic.com.
+2. Na Vercel: *Project → Settings → Environment Variables*:
+   - `ANTHROPIC_API_KEY` = sua chave
+   - `ACCESS_CODE` = um código qualquer (ex.: `familia2026`), para ninguém de fora usar sua API
+   - `ANTHROPIC_MODEL` (opcional) = padrão `claude-haiku-5-5`
+3. Faça um novo deploy.
+4. No app, em ⚙️, digite o mesmo código de acesso em cada celular.
+
+Custo: com o Haiku, traduzir uma letra inteira custa uma fração de centavo.
 
 Depois abra o link no celular e use "Adicionar à tela de início" para ficar como app.
 

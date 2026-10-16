@@ -67,6 +67,12 @@ h3{font-size:16px;margin:0 0 8px}
 label{font-size:14px;color:var(--mut);display:block;margin:8px 0 4px}
 .del{background:none;border:0;color:var(--bad);cursor:pointer;font-size:14px}
 a{color:var(--acc)}
+textarea{resize:vertical;min-height:120px}
+.lyl{padding:8px 0;border-top:1px solid var(--line)}
+.lyt{display:flex;align-items:center;gap:6px}
+.lyt span{flex:1;font-weight:600}
+.lyt a.spk{text-decoration:none}
+.lytr{margin-top:6px;font-size:14px;color:var(--mut)}
 .langcard{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;font:inherit;color:inherit;cursor:pointer}
 .langcard .flag{font-size:40px;line-height:1}
 .langcard .t{flex:1;display:flex;flex-direction:column}
@@ -732,6 +738,7 @@ function week(){
   <div class="links"><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">▶️ YouTube</a><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">🎧 Spotify</a><a href="https://www.google.com/search?q=${q}%20${CO().lyr}" target="_blank" rel="noopener">📄 Letra</a></div></div>
   <div class="card"><h3>🔎 Caça-palavras</h3><p class="mut">Palavras para pegar de ouvido nesta música:</p>${w.hunt.map(h=>`<span class="chip">${esc(h)}</span>`).join('')}
   <p class="mut" style="margin-bottom:0">Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.</p></div>
+  ${lyricsCard(w)}
   <div class="card lesson"><h3>💡 ${esc(w.theme)}</h3>${w.lesson}</div>
   ${st?`<div class="card"><h3>📅 Roteiro da semana</h3>${roteiro().map((r,i)=>`<div class="day ${ch[i]?'done':''}" onclick="toggleDay(${w.n},${i})"><div class="box">${ch[i]?'✓':''}</div><div class="txt"><b>Dia ${i+1} · ${r[0]}</b><div class="mut">${esc(r[1])}</div></div></div>`).join('')}</div>`
   :`<div class="card"><p>Comece a semana para liberar o roteiro e colocar os cards na sua revisão.</p><button class="btn" onclick="startWeek(${w.n})">Começar semana ${w.n}</button></div>`}
@@ -837,6 +844,35 @@ function addP(){const n=prompt('Nome do novo perfil:');if(n&&n.trim()){db.profil
 function resetP(){if(!confirm('Tem certeza? Isso não pode ser desfeito.'))return;P().c[db.lang]=blankC();session=null;save();render()}
 function exportDb(){try{const b=new Blob([JSON.stringify(db,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ascolto-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove()}catch(e){alert('Não foi possível exportar aqui.')}}
 function importDb(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.profiles))throw 0;db=d;db.active=0;migrate();session=null;save();pickVoice();render();alert('Progresso importado!')}catch(e){alert('Arquivo inválido.')}};r.readAsText(f)}
+
+/* ===================== LETRA BILÍNGUE ===================== */
+let lyrEdit=null,lyrHide=false;
+function lyr(){db.lyrics=db.lyrics||{};db.lyrics[db.lang]=db.lyrics[db.lang]||{};return db.lyrics[db.lang]}
+function lyricsCard(w){
+  const L=lyr()[w.n];
+  if(!L||lyrEdit===w.n){
+    const pre=L?L.lines.map(l=>l.t).join('\n'):'';
+    return `<div class="card"><h3>📄 Letra bilíngue</h3>
+    <p class="mut" style="margin-top:0">Abra a letra (botão <b>Letra</b>), copie e cole aqui. O app separa linha por linha para vocês escreverem a tradução embaixo de cada uma. Ela fica salva só neste aparelho.</p>
+    <textarea id="lyrIn" rows="8" placeholder="Cole a letra aqui...">${esc(pre)}</textarea>
+    <div class="row" style="margin-top:10px"><button class="btn sm" onclick="saveLyr(${w.n})">Salvar letra</button>${L?`<button class="btn ghost sm" onclick="lyrEdit=null;render()">Cancelar</button>`:''}</div></div>`;
+  }
+  const tl=CO().lang;
+  return `<div class="card"><h3>📄 Letra bilíngue</h3>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost sm" onclick="lyrHide=!lyrHide;render()">${lyrHide?'Mostrar traduções':'Esconder traduções'}</button><button class="btn ghost sm" onclick="lyrEdit=${w.n};render()">Editar letra</button></div>
+  <p class="mut" style="margin-top:0">Escreva a sua tradução embaixo de cada linha (🌐 abre o Google Tradutor para ajudar). ➕ vira card.</p>
+  ${L.lines.map((l,i)=>l.t?`<div class="lyl"><div class="lyt">${spk(l.t)}<span>${esc(l.t)}</span><a class="spk" href="https://translate.google.com/?sl=${tl}&tl=pt&text=${encodeURIComponent(l.t)}&op=translate" target="_blank" rel="noopener" aria-label="Traduzir">🌐</a><button class="spk" onclick="lineCard(${w.n},${i})" aria-label="Virar card">➕</button></div>
+  ${lyrHide?'':`<input class="lytr" value="${esc(l.tr)}" placeholder="tradução..." onchange="setTr(${w.n},${i},this.value)">`}</div>`:'<div style="height:12px"></div>').join('')}</div>`;
+}
+function saveLyr(n){const t=$('#lyrIn').value;const old=lyr()[n];
+  const lines=t.replace(/\r/g,'').split('\n').map(s=>s.trim());
+  while(lines.length&&!lines[lines.length-1])lines.pop();
+  if(!lines.length){delete lyr()[n];lyrEdit=null;save();render();return}
+  lyr()[n]={lines:lines.map(x=>({t:x,tr:(old&&old.lines.find(o=>o.t===x&&o.tr)||{}).tr||''}))};
+  lyrEdit=null;save();render()}
+function setTr(n,i,v){lyr()[n].lines[i].tr=v.trim();save()}
+function lineCard(n,i){const l=lyr()[n].lines[i];if(!l.tr&&!confirm('Esta linha ainda não tem tradução. Criar o card assim mesmo?'))return;
+  C().mine.push({id:Date.now().toString(36)+i,it:l.t,pt:l.tr||'(tradução pendente)',note:`Letra da semana ${n}`});save();alert('Virou card na aba Frases!')}
 
 pickVoice();
 render();

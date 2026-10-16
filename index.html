@@ -300,8 +300,20 @@ function markDay(){const p=P(),t=today();if(!p.days.includes(t)){p.days.push(t);
 function streak(p){let n=0,d=today();if(!p.days.includes(d))d=addDays(d,-1);while(p.days.includes(d)){n++;d=addDays(d,-1)}return n}
 
 /* ===================== VOZ ===================== */
-let itVoice=null;
-function pickVoice(){try{const v=speechSynthesis.getVoices();itVoice=v.find(x=>/^it/i.test(x.lang))||null}catch(e){}}
+let itVoice=null,itVoices=[];
+function voiceScore(v){const n=v.name.toLowerCase();let s=0;
+  if(/natural|neural|online/.test(n))s+=50;
+  if(/premium|enhanced|aprimorad|migliorat/.test(n))s+=40;
+  if(/google/.test(n))s+=30;
+  if(/alice|federica|luca|elsa|isabella|diego|paola|emma|giuseppe/.test(n))s+=10;
+  if(!v.localService)s+=5;
+  if(/espeak|compact|robot/.test(n))s-=60;
+  return s}
+function pickVoice(){try{
+  itVoices=speechSynthesis.getVoices().filter(x=>/^it/i.test(x.lang)).sort((a,b)=>voiceScore(b)-voiceScore(a));
+  itVoice=(db.voice&&itVoices.find(x=>x.voiceURI===db.voice))||itVoices[0]||null;
+  if(view==='settings')render();
+}catch(e){}}
 if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
 function say(t){if(!('speechSynthesis' in window)){alert('Seu navegador não tem leitura em voz alta.');return}
 speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='it-IT';if(itVoice)u.voice=itVoice;u.rate=.88;speechSynthesis.speak(u)}
@@ -440,11 +452,17 @@ function settings(){
   return `<h2>Configurações</h2>
   <div class="card"><h3>Perfis</h3>${db.profiles.map((p,i)=>`<label>Perfil ${i+1}</label><input value="${esc(p.name)}" onchange="renameP(${i},this.value)">`).join('')}
   <div style="margin-top:12px"><button class="btn ghost" onclick="addP()">+ Adicionar perfil</button></div></div>
+  <div class="card"><h3>Voz italiana</h3>
+  ${itVoices.length?`<select onchange="setVoice(this.value)">${itVoices.map(v=>`<option value="${esc(v.voiceURI)}" ${itVoice&&v.voiceURI===itVoice.voiceURI?'selected':''}>${esc(v.name)}</option>`).join('')}</select>
+  <div class="row" style="margin-top:10px"><button class="btn ghost sm" onclick="say('Ciao! Come stai? Oggi studiamo italiano insieme.')">🔊 Testar voz</button></div>`
+  :`<p class="mut">Nenhuma voz italiana encontrada neste navegador.</p>`}
+  <p class="mut" style="margin-bottom:0">As vozes vêm do aparelho. Se todas soarem robóticas, abra o app no Chrome ou Safari. No iPhone, dá para baixar uma voz melhor em Ajustes → Acessibilidade → Conteúdo Falado → Vozes → Italiano (ex.: Alice Aprimorada).</p></div>
   <div class="card"><h3>Backup do progresso</h3><p class="mut">O progresso fica salvo neste aparelho. Exporte para guardar ou passar para outro celular.</p>
   <div class="row"><button class="btn sm" onclick="exportDb()">Exportar</button><button class="btn ghost sm" onclick="$('#imp').click()">Importar</button></div>
   <input type="file" id="imp" accept="application/json" style="display:none" onchange="importDb(this)"></div>
   <div class="card"><h3>Zerar perfil atual</h3><p class="mut">Apaga o progresso de ${esc(P().name)}.</p><button class="btn ghost sm" style="color:var(--bad)" onclick="resetP()">Zerar ${esc(P().name)}</button></div>`;
 }
+function setVoice(uri){db.voice=uri;itVoice=itVoices.find(x=>x.voiceURI===uri)||itVoice;save();say('Ciao! Questa è la mia voce.')}
 function renameP(i,v){v=v.trim();if(!v)return;db.profiles[i].name=v;save();render()}
 function addP(){const n=prompt('Nome do novo perfil:');if(n&&n.trim()){db.profiles.push(blank(n.trim()));save();render()}}
 function resetP(){if(!confirm('Tem certeza? Isso não pode ser desfeito.'))return;db.profiles[db.active]=blank(P().name);session=null;save();render()}

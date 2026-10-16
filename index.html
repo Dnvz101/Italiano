@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ascolto em Família</title>
+<meta name="theme-color" content="#0f766e">
+<style>
+:root{--bg:#f7f5f0;--card:#fff;--ink:#1c1b19;--mut:#6b6760;--line:#e6e2d9;--acc:#0f766e;--acc-ink:#fff;--acc2:#c2410c;--ok:#15803d;--bad:#b91c1c;--warn:#a16207;--chip:#e7f3f1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141412;--card:#1e1d1a;--ink:#f1efe9;--mut:#a39e94;--line:#2f2d29;--acc:#2dd4bf;--acc-ink:#062e2a;--acc2:#fb923c;--ok:#4ade80;--bad:#f87171;--warn:#facc15;--chip:#1c2e2a}}
+:root[data-theme="dark"]{--bg:#141412;--card:#1e1d1a;--ink:#f1efe9;--mut:#a39e94;--line:#2f2d29;--acc:#2dd4bf;--acc-ink:#062e2a;--acc2:#fb923c;--ok:#4ade80;--bad:#f87171;--warn:#facc15;--chip:#1c2e2a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px}
+header h1{font-size:18px;margin:0;flex:1;letter-spacing:-.01em}
+header h1 span{color:var(--acc)}
+select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+header select{width:auto}
+main{max-width:640px;margin:0 auto;padding:16px 16px 96px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav button{background:none;border:0;color:var(--mut);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer}
+nav button b{font-size:20px;font-weight:400}
+nav button.on{color:var(--acc);font-weight:600}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+h2{font-size:22px;margin:4px 0 12px;letter-spacing:-.01em}
+h3{font-size:16px;margin:0 0 8px}
+.mut{color:var(--mut);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:600;cursor:pointer;background:var(--acc);color:var(--acc-ink);width:100%}
+.btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}
+.btn.sm{width:auto;padding:8px 12px;font-size:14px}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font-size:24px;color:var(--acc)}
+.stat span{font-size:12px;color:var(--mut)}
+.chip{display:inline-block;background:var(--chip);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:13px;margin:0 6px 6px 0}
+.lvl{font-size:12px;font-weight:600;border-radius:999px;padding:2px 8px;border:1px solid currentColor}
+.l1{color:var(--ok)}.l2{color:var(--acc)}.l3{color:var(--warn)}.l4{color:var(--acc2)}
+.wk{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;font:inherit;color:inherit;cursor:pointer}
+.wk .n{width:36px;height:36px;border-radius:10px;background:var(--chip);display:grid;place-items:center;font-weight:700;color:var(--acc);flex:none}
+.wk .t{flex:1;min-width:0}
+.wk .t div:first-child{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.links a{flex:1;min-width:90px;text-align:center;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px;color:var(--ink);font-size:14px;font-weight:600}
+.day{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.day:first-of-type{border-top:0}
+.box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-size:14px;margin-top:2px}
+.day.done .box{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.day.done .txt{color:var(--mut);text-decoration:line-through}
+.vc{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.vc:first-of-type{border-top:0}
+.vc .it{font-weight:600}
+.spk{background:var(--chip);border:0;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:15px;flex:none}
+.flash{min-height:260px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px}
+.flash .front{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.flash .back{font-size:20px;color:var(--acc)}
+.flash .ex{font-size:15px;color:var(--mut);font-style:italic}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.grades button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:10px 4px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.grades button small{display:block;font-weight:400;color:var(--mut);font-size:11px}
+.g0{border-color:var(--bad)!important;color:var(--bad)!important}
+.g3{border-color:var(--ok)!important;color:var(--ok)!important}
+.lesson p{margin:0 0 8px}
+.prog{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0}
+.prog i{display:block;height:100%;background:var(--acc)}
+label{font-size:14px;color:var(--mut);display:block;margin:8px 0 4px}
+.del{background:none;border:0;color:var(--bad);cursor:pointer;font-size:14px}
+a{color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ascolto <span>em Família</span></h1>
+  <select id="who" aria-label="Perfil"></select>
+  <button class="spk" onclick="go('settings')" aria-label="Configurações">⚙️</button>
+</header>
+<main id="app"></main>
+<nav id="nav"></nav>
+
+<script>
+/* ===================== CONTEÚDO DO CURSO ===================== */
+const WEEKS=[
+{n:1,title:"Ci vuole un fiore",artist:"Sergio Endrigo",year:1974,level:"Iniciante",lv:1,
+theme:"Ci vuole / ci vogliono (é preciso)",
+about:"Canção infantil clássica, em forma de corrente: cada coisa depende de outra, até chegar numa flor. Melodia lenta e dicção limpíssima.",
+why:"Ótima primeira semana para toda a família (especialmente para sua filha). A estrutura repetitiva fixa uma construção que os italianos usam o dia inteiro.",
+hunt:["fiore","albero","seme","frutto","terra","legno","tavolo","monte"],
+lesson:"<p><b>Ci vuole</b> + singular e <b>ci vogliono</b> + plural significam <i>é preciso / precisa de</i>.</p><p>Também serve para tempo: <b>Ci vogliono due ore</b> = leva duas horas.</p><p>Repare como a música encadeia: <i>per fare X ci vuole Y</i>. Tente criar a sua própria corrente em português e depois em italiano.</p>",
+cards:[
+["ci vuole","é preciso / precisa de (singular)","Ci vuole pazienza con i bambini.","É preciso paciência com as crianças."],
+["ci vogliono","são precisos (plural)","Ci vogliono tre uova per la torta.","São precisos três ovos para o bolo."],
+["Quanto ci vuole?","Quanto tempo leva?","Quanto ci vuole per arrivare a Roma?","Quanto tempo leva para chegar a Roma?"],
+["per fare","para fazer","Per fare il caffè ci vuole l'acqua calda.","Para fazer café precisa de água quente."],
+["il fiore / i fiori","a flor / as flores","Ho comprato dei fiori per la mamma.","Comprei flores para a mamãe."],
+["l'albero","a árvore","C'è un albero grande nel giardino.","Há uma árvore grande no jardim."],
+["il seme","a semente","Il seme diventa una pianta.","A semente vira uma planta."],
+["la frutta / il frutto","a fruta (em geral) / o fruto","Mangio frutta ogni mattina.","Como fruta toda manhã."],
+["la terra","a terra","Ho le mani sporche di terra.","Estou com as mãos sujas de terra."],
+["il legno","a madeira","Questa sedia è di legno.","Esta cadeira é de madeira."],
+["il tavolo","a mesa","La cena è sul tavolo.","O jantar está na mesa."]]},
+
+{n:2,title:"Azzurro",artist:"Adriano Celentano",year:1968,level:"Iniciante",lv:1,
+theme:"Tédio de verão, desejos e o verbo sembrare",
+about:"Escrita por Paolo Conte, fala de uma tarde de verão vazia, longe de quem se ama, e de uma vontade de fugir. Virou quase um segundo hino da Itália.",
+why:"Ritmo de marchinha, voz bem articulada e vocabulário do cotidiano. Você vai ouvir essa música em todo estádio e festa italiana.",
+hunt:["azzurro","pomeriggio","estate","treno","desideri"],
+lesson:"<p><b>Troppo</b> = demais: <i>troppo caldo, troppo lungo</i>.</p><p><b>Mi sembra</b> = me parece. Funciona com pronome antes: <i>ti sembra, gli sembra</i>.</p><p>Cores concordam em gênero e número: <i>cielo azzurro, macchina azzurra, occhi azzurri</i>.</p>",
+cards:[
+["azzurro","azul-claro (a cor da seleção)","Il cielo oggi è azzurro.","O céu hoje está azul-claro."],
+["il pomeriggio","a tarde","Ci vediamo domani pomeriggio.","Nos vemos amanhã à tarde."],
+["l'estate","o verão","D'estate andiamo al mare.","No verão vamos à praia."],
+["troppo","demais","Fa troppo caldo oggi.","Está calor demais hoje."],
+["cercare","procurar","Sto cercando le chiavi.","Estou procurando as chaves."],
+["trovare","encontrar","Non trovo il telefono.","Não encontro o telefone."],
+["il treno","o trem","Il treno parte alle otto.","O trem parte às oito."],
+["il desiderio","o desejo","Esprimi un desiderio!","Faça um pedido!"],
+["annoiarsi","entediar-se","Mi annoio senza di te.","Fico entediado sem você."],
+["da solo / da sola","sozinho / sozinha","Oggi pranzo da solo.","Hoje almoço sozinho."],
+["mi sembra","me parece","Mi sembra una buona idea.","Me parece uma boa ideia."]]},
+
+{n:3,title:"Il mondo",artist:"Jimmy Fontana",year:1965,level:"Iniciante",lv:1,
+theme:"Passato prossimo e non... mai",
+about:"Depois de uma noite de amor que acabou, o narrador percebe que o mundo continua girando como sempre, indiferente à dor dele.",
+why:"Frases longas e cantadas devagar, perfeitas para perceber o passato prossimo (o tempo passado mais usado na fala).",
+hunt:["mondo","notte","giorno","girare"],
+lesson:"<p><b>Passato prossimo</b> = <i>avere/essere</i> + particípio: <b>ho fatto</b> (fiz), <b>sono andato</b> (fui).</p><p>Verbos de movimento e reflexivos usam <b>essere</b>, e o particípio concorda: <i>sono andata, ci siamo fermati</i>.</p><p><b>Non... mai</b> = nunca: <i>non ho mai visto</i>.</p>",
+cards:[
+["il mondo","o mundo","Voglio girare il mondo.","Quero rodar o mundo."],
+["girare","girar / rodar / virar","Gira a destra al semaforo.","Vire à direita no semáforo."],
+["fermarsi","parar","Mi sono fermato a prendere un caffè.","Parei para tomar um café."],
+["non... mai","nunca","Non sono mai stato in Sicilia.","Nunca estive na Sicília."],
+["sempre","sempre","Arrivi sempre in ritardo!","Você sempre chega atrasado!"],
+["ancora","ainda / de novo","Sei ancora qui?","Você ainda está aqui?"],
+["la notte","a noite (madrugada)","Ho dormito male stanotte.","Dormi mal esta noite."],
+["il giorno","o dia","Ogni giorno è diverso.","Cada dia é diferente."],
+["ho fatto","eu fiz (com avere)","Ieri ho fatto una torta.","Ontem fiz um bolo."],
+["sono andato/a","eu fui (com essere)","Sabato sono andata al cinema.","Sábado fui ao cinema."]]},
+
+{n:4,title:"La solitudine",artist:"Laura Pausini",year:1993,level:"Básico",lv:2,
+theme:"Saudade e partida: mancare, andarsene, non... più",
+about:"Uma adolescente sofre porque o namorado da escola, Marco, foi embora para longe. A música que lançou Laura Pausini no mundo.",
+why:"Dicção muito clara e vocabulário de sentimentos que você usa todo dia. Laura também gravou em espanhol, o que ajuda a comparar.",
+hunt:["solitudine","Marco","tornare","banco"],
+lesson:"<p><b>Mancare</b> funciona ao contrário do português: <b>mi manchi</b> = você me faz falta (sinto sua falta). <b>Mi manca il Brasile</b> = sinto falta do Brasil.</p><p><b>Andarsene</b> = ir embora: <i>me ne vado, se n'è andato</i>.</p><p><b>Non... più</b> = não... mais.</p>",
+cards:[
+["la solitudine","a solidão","La solitudine a volte fa bene.","A solidão às vezes faz bem."],
+["mi manchi","sinto sua falta","Mi manchi tanto, torna presto!","Sinto muito sua falta, volte logo!"],
+["mi manca...","sinto falta de...","Mi manca il Brasile.","Sinto falta do Brasil."],
+["me ne vado","vou embora","Me ne vado, è tardi.","Vou embora, está tarde."],
+["se n'è andato/a","ele/ela foi embora","Lucia se n'è andata senza salutare.","Lucia foi embora sem se despedir."],
+["tornare","voltar","Quando torni a casa?","Quando você volta para casa?"],
+["non... più","não... mais","Non ci vado più.","Não vou mais lá."],
+["lontano","longe","Il Giappone è lontano dall'Italia.","O Japão é longe da Itália."],
+["il ricordo","a lembrança","Ho un bel ricordo di quel viaggio.","Tenho uma boa lembrança daquela viagem."],
+["dimenticare","esquecer","Non dimenticare l'ombrello!","Não esqueça o guarda-chuva!"],
+["compagni di banco","colegas de carteira (escola)","Eravamo compagni di banco.","Sentávamos juntos na escola."]]},
+
+{n:5,title:"Parole parole",artist:"Mina e Alberto Lupo",year:1972,level:"Básico",lv:2,
+theme:"O pronome ne e expressões de diálogo",
+about:"Um duelo: ele declama elogios românticos falando, ela responde cantando que aquilo tudo é só conversa fiada.",
+why:"Metade da música é fala, não canto: você treina o italiano falado de verdade, lento e teatral. Divertido para ouvir em casal.",
+hunt:["parole","soltanto","caramelle"],
+lesson:"<p><b>Ne</b> substitui uma quantidade ou um assunto: <i>Quanti figli hai? <b>Ne</b> ho due</i> (tenho dois [deles]).</p><p>Expressões fixas: <b>non ne posso più</b> (não aguento mais), <b>non ne voglio</b> (não quero disso).</p><p>No imperativo o pronome gruda no verbo: <b>ascoltami</b>, <b>dimmi</b>, <b>guardami</b>.</p>",
+cards:[
+["le parole","as palavras","Sono solo parole.","São só palavras."],
+["soltanto","somente","Ho soltanto cinque minuti.","Tenho só cinco minutos."],
+["ne","disso / deles (quantidade)","Quanti figli hai? Ne ho due.","Quantos filhos você tem? Tenho dois."],
+["non ne voglio più","não quero mais (disso)","Grazie, ma non ne voglio più.","Obrigado, mas não quero mais."],
+["non ne posso più","não aguento mais","Che caldo, non ne posso più!","Que calor, não aguento mais!"],
+["la caramella","a bala (doce)","Vuoi una caramella?","Quer uma bala?"],
+["ascoltami","me escuta","Ascoltami un attimo, per favore.","Me escuta um instante, por favor."],
+["ti prego","por favor (te peço)","Ti prego, non arrabbiarti.","Por favor, não fique bravo."],
+["Ma dai!","Fala sério! / Não acredito!","Ma dai, davvero?","Fala sério, é verdade?"],
+["Basta!","Chega!","Basta, ho capito!","Chega, entendi!"],
+["ogni tanto","de vez em quando","Ogni tanto ci sentiamo.","De vez em quando a gente se fala."]]},
+
+{n:6,title:"Volare (Nel blu dipinto di blu)",artist:"Domenico Modugno",year:1958,level:"Básico",lv:2,
+theme:"Sonhos e o imperfetto",
+about:"O narrador sonha que pinta o rosto de azul e sai voando pelo céu infinito, cantando de felicidade, até acordar.",
+why:"O refrão é conhecido no mundo inteiro e as estrofes usam o imperfetto, o tempo para descrever sonhos e lembranças.",
+hunt:["volare","cantare","blu","dipinto","sogno","cielo","felice"],
+lesson:"<p><b>Imperfetto</b> descreve como as coisas eram ou estavam: <b>ero</b> (eu era/estava), <b>avevo</b> (eu tinha), <b>sognavo</b> (eu sonhava).</p><p>Regra prática: <i>passato prossimo</i> conta o que aconteceu; <i>imperfetto</i> pinta o cenário. <i>Ero a casa quando <b>hai chiamato</b>.</i></p>",
+cards:[
+["volare","voar","Ho paura di volare.","Tenho medo de voar."],
+["il sogno","o sonho","Il mio sogno è vivere a Roma.","Meu sonho é morar em Roma."],
+["sognare","sonhar","Stanotte ho sognato la nonna.","Esta noite sonhei com a vovó."],
+["il cielo","o céu","Guarda le stelle in cielo!","Olha as estrelas no céu!"],
+["felice","feliz","Sono felice di vederti.","Fico feliz em te ver."],
+["dipinto","pintado","Il muro è dipinto di blu.","A parede está pintada de azul."],
+["cantare","cantar","Mia figlia canta sempre in macchina.","Minha filha sempre canta no carro."],
+["ero","eu era / estava","Quando ero piccolo vivevo a San Paolo.","Quando eu era pequeno morava em São Paulo."],
+["avevo","eu tinha","Avevo un cane bianco.","Eu tinha um cachorro branco."],
+["lassù","lá em cima","Che vista da lassù!","Que vista lá de cima!"]]},
+
+{n:7,title:"Una storia importante",artist:"Eros Ramazzotti",year:1985,level:"Intermediário",lv:3,
+theme:"Relacionamentos e sentimentos",
+about:"Um jovem fala de um amor que marcou sua vida e de como crescer muda a forma de enxergar as coisas.",
+why:"Eros canta rápido em alguns trechos e arrasta vogais em outros: ótimo para treinar o ouvido para o italiano falado com emoção.",
+hunt:["storia","importante"],
+lesson:"<p><b>Storia</b> também significa relacionamento: <i>hanno una storia</i> = estão juntos.</p><p><b>Ci tengo</b> = eu me importo / faço questão. <b>Vale la pena</b> = vale a pena. <b>Fare finta</b> = fingir.</p>",
+cards:[
+["una storia","uma história / um relacionamento","Hanno una storia da due anni.","Estão juntos há dois anos."],
+["importante","importante","Per me è importante.","Para mim é importante."],
+["ci tengo","me importo / faço questão","Ci tengo molto a questa amicizia.","Me importo muito com essa amizade."],
+["vale la pena","vale a pena","Vale la pena provare.","Vale a pena tentar."],
+["fare finta","fingir","Fa finta di dormire.","Finge que está dormindo."],
+["insieme","juntos","Ceniamo insieme stasera?","Jantamos juntos hoje?"],
+["capire","entender","Non ho capito, puoi ripetere?","Não entendi, pode repetir?"],
+["crescere","crescer","Come sei cresciuta!","Como você cresceu!"],
+["Mi dispiace","Sinto muito","Mi dispiace, non volevo.","Desculpa, não foi por querer."],
+["la vita","a vida","La vita è bella.","A vida é bela."],
+["tra noi","entre nós","Resta tra noi, va bene?","Fica entre nós, tá?"]]},
+
+{n:8,title:"Sere nere",artist:"Tiziano Ferro",year:2003,level:"Intermediário",lv:3,
+theme:"Término e seguir em frente",
+about:"Depois do fim de um relacionamento, as noites ficam escuras e a memória da outra pessoa não vai embora.",
+why:"Pronúncia moderna e natural, de um cantor que hoje é referência. Muito vocabulário de emoções do dia a dia.",
+hunt:["sere","nere","pensi"],
+lesson:"<p><b>Ce la faccio / non ce la faccio</b> = consigo / não consigo (dar conta). Uma das expressões mais italianas que existem.</p><p><b>Mi fa male</b> = me dói: <i>mi fa male la testa</i>. Para várias partes: <i>mi fanno male i piedi</i>.</p>",
+cards:[
+["la sera / stasera","a noite (início) / hoje à noite","Che fai stasera?","O que vai fazer hoje à noite?"],
+["nero / nera","preto(a), escuro(a)","Ho un gatto nero.","Tenho um gato preto."],
+["ti penso","penso em você","Ti penso ogni giorno.","Penso em você todo dia."],
+["ricordarsi","lembrar-se","Ti ricordi di me?","Você se lembra de mim?"],
+["mi fa male","me dói / me machuca","Mi fa male la testa.","Estou com dor de cabeça."],
+["non ce la faccio","não consigo / não dou conta","Non ce la faccio a finire oggi.","Não consigo terminar hoje."],
+["andare avanti","seguir em frente","Bisogna andare avanti.","É preciso seguir em frente."],
+["lasciare","deixar / terminar com","Mi ha lasciato dopo tre anni.","Terminou comigo depois de três anos."],
+["il cuore","o coração","Te lo dico col cuore.","Te digo de coração."],
+["piangere","chorar","Non piangere, va tutto bene.","Não chore, está tudo bem."]]},
+
+{n:9,title:"Penso positivo",artist:"Jovanotti",year:1994,level:"Avançado",lv:4,
+theme:"Otimismo e expressões de ânimo",
+about:"Um manifesto acelerado de energia e otimismo: estar vivo, acreditar e seguir apesar de tudo.",
+why:"É praticamente rap: rápido e cheio de palavras. Semana de desafio. Não tente entender tudo, foque no refrão e nas palavras que voltam.",
+hunt:["penso","positivo","vivo"],
+lesson:"<p><b>Perché</b> é ao mesmo tempo <i>por quê</i> e <i>porque</i>.</p><p><b>Magari!</b> = quem dera! (também pode ser <i>talvez</i>).</p><p><b>Dai!</b> e <b>Forza!</b> são o nosso <i>vai! / bora!</i>.</p>",
+cards:[
+["penso positivo","penso positivo","Oggi penso positivo!","Hoje penso positivo!"],
+["perché","por quê / porque","Perché ridi? Perché sono felice.","Por que você ri? Porque estou feliz."],
+["mi sento vivo","me sinto vivo","Dopo il caffè mi sento vivo.","Depois do café me sinto vivo."],
+["credere","acreditar","Credo in te.","Acredito em você."],
+["Forza!","Vamos! / Força!","Forza, manca poco!","Vamos, falta pouco!"],
+["Dai!","Vai! / Anda!","Dai, andiamo!","Anda, vamos!"],
+["Magari!","Quem dera! / talvez","Vieni in Italia? Magari!","Vem para a Itália? Quem dera!"],
+["ce la faccio","eu consigo","Tranquillo, ce la faccio da solo.","Tranquilo, consigo sozinho."],
+["tutto bene","tudo bem","Tutto bene a casa?","Tudo bem em casa?"],
+["la gente","as pessoas","C'è tanta gente in piazza.","Tem muita gente na praça."]]},
+
+{n:10,title:"Caruso",artist:"Lucio Dalla",year:1986,level:"Avançado",lv:4,
+theme:"Carinho, o mar e um toque de napolitano",
+about:"Inspirada nos últimos dias do tenor Enrico Caruso, num terraço em frente ao golfo de Sorrento, cantando para uma jovem.",
+why:"Uma das canções italianas mais belas e regravadas. O refrão tem napolitano, o que treina o ouvido para variações regionais.",
+hunt:["Sorrento","mare","notte","occhi","voce"],
+lesson:"<p><b>Ti voglio bene</b> = te amo/te quero bem (pais, filhos, amigos). <b>Ti amo</b> = amor romântico. Para sua filha: <i>ti voglio bene</i>!</p><p>No napolitano, muitas vogais finais somem ou viram um som neutro. No refrão você vai ouvir a versão napolitana de <i>ti voglio bene</i>.</p>",
+cards:[
+["ti voglio bene","te amo (família/amigos)","Ti voglio bene, papà.","Te amo, papai."],
+["ti amo","te amo (romântico)","Ti amo più di ieri.","Te amo mais que ontem."],
+["il mare","o mar","Andiamo al mare domenica?","Vamos à praia domingo?"],
+["la voce","a voz","Hai una bella voce.","Você tem uma voz bonita."],
+["gli occhi","os olhos","Ha gli occhi verdi.","Tem olhos verdes."],
+["guardare","olhar / assistir","Guardiamo un film?","Vamos ver um filme?"],
+["stringere","apertar / abraçar forte","Stringimi forte.","Me abraça forte."],
+["la terrazza","o terraço","Ceniamo in terrazza.","Jantamos no terraço."],
+["il golfo","o golfo","Il golfo di Napoli è bellissimo.","O golfo de Nápoles é lindíssimo."],
+["Che bello!","Que lindo! / Que bom!","Che bello rivederti!","Que bom te rever!"]]}
+];
+
+const ROTEIRO=[
+["Escuta às cegas","Ouça 3 vezes sem letra. Anote qualquer palavra que reconhecer, sem se cobrar."],
+["Escuta com letra","Abra a letra (botão Letra) e ouça 2 vezes acompanhando. Procure as palavras do Caça-palavras."],
+["Cards + escuta","Estude os cards da semana na aba Cards e ouça a música mais 2 vezes."],
+["Escuta passiva","Deixe a música em loop por uns 30 minutos enquanto faz outras coisas (cozinhar, dirigir, arrumar)."],
+["Shadowing","Cante junto, imitando ritmo, entonação e pronúncia. Pode ser no chuveiro!"],
+["Produção","Escreva 3 frases suas com as expressões da semana na aba Frases. Leia em voz alta."],
+["Escuta final","Ouça sem letra e compare com o dia 1. Quanto você entende agora?"]
+];
+
+/* ===================== ESTADO ===================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toLocaleDateString('sv');
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toLocaleDateString('sv')};
+const IV=[0,1,3,7,14,30,60,120];
+const KEY='ascolto-familia-v1';
+const blank=name=>({name,started:[1],checks:{},srs:{},mine:[],days:[]});
+let db=null;
+try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!db||!Array.isArray(db.profiles))db={active:0,dir:'it',profiles:[blank('Leandro'),blank('Esposa'),blank('Filha')]};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+const P=()=>db.profiles[db.active]||db.profiles[0];
+
+const CARDS={};
+WEEKS.forEach(w=>w.cards.forEach((c,i)=>{const id=`w${w.n}-${i}`;CARDS[id]={id,w:w.n,it:c[0],pt:c[1],ex:c[2],exPt:c[3]}}));
+function deck(p){const ids=[];p.started.slice().sort((a,b)=>a-b).forEach(n=>{const w=WEEKS.find(x=>x.n===n);if(w)w.cards.forEach((c,i)=>ids.push(`w${n}-${i}`))});p.mine.forEach(m=>ids.push('m-'+m.id));return ids}
+function getCard(id){if(id.startsWith('m-')){const m=P().mine.find(x=>'m-'+x.id===id);return m?{id,it:m.it,pt:m.pt,ex:m.note||'',exPt:''}:null}return CARDS[id]}
+function dueList(p){const t=today(),due=[],fresh=[];deck(p).forEach(id=>{const s=p.srs[id];if(!s)fresh.push(id);else if(s.due<=t)due.push(id)});return{due,fresh}}
+function markDay(){const p=P(),t=today();if(!p.days.includes(t)){p.days.push(t);if(p.days.length>400)p.days=p.days.slice(-400)}}
+function streak(p){let n=0,d=today();if(!p.days.includes(d))d=addDays(d,-1);while(p.days.includes(d)){n++;d=addDays(d,-1)}return n}
+
+/* ===================== VOZ ===================== */
+let itVoice=null;
+function pickVoice(){try{const v=speechSynthesis.getVoices();itVoice=v.find(x=>/^it/i.test(x.lang))||null}catch(e){}}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.onvoiceschanged=pickVoice}
+function say(t){if(!('speechSynthesis' in window)){alert('Seu navegador não tem leitura em voz alta.');return}
+speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='it-IT';if(itVoice)u.voice=itVoice;u.rate=.88;speechSynthesis.speak(u)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b){e.stopPropagation();say(b.dataset.say)}});
+const spk=t=>`<button class="spk" data-say="${esc(t)}" aria-label="Ouvir">🔊</button>`;
+
+/* ===================== NAVEGAÇÃO ===================== */
+let view='home',param=null,session=null;
+function go(v,p){view=v;param=p??null;render();window.scrollTo(0,0)}
+const TABS=[['home','🏠','Início'],['weeks','🎵','Semanas'],['review','🃏','Cards'],['mine','✍️','Frases'],['method','📖','Método']];
+
+function render(){
+  const who=$('#who');
+  who.innerHTML=db.profiles.map((p,i)=>`<option value="${i}" ${i===db.active?'selected':''}>${esc(p.name)}</option>`).join('');
+  $('#nav').innerHTML=TABS.map(([k,ic,l])=>`<button class="${(view===k||(k==='weeks'&&view==='week'))?'on':''}" onclick="${k==='review'?'startReview()':`go('${k}')`}"><b>${ic}</b>${l}</button>`).join('');
+  const V={home,weeks,week,review,mine,method,settings}[view]||home;
+  $('#app').innerHTML=V();
+}
+$('#who').onchange=function(){db.active=+this.value;session=null;save();render()};
+
+/* ===================== TELAS ===================== */
+function home(){
+  const p=P(),{due,fresh}=dueList(p),cur=Math.max(...p.started),w=WEEKS.find(x=>x.n===cur);
+  const learned=Object.values(p.srs).filter(s=>s.box>=3).length;
+  const ch=p.checks[cur]||[],done=ch.filter(Boolean).length;
+  const n=due.length+Math.min(fresh.length,10);
+  return `<h2>Ciao, ${esc(p.name)}! 👋</h2>
+  <div class="stats"><div class="stat"><b>${streak(p)}</b><span>dias seguidos</span></div><div class="stat"><b>${n}</b><span>cards hoje</span></div><div class="stat"><b>${learned}</b><span>firmes na memória</span></div></div>
+  <div class="card"><div class="mut">Semana ${cur} · ${esc(w.level)}</div><h3 style="margin-top:4px">🎵 ${esc(w.title)} <span class="mut">— ${esc(w.artist)}</span></h3>
+  <div class="prog"><i style="width:${done/7*100}%"></i></div><div class="mut" style="margin-bottom:12px">Roteiro: ${done}/7 dias</div>
+  <button class="btn" onclick="go('week',${cur})">Continuar semana ${cur}</button></div>
+  <div class="card"><h3>🃏 Revisão de hoje</h3><p class="mut">${n?`${due.length} para revisar e ${Math.min(fresh.length,10)} novos.`:'Tudo em dia! Volte amanhã ou faça uma revisão extra.'}</p>
+  <button class="btn ${n?'':'ghost'}" onclick="startReview()">${n?'Revisar agora':'Revisão extra'}</button></div>
+  ${done===7&&cur<WEEKS.length&&!p.started.includes(cur+1)?`<div class="card"><h3>🎉 Semana ${cur} completa!</h3><button class="btn" onclick="startWeek(${cur+1})">Começar semana ${cur+1}</button></div>`:''}
+  <p class="mut" style="text-align:center">Dica: ouvir um pouco todo dia vale mais que muito num dia só.</p>`;
+}
+
+function weeks(){
+  const p=P();
+  return `<h2>Semanas</h2><p class="mut">Uma música por semana. A ordem vai do mais lento e claro ao mais rápido.</p>`+
+  WEEKS.map(w=>{const st=p.started.includes(w.n),d=(p.checks[w.n]||[]).filter(Boolean).length;
+  return `<button class="wk" onclick="go('week',${w.n})"><div class="n">${w.n}</div><div class="t"><div>${esc(w.title)}</div><div class="mut">${esc(w.artist)} · ${w.year}</div></div>
+  <div style="text-align:right"><span class="lvl l${w.lv}">${esc(w.level)}</span><div class="mut" style="font-size:12px;margin-top:4px">${st?(d===7?'✅ concluída':`${d}/7 dias`):'não iniciada'}</div></div></button>`}).join('');
+}
+
+function week(){
+  const p=P(),w=WEEKS.find(x=>x.n===param)||WEEKS[0],st=p.started.includes(w.n),ch=p.checks[w.n]||[];
+  const q=encodeURIComponent(`${w.artist} ${w.title}`);
+  return `<button class="btn ghost sm" onclick="go('weeks')">← Semanas</button>
+  <h2 style="margin-top:12px">Semana ${w.n}</h2>
+  <div class="card"><span class="lvl l${w.lv}">${esc(w.level)}</span>
+  <h3 style="margin-top:10px;font-size:20px">🎵 ${esc(w.title)}</h3><div class="mut">${esc(w.artist)} · ${w.year}</div>
+  <p>${esc(w.about)}</p><p class="mut"><b>Por que esta música:</b> ${esc(w.why)}</p>
+  <div class="links"><a href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener">▶️ YouTube</a><a href="https://open.spotify.com/search/${q}" target="_blank" rel="noopener">🎧 Spotify</a><a href="https://www.google.com/search?q=${q}%20testo" target="_blank" rel="noopener">📄 Letra</a></div></div>
+  <div class="card"><h3>🔎 Caça-palavras</h3><p class="mut">Palavras para pegar de ouvido nesta música:</p>${w.hunt.map(h=>`<span class="chip">${esc(h)}</span>`).join('')}
+  <p class="mut" style="margin-bottom:0">Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.</p></div>
+  <div class="card lesson"><h3>💡 ${esc(w.theme)}</h3>${w.lesson}</div>
+  ${st?`<div class="card"><h3>📅 Roteiro da semana</h3>${ROTEIRO.map((r,i)=>`<div class="day ${ch[i]?'done':''}" onclick="toggleDay(${w.n},${i})"><div class="box">${ch[i]?'✓':''}</div><div class="txt"><b>Dia ${i+1} · ${r[0]}</b><div class="mut">${r[1]}</div></div></div>`).join('')}</div>`
+  :`<div class="card"><p>Comece a semana para liberar o roteiro e colocar os cards na sua revisão.</p><button class="btn" onclick="startWeek(${w.n})">Começar semana ${w.n}</button></div>`}
+  <div class="card"><h3>🗂️ Expressões da semana</h3>${w.cards.map(c=>`<div class="vc">${spk(c[0])}<div><div class="it">${esc(c[0])}</div><div class="mut">${esc(c[1])}</div><div style="font-size:14px;margin-top:4px"><i>${esc(c[2])}</i> ${spk(c[2])}<br><span class="mut">${esc(c[3])}</span></div></div></div>`).join('')}</div>`;
+}
+
+function startWeek(n){const p=P();if(!p.started.includes(n))p.started.push(n);markDay();save();go('week',n)}
+function toggleDay(n,i){const p=P();const c=p.checks[n]||Array(7).fill(false);c[i]=!c[i];p.checks[n]=c;if(c[i])markDay();save();render()}
+
+function makeSession(extra){
+  const p=P();const {due,fresh}=dueList(p);let q=[...due,...fresh.slice(0,10)];
+  if(!q.length&&extra)q=deck(p).sort(()=>Math.random()-.5).slice(0,20);
+  return {queue:q,done:0,shown:false};
+}
+function startReview(extra){session=makeSession(extra);go('review')}
+function review(){
+  if(!session)session=makeSession(false);
+  if(!session.queue.length){
+    return `<h2>Cards</h2><div class="card" style="text-align:center"><div style="font-size:48px">🎉</div>
+    <h3>${session.done?`Ótimo! ${session.done} respostas hoje.`:'Nada para revisar agora.'}</h3>
+    <p class="mut">A revisão espaçada traz cada card de volta na hora certa. Volte amanhã.</p>
+    <button class="btn ghost" onclick="startReview(true)">Revisão extra (20 aleatórios)</button></div>
+    <div class="card"><h3>Direção dos cards</h3><div class="row"><button class="btn ${db.dir==='it'?'':'ghost'} sm" onclick="setDir('it')">Italiano → Português</button><button class="btn ${db.dir==='pt'?'':'ghost'} sm" onclick="setDir('pt')">Português → Italiano</button></div></div>`;
+  }
+  const c=getCard(session.queue[0]);if(!c){session.queue.shift();return review()}
+  const s=P().srs[c.id],isNew=!s,front=db.dir==='pt'?c.pt:c.it,back=db.dir==='pt'?c.it:c.pt;
+  return `<div class="row" style="align-items:center;margin-bottom:10px"><div class="mut">${session.queue.length} restantes ${isNew?'· <b style="color:var(--acc2)">novo</b>':''}</div><div style="text-align:right" class="mut">${c.w?`Semana ${c.w}`:'Minha frase'}</div></div>
+  <div class="card flash" onclick="${session.shown?'':'reveal()'}">
+    <div class="front">${esc(front)}</div>${db.dir==='it'?spk(c.it):''}
+    ${session.shown?`<div class="back">${esc(back)}</div>${db.dir==='pt'?spk(c.it):''}
+      ${c.ex?`<div class="ex">${esc(c.ex)} ${c.w?spk(c.ex):''}</div>`:''}${c.exPt?`<div class="mut">${esc(c.exPt)}</div>`:''}`
+    :`<div class="mut" style="margin-top:16px">Toque para ver a resposta</div>`}
+  </div>
+  ${session.shown?`<div class="grades"><button class="g0" onclick="grade(0)">Errei<small>agora</small></button><button onclick="grade(1)">Difícil<small>${lbl(1,s)}</small></button><button onclick="grade(2)">Bom<small>${lbl(2,s)}</small></button><button class="g3" onclick="grade(3)">Fácil<small>${lbl(3,s)}</small></button></div>`
+  :`<button class="btn" onclick="reveal()">Mostrar resposta</button>`}`;
+}
+function nextBox(g,s){const b=s?s.box:0;return g===1?Math.max(1,b):Math.min(7,g===2?b+1:b+2)}
+function lbl(g,s){const d=IV[nextBox(g,s)];return d===1?'1 dia':d+' dias'}
+function reveal(){session.shown=true;render();const c=getCard(session.queue[0]);if(c&&db.dir==='pt')say(c.it)}
+function grade(g){
+  const p=P(),id=session.queue.shift(),s=p.srs[id]||{box:0};
+  if(g===0){s.box=0;s.due=today();session.queue.push(id)}
+  else{s.box=nextBox(g,p.srs[id]);s.due=addDays(today(),IV[s.box])}
+  p.srs[id]=s;session.done++;session.shown=false;markDay();save();render();
+}
+function setDir(d){db.dir=d;save();render()}
+
+function mine(){
+  const p=P();
+  return `<h2>Minhas frases</h2>
+  <div class="card"><p class="mut" style="margin-top:0">Anote frases e expressões que você pegou de ouvido (músicas, séries, conversas) ou que você mesmo criou com as palavras da semana. Elas entram nos seus cards.</p>
+  <label>Em italiano</label><input id="fIt" placeholder="ex.: Non ce la faccio più">
+  <label>Significado</label><input id="fPt" placeholder="ex.: Não aguento mais">
+  <label>Nota (onde ouviu, contexto)</label><input id="fNote" placeholder="ex.: Sere nere, refrão">
+  <div style="margin-top:12px"><button class="btn" onclick="addMine()">Adicionar card</button></div></div>
+  ${p.mine.length?`<div class="card">${p.mine.slice().reverse().map(m=>`<div class="vc">${spk(m.it)}<div style="flex:1"><div class="it">${esc(m.it)}</div><div class="mut">${esc(m.pt)}</div>${m.note?`<div class="mut" style="font-size:13px">📝 ${esc(m.note)}</div>`:''}</div><button class="del" onclick="delMine('${m.id}')">apagar</button></div>`).join('')}</div>`
+  :'<p class="mut" style="text-align:center">Nenhuma frase ainda.</p>'}`;
+}
+function addMine(){const it=$('#fIt').value.trim(),pt=$('#fPt').value.trim(),note=$('#fNote').value.trim();
+  if(!it||!pt){alert('Preencha italiano e significado.');return}
+  P().mine.push({id:Date.now().toString(36),it,pt,note});markDay();save();render()}
+function delMine(id){if(!confirm('Apagar esta frase?'))return;const p=P();p.mine=p.mine.filter(m=>m.id!==id);delete p.srs['m-'+id];save();render()}
+
+function method(){
+  return `<h2>O método</h2>
+  <div class="card"><h3>Stephen Krashen e o Natural Approach</h3>
+  <p>O linguista Stephen Krashen propôs, com Tracy Terrell, a <b>Abordagem Natural</b> (1983). A ideia central: a gente <b>adquire</b> uma língua quando entende mensagens nela, não quando decora regras.</p>
+  <p><b>Input compreensível (i+1):</b> o que acelera é ouvir e ler coisas que você entende quase tudo, com um pouco a mais do que seu nível atual.</p>
+  <p><b>Aquisição × aprendizagem:</b> gramática decorada ajuda a revisar o que você fala, mas a fluência vem da exposição repetida.</p>
+  <p style="margin-bottom:0"><b>Filtro afetivo:</b> ansiedade e medo de errar bloqueiam a aquisição. Por isso música funciona tão bem: é prazeroso e você repete sem perceber.</p></div>
+  <div class="card"><h3>Como este app aplica</h3>
+  <p>🎵 <b>Uma música por semana</b>, ouvida todo dia de jeitos diferentes (às cegas, com letra, passiva, cantando junto).</p>
+  <p>🗂️ <b>Cards com revisão espaçada</b> como apoio: cada expressão volta no dia certo para não ser esquecida.</p>
+  <p>✍️ <b>Frases suas</b>: o que você pega de ouvido vale mais do que qualquer lista pronta.</p>
+  <p style="margin-bottom:0">👨‍👩‍👧 <b>Em família</b>: cada um tem seu perfil e progresso. Conversar em italiano em casa, mesmo com frases simples, é o melhor exercício.</p></div>
+  <div class="card"><h3>Regras de ouro</h3><p>1. Todo dia, nem que sejam 10 minutos.<br>2. Não pare para traduzir tudo. Deixe a música te levar.<br>3. Repita a mesma música até ela ficar "transparente".<br>4. Use as expressões em voz alta, mesmo sozinho.</p></div>`;
+}
+
+function settings(){
+  return `<h2>Configurações</h2>
+  <div class="card"><h3>Perfis</h3>${db.profiles.map((p,i)=>`<label>Perfil ${i+1}</label><input value="${esc(p.name)}" onchange="renameP(${i},this.value)">`).join('')}
+  <div style="margin-top:12px"><button class="btn ghost" onclick="addP()">+ Adicionar perfil</button></div></div>
+  <div class="card"><h3>Backup do progresso</h3><p class="mut">O progresso fica salvo neste aparelho. Exporte para guardar ou passar para outro celular.</p>
+  <div class="row"><button class="btn sm" onclick="exportDb()">Exportar</button><button class="btn ghost sm" onclick="$('#imp').click()">Importar</button></div>
+  <input type="file" id="imp" accept="application/json" style="display:none" onchange="importDb(this)"></div>
+  <div class="card"><h3>Zerar perfil atual</h3><p class="mut">Apaga o progresso de ${esc(P().name)}.</p><button class="btn ghost sm" style="color:var(--bad)" onclick="resetP()">Zerar ${esc(P().name)}</button></div>`;
+}
+function renameP(i,v){v=v.trim();if(!v)return;db.profiles[i].name=v;save();render()}
+function addP(){const n=prompt('Nome do novo perfil:');if(n&&n.trim()){db.profiles.push(blank(n.trim()));save();render()}}
+function resetP(){if(!confirm('Tem certeza? Isso não pode ser desfeito.'))return;db.profiles[db.active]=blank(P().name);session=null;save();render()}
+function exportDb(){try{const b=new Blob([JSON.stringify(db,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ascolto-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove()}catch(e){alert('Não foi possível exportar aqui.')}}
+function importDb(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.profiles))throw 0;db=d;db.active=0;session=null;save();render();alert('Progresso importado!')}catch(e){alert('Arquivo inválido.')}};r.readAsText(f)}
+
+render();
+</script>
+</body>
+</html>

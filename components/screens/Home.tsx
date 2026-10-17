@@ -2,11 +2,14 @@
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IMM_GOAL, currentWeek, dueList, immDay, immWeek, learnedCount, streak, today } from '@/lib/course';
+import { LEVELS, songFit, userLevel } from '@/lib/level';
 
 export default function Home() {
   const s = useStore();
-  const { lang, course, progress: p, phrases, go, startReview } = useCourse();
-  const { due, fresh } = dueList(course, p, phrases);
+  const { lang, course, progress: p, phrases, songs, go, startReview } = useCourse();
+  const { due, fresh } = dueList(course, p, phrases, songs);
+  const level = userLevel(course, p, s.profile.settings.level?.[lang]);
+  const studying = songs.filter((x) => (p.songs || []).includes(x.id));
   const cur = currentWeek(p);
   const w = course.weeks.find((x) => x.n === cur) || course.weeks[0];
   const done = (p.checks[cur] || []).filter(Boolean).length;
@@ -32,7 +35,7 @@ export default function Home() {
       <div className="stats">
         <div className="stat">
           <b>{streak(s.days)}</b>
-          <span>dias seguidos</span>
+          <span>{streak(s.days) === 1 ? 'dia seguido' : 'dias seguidos'}</span>
         </div>
         <div className="stat">
           <b>{n}</b>
@@ -59,6 +62,31 @@ export default function Home() {
         </div>
         <button className="btn" onClick={() => go('week', cur)}>
           Continuar semana {cur}
+        </button>
+      </div>
+
+      <div className="card">
+        <h3>🎤 Minhas músicas</h3>
+        {studying.length ? (
+          studying.slice(0, 3).map((x) => (
+            <button key={x.id} className="wk" onClick={() => go('song', x.id)}>
+              <div className="n">{songFit(x.level, level).emoji}</div>
+              <div className="t">
+                <div>{x.title}</div>
+                <div className="mut">{x.artist}</div>
+              </div>
+              <div className="mut" style={{ fontSize: 12 }}>
+                {(p.checks['s:' + x.id] || []).filter(Boolean).length}/7 dias
+              </div>
+            </button>
+          ))
+        ) : (
+          <p className="mut" style={{ marginTop: 0 }}>
+            Estude com as músicas que você ama. A IA mede o nível e monta a aula (seu nível: {LEVELS[level]}).
+          </p>
+        )}
+        <button className="btn ghost sm" style={{ width: '100%' }} onClick={() => go('songs')}>
+          {songs.length ? 'Ver minhas músicas' : '🎤 Adicionar uma música que eu amo'}
         </button>
       </div>
 

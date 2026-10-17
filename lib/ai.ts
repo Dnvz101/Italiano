@@ -24,11 +24,12 @@ export async function checkQuota(sb: SupabaseClient, userId: string) {
   if ((count || 0) >= limit) throw new AiError(`Limite de ${limit} usos da IA por dia atingido. Tente amanhã.`, 429);
 }
 
-export async function callClaude(prompt: string, maxTokens = 4096) {
+export async function callClaude(prompt: string, maxTokens = 4096, modelOverride?: string) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new AiError('ANTHROPIC_API_KEY não configurada na Vercel.');
-  const model = MODEL();
-  const r = await fetch('https://api.anthropic.com/v1/messages', {
+  const model = modelOverride || MODEL();
+  const base = process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com';
+  const r = await fetch(`${base}/v1/messages`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
     body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] }),

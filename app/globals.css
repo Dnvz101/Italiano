@@ -82,3 +82,11 @@ textarea{resize:vertical;min-height:120px}
 .login h1{font-size:28px;margin:0 0 4px;letter-spacing:-.02em}
 .login h1 span{color:var(--acc)}
 .otp{font-size:24px;letter-spacing:8px;text-align:center;font-family:monospace}
+.fit{border-width:2px}
+.fit-ok,.fit-stretch{border-color:var(--ok)}
+.fit-easy{border-color:#2563eb}
+.fit-hard{border-color:var(--acc2)}
+.switch{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);margin:4px 0 10px;cursor:pointer}
+.switch input{width:auto}
+nav button{padding:4px 2px;font-size:11px;min-width:0;flex:1}
+a.btn{text-decoration:none}

@@ -2,13 +2,13 @@
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
-import type { Week } from '@/lib/types';
+import { chorusLines } from '@/lib/level';
 import Spk from '../Spk';
 
-export default function Lyrics({ week }: { week: Week }) {
+export default function Lyrics({ songKey, label, chorusDefault = false }: { songKey: string; label: string; chorusDefault?: boolean }) {
   const s = useStore();
   const { lang, course } = useCourse();
-  const key = 'w' + week.n;
+  const key = songKey;
   const row = s.lyrics[`${lang}:${key}`];
   const answers = (row && s.answers[row.id]) || {};
 
@@ -17,6 +17,7 @@ export default function Lyrics({ week }: { week: Week }) {
   const [readMode, setReadMode] = useState(false);
   const [busy, setBusy] = useState(false);
   const [shown, setShown] = useState<Set<number>>(new Set());
+  const [chorus, setChorus] = useState(chorusDefault);
 
   const startEdit = () => {
     setDraft(row ? row.lines.map((l) => l.t).join('\n') : '');
@@ -58,7 +59,7 @@ export default function Lyrics({ week }: { week: Week }) {
     const l = row.lines[i];
     const pt = answers[l.t] || l.ai;
     if (!pt && !confirm('Esta linha ainda não tem tradução. Criar o card assim mesmo?')) return;
-    await s.addPhrase(lang, l.t, pt || '(tradução pendente)', `Letra da semana ${week.n}`);
+    await s.addPhrase(lang, l.t, pt || '(tradução pendente)', `Letra ${label}`);
     alert('Virou card na aba Frases!');
   };
 
@@ -84,6 +85,8 @@ export default function Lyrics({ week }: { week: Week }) {
       </div>
     );
 
+  const chorusIdx = new Set(chorusLines(row.lines.map((l) => l.t)));
+  const focus = chorus && chorusIdx.size > 0;
   const total = row.lines.filter((l) => l.t).length;
   const mine = row.lines.filter((l) => l.t && answers[l.t]).length;
   const hasAi = row.lines.some((l) => l.ai);
@@ -109,6 +112,12 @@ export default function Lyrics({ week }: { week: Week }) {
           </>
         )}
       </p>
+      {chorusIdx.size > 0 && (
+        <label className="switch">
+          <input type="checkbox" checked={chorus} onChange={(e) => setChorus(e.target.checked)} /> 🎯 Só o refrão (
+          {chorusIdx.size === 1 ? '1 linha que se repete' : `${chorusIdx.size} linhas que se repetem`})
+        </label>
+      )}
       <div className="row" style={{ marginBottom: 6 }}>
         <button className={`btn ${hasAi ? 'ghost' : ''} sm`} onClick={aiTranslate} disabled={busy}>
           {busy ? 'Traduzindo...' : hasAi ? '✨ Refazer IA' : '✨ Gerar tradução da IA'}
@@ -119,6 +128,7 @@ export default function Lyrics({ week }: { week: Week }) {
       </div>
 
       {row.lines.map((l, i) => {
+        if (focus && !chorusIdx.has(i)) return null;
         if (!l.t) return <div key={i} style={{ height: 12 }} />;
         const open = shown.has(i);
         return (

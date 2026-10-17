@@ -1,8 +1,8 @@
 'use client';
 import { createContext, useContext } from 'react';
-import type { Course, Phrase, Progress, Session } from '@/lib/types';
+import type { Course, Phrase, Progress, Session, Song } from '@/lib/types';
 
-export type View = 'home' | 'weeks' | 'week' | 'review' | 'mine' | 'method' | 'settings' | 'lang' | 'import';
+export type View = 'home' | 'weeks' | 'week' | 'songs' | 'song' | 'review' | 'mine' | 'method' | 'settings' | 'lang' | 'import';
 
 export type AppCtx = {
   view: View;
@@ -12,6 +12,7 @@ export type AppCtx = {
   course: Course | null;
   progress: Progress | null;
   phrases: Phrase[];
+  songs: Song[]; // músicas do idioma atual (minhas e da família)
   dir: 'it' | 'pt' | 'audio';
   session: Session | null;
   setSession: (s: Session | null) => void;

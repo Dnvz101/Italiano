@@ -8,6 +8,8 @@ import type { Session } from '@/lib/types';
 import LangPicker from './screens/LangPicker';
 import Home from './screens/Home';
 import Weeks from './screens/Weeks';
+import Songs from './screens/Songs';
+import SongView from './screens/Song';
 import WeekView from './screens/Week';
 import Review from './screens/Review';
 import Mine from './screens/Mine';
@@ -17,7 +19,8 @@ import ImportLocal from './screens/ImportLocal';
 
 const TABS: [View, string, string][] = [
   ['home', '🏠', 'Início'],
-  ['weeks', '🎵', 'Semanas'],
+  ['weeks', '🎵', 'Trilha'],
+  ['songs', '🎤', 'Músicas'],
   ['review', '🃏', 'Cards'],
   ['mine', '✍️', 'Frases'],
   ['method', '📖', 'Método'],
@@ -41,6 +44,7 @@ export default function App() {
   const course = lang ? s.courses[lang] : null;
   const progress = lang ? s.progress[lang] : null;
   const phrases = useMemo(() => s.phrases.filter((p) => p.lang === lang), [s.phrases, lang]);
+  const songs = useMemo(() => s.songs.filter((x) => x.lang === lang), [s.songs, lang]);
   const dir = s.profile.settings.dir || 'it';
 
   const go = useCallback((v: View, p: any = null) => {
@@ -59,21 +63,21 @@ export default function App() {
   const autoSay = useCallback(
     (ns: Session) => {
       if (dir !== 'audio' || !course || !ns.queue.length || ns.shown) return;
-      const c = getCard(course, phrases, ns.queue[0]);
+      const c = getCard(course, phrases, ns.queue[0], songs);
       if (c) setTimeout(() => speak(c.it), 150);
     },
-    [dir, course, phrases, speak]
+    [dir, course, phrases, songs, speak]
   );
 
   const startReview = useCallback(
     (extra = false) => {
       if (!course || !progress) return;
-      const ns = { queue: makeQueue(course, progress, phrases, extra), done: 0, shown: false };
+      const ns = { queue: makeQueue(course, progress, phrases, extra, songs), done: 0, shown: false };
       setSession(ns);
       go('review');
       autoSay(ns);
     },
-    [course, progress, phrases, go, autoSay]
+    [course, progress, phrases, songs, go, autoSay]
   );
 
   const setLang = useCallback(
@@ -93,6 +97,7 @@ export default function App() {
     course,
     progress,
     phrases,
+    songs,
     dir,
     session,
     setSession,
@@ -109,6 +114,8 @@ export default function App() {
     home: Home,
     weeks: Weeks,
     week: WeekView,
+    songs: Songs,
+    song: SongView,
     review: Review,
     mine: Mine,
     method: Method,
@@ -139,7 +146,7 @@ export default function App() {
           {TABS.map(([k, ic, l]) => (
             <button
               key={k}
-              className={view === k || (k === 'weeks' && view === 'week') ? 'on' : ''}
+              className={view === k || (k === 'weeks' && view === 'week') || (k === 'songs' && view === 'song') ? 'on' : ''}
               onClick={() => (k === 'review' ? startReview() : go(k))}
             >
               <b>{ic}</b>

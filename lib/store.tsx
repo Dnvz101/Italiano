@@ -5,7 +5,7 @@ import { blankProgress, today } from '@/lib/course';
 import { setVoicePref } from '@/lib/voice';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
-import type { Course, Household, Lyric, LyricLine, Phrase, Profile, Progress } from '@/lib/types';
+import type { Course, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
 
 export const OLD_KEY = 'ascolto-familia-v1';
 export const importedKey = (uid: string) => 'ascolto-imported-v9:' + uid;
@@ -22,6 +22,7 @@ type Data = {
   days: string[];
   lyrics: Record<string, Lyric>; // chave `${lang}:${song_key}`
   answers: Record<string, Record<string, string>>; // lyric_id → { texto da linha: tradução }
+  songs: Song[]; // minhas músicas (e as da família)
 };
 
 type Store = Data & {
@@ -38,6 +39,13 @@ type Store = Data & {
   joinHousehold: (code: string) => Promise<void>;
   resetCourse: (lang: string) => void;
   importLocal: (index: number) => Promise<void>;
+  addSong: (
+    lang: string,
+    info: { title: string; artist: string; duration_sec: number | null; level: number; analysis: SongAnalysis },
+    lines: string[]
+  ) => Promise<string | null>;
+  deleteSong: (id: string) => Promise<void>;
+  toggleSongStudy: (lang: string, id: string) => void;
   signOut: () => Promise<void>;
   saveError: string | null;
 };
@@ -52,7 +60,7 @@ export const useStore = () => {
 const lkey = (lang: string, key: string) => `${lang}:${key}`;
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const sb = useMemo(() => createClient(), []);
+  const sb = useMemo(() => (typeof window === 'undefined' ? (null as any) : createClient()), []);
   const [data, setData] = useState<Data | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -117,7 +125,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       if (!prof) throw new Error('Perfil não encontrado. O schema do banco foi aplicado?');
 
-      const [courses, weeks, prog, days, phrases, lyrics, answers, house, members] = await Promise.all([
+      const [courses, weeks, prog, days, phrases, lyrics, answers, songs, house, members] = await Promise.all([
         sb.from('courses').select('*').order('sort'),
         sb.from('course_weeks').select('*').order('n'),
         sb.from('course_progress').select('*'),
@@ -125,6 +133,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         sb.from('user_phrases').select('*').order('created_at'),
         sb.from('lyrics').select('*'),
         sb.from('lyric_answers').select('*'),
+        sb.from('user_songs').select('*').order('created_at', { ascending: false }),
         prof.household_id
           ? sb.from('households').select('*').eq('id', prof.household_id).maybeSingle()
           : Promise.resolve({ data: null }),
@@ -132,7 +141,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ? sb.from('profiles').select('id,name').eq('household_id', prof.household_id).order('name')
           : Promise.resolve({ data: [] }),
       ]);
-      const firstErr = [courses, weeks, prog, days, phrases, lyrics, answers].find((r: any) => r.error);
+      const firstErr = [courses, weeks, prog, days, phrases, lyrics, answers, songs].find((r: any) => r.error);
       if (firstErr) throw (firstErr as any).error;
 
       // Conteúdo: do banco; se o seed ainda não foi rodado, usa o conteúdo embutido
@@ -149,7 +158,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const progress: Record<string, Progress> = {};
       Object.keys(cs).forEach((l) => (progress[l] = blankProgress()));
       prog.data?.forEach((p: any) => {
-        progress[p.lang] = { started: p.started?.length ? p.started : [1], checks: p.checks || {}, srs: p.srs || {}, imm: p.imm || {} };
+        progress[p.lang] = {
+          started: p.started?.length ? p.started : [1],
+          songs: p.songs || [],
+          checks: p.checks || {},
+          srs: p.srs || {},
+          imm: p.imm || {},
+        };
       });
 
       const ly: Record<string, Lyric> = {};
@@ -169,6 +184,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         days: (days.data || []).map((x: any) => x.day),
         lyrics: ly,
         answers: ans,
+        songs: songs.data || [],
       };
       latest.current = d;
       setData(d);
@@ -195,6 +211,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           user_id: d.userId,
           lang,
           started: p.started,
+          songs: p.songs || [],
           checks: p.checks,
           srs: p.srs,
           imm: p.imm,
@@ -416,6 +433,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const cur = latest.current!.progress[lang] || blankProgress();
         const merged: Progress = {
           started: Array.from(new Set([...(old.started || [1]), ...cur.started])).sort((a, b) => a - b),
+          songs: cur.songs || [],
           checks: { ...(old.checks || {}), ...cur.checks },
           srs: { ...srs, ...cur.srs },
           imm: { ...(old.imm || {}), ...cur.imm },
@@ -461,6 +479,58 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [sb, commit, saveLyrics, setLyricAi, setAnswer, setSetting, setName, flush]
   );
 
+  const addSong = useCallback(
+    async (
+      lang: string,
+      info: { title: string; artist: string; duration_sec: number | null; level: number; analysis: SongAnalysis },
+      lines: string[]
+    ) => {
+      const d = latest.current!;
+      const { data: row, error } = await sb
+        .from('user_songs')
+        .insert({ user_id: d.userId, household_id: d.profile.household_id, lang, ...info })
+        .select()
+        .single();
+      report(error);
+      if (!row) return null;
+      commit((x) => ({ ...x, songs: [row, ...x.songs] }));
+      await saveLyrics(lang, 'song:' + row.id, lines);
+      return row.id as string;
+    },
+    [sb, commit, saveLyrics]
+  );
+
+  const toggleSongStudy = useCallback(
+    (lang: string, id: string) => {
+      updateProgress(lang, (p) => {
+        const has = (p.songs || []).includes(id);
+        return { ...p, songs: has ? p.songs.filter((x) => x !== id) : [...(p.songs || []), id] };
+      });
+      markDay();
+    },
+    [updateProgress, markDay]
+  );
+
+  const deleteSong = useCallback(
+    async (id: string) => {
+      const song = latest.current!.songs.find((x) => x.id === id);
+      if (!song) return;
+      const { error } = await sb.from('user_songs').delete().eq('id', id);
+      report(error);
+      if (error) return;
+      await saveLyrics(song.lang, 'song:' + id, []);
+      commit((x) => ({ ...x, songs: x.songs.filter((s) => s.id !== id) }));
+      updateProgress(song.lang, (p) => {
+        const srs = { ...p.srs };
+        Object.keys(srs).forEach((k) => k.startsWith(`s:${id}-`) && delete srs[k]);
+        const checks = { ...p.checks };
+        delete checks['s:' + id];
+        return { ...p, songs: (p.songs || []).filter((x) => x !== id), srs, checks };
+      });
+    },
+    [sb, commit, saveLyrics, updateProgress]
+  );
+
   const signOut = useCallback(async () => {
     flush();
     await sb.auth.signOut();
@@ -503,6 +573,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     joinHousehold,
     resetCourse,
     importLocal,
+    addSong,
+    deleteSong,
+    toggleSongStudy,
     signOut,
     saveError,
   };

@@ -1,5 +1,18 @@
 # Histórico de versões — Ascolto em Família
 
+## v10 — 2026-10-18 · Minha música
+- Nova aba **🎤 Músicas**: cole a letra de uma música que você ama e a IA mede o nível (1–4), calibrada pelas músicas da trilha, com sinais de velocidade, vocabulário, tempos verbais e gírias (e palavras por minuto, se informar a duração).
+- Aula gerada pela IA: tema, explicação, caça-palavras e 8–10 cards com exemplos originais.
+- Comparação com o seu nível: 🟢 no nível / i+1, 🔵 abaixo, 🟠 acima, sem nunca bloquear.
+- Músicas acima do nível abrem no modo **só o refrão** (detectado pelas linhas repetidas, sem IA).
+- Sugestões reais do mesmo artista, com botão para ouvir no YouTube e "+ Adicionar" já preenchido.
+- Roteiro de 7 dias para cada música; cards entram na revisão com prioridade (frases e músicas suas antes da trilha).
+- ⚙️ **Meu nível** por idioma (automático pela trilha ou manual).
+- Músicas visíveis para a família; apagar remove letra e cards.
+- Login: tela orienta a tocar no link do e-mail (o código aparece só com SMTP próprio).
+- Build não quebra mais se faltarem as variáveis do Supabase (o erro aparece na tela, com instrução).
+- Barra inferior: Início · Trilha · Músicas · Cards · Frases · Método.
+
 ## v9 — 2026-10-18 · Fundação
 - App reescrito em **Next.js + React** (antes: um único `index.html`).
 - **Login por e-mail** (código de 6 dígitos ou link, sem senha) via Supabase.

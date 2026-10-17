@@ -1,6 +1,6 @@
-# Ascolto em Família · v9
+# Ascolto em Família · v10
 
-App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos e letras compartilhadas com a família.
+App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
 **Stack:** Next.js 15 (React 19) na Vercel · Supabase (login + Postgres) · API da Anthropic para a tradução das letras.
 
@@ -10,7 +10,7 @@ App para aprender idiomas com música, pelo método natural (Stephen Krashen). I
 
 ### 1. Supabase
 1. Crie uma conta em supabase.com → **New project**. Região sugerida: **Northeast Asia (Tokyo)**.
-2. Abra **SQL Editor** → cole o conteúdo de `supabase/migrations/0001_init.sql` → **Run**.
+2. Abra **SQL Editor** → cole o conteúdo de `supabase/migrations/0001_init.sql` → **Run**. Depois, numa nova query, `supabase/migrations/0002_minha_musica.sql` → **Run**.
 3. No mesmo SQL Editor, cole `supabase/seed.sql` → **Run** (carrega as músicas e os cards).
 4. **Authentication → URL Configuration**
    - *Site URL:* `https://SEU-APP.vercel.app`
@@ -59,9 +59,25 @@ App para aprender idiomas com música, pelo método natural (Stephen Krashen). I
 
 A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, não consegue ler dados de outra família.
 
+## Atualizando da v9 para a v10
+1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
+2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
+
+## Minha música (v10)
+- Aba **🎤 Músicas** → cole a letra de uma música que você ama (e, se quiser, a duração, para medir palavras por minuto).
+- A IA dá o nível da música (1 Iniciante a 4 Avançado), calibrada pelas músicas da trilha, e monta tema, aula, caça-palavras e 8 a 10 cards.
+- O app compara com o **seu** nível (automático pela trilha, ou escolhido em ⚙️ → Meu nível):
+  - 🟢 no seu nível ou um pouco acima (i+1): estudo completo;
+  - 🔵 abaixo: ótima para cantar junto, e sugere outras do mesmo artista;
+  - 🟠 acima: abre no modo **só o refrão** (linhas que se repetem) e sugere outras do mesmo artista.
+- Nunca bloqueia: a pessoa sempre pode estudar a música que escolheu.
+- "Começar a estudar" coloca os cards da música na revisão, com prioridade sobre os da trilha.
+- As músicas aparecem para a família (seção "Da família"); progresso e cards continuam de cada um.
+
 ## IA
-- `app/api/translate` só aceita quem está logado.
-- Cada chamada fica registrada na tabela `ai_usage` (quem, quando, tokens). Limite padrão: 30 por pessoa a cada 24h (`AI_DAILY_LIMIT`).
+- `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.
+- Cada chamada fica registrada na tabela `ai_usage` (quem, quando, tipo, tokens). Limite padrão: 30 por pessoa a cada 24h (`AI_DAILY_LIMIT`), somando traduções e análises.
+- Tradução usa `ANTHROPIC_MODEL` (padrão Haiku, barato). A análise de música usa `AI_MODEL_ANALYZE` (padrão `claude-sonnet-5-5`), que acerta melhor o nível e conhece mais músicas para sugerir. É uma chamada por música, então o custo continua baixo. Para economizar, defina `AI_MODEL_ANALYZE=claude-haiku-5-5`.
 - Para registrar o custo em dólar, preencha `AI_PRICE_INPUT_PER_MTOK` e `AI_PRICE_OUTPUT_PER_MTOK` com o preço do modelo (US$ por milhão de tokens).
 - Ver o uso: Supabase → Table Editor → `ai_usage`.
 
@@ -85,11 +101,11 @@ O envio de e-mail embutido do Supabase tem limite baixo por hora e serve bem par
 ## Estrutura
 ```
 app/            telas do Next.js (página principal, login, callback, API de tradução)
-components/     App (navegação) e screens/ (Início, Semanas, Semana, Letra, Cards, Frases, Método, Ajustes, Importar)
-lib/            store (dados + sincronização), course (revisão espaçada), voice, ai, supabase/
+components/     App (navegação), CardList e screens/ (Início, Trilha, Semana, Músicas, Música, Letra, Cards, Frases, Método, Ajustes, Importar)
+lib/            store (dados + sincronização), course (revisão espaçada), level (nível e encaixe), voice, ai, supabase/
 content/        cursos em JSON (fonte do seed)
 supabase/       schema SQL e seed
 ```
 
 ## Próximas versões
-- **v10 — Minha música:** colar a letra de uma música que você ama, a IA classifica o nível (🟢 no seu nível, 🔵 abaixo, 🟠 acima), sugere outra do mesmo artista e monta a aula.
+- **v11:** perfil musical na entrada (artistas e estilos favoritos) e sugestões de músicas a partir dele.

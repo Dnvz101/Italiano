@@ -7,14 +7,14 @@ import Spk from '../Spk';
 
 export default function Review() {
   const s = useStore();
-  const { lang, course, progress: p, phrases, session, setSession, startReview, autoSay, speak, dir } = useCourse();
+  const { lang, course, progress: p, phrases, songs, session, setSession, startReview, autoSay, speak, dir } = useCourse();
 
   useEffect(() => {
-    if (!session) setSession({ queue: makeQueue(course, p, phrases, false), done: 0, shown: false });
+    if (!session) setSession({ queue: makeQueue(course, p, phrases, false, songs), done: 0, shown: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
-  const card = session?.queue.length ? getCard(course, phrases, session.queue[0]) : null;
+  const card = session?.queue.length ? getCard(course, phrases, session.queue[0], songs) : null;
   useEffect(() => {
     // card apagado no meio da sessão: pula
     if (session?.queue.length && !card) setSession({ ...session, queue: session.queue.slice(1) });
@@ -92,7 +92,7 @@ export default function Review() {
           {session.queue.length} restantes {!srs && <b style={{ color: 'var(--acc2)' }}>· novo</b>}
         </div>
         <div className="mut" style={{ textAlign: 'right' }}>
-          {card.w ? `Semana ${card.w}` : 'Minha frase'}
+          {card.label}
         </div>
       </div>
       <div className="card flash" onClick={session.shown ? undefined : reveal}>

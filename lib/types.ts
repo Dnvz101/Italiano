@@ -34,6 +34,7 @@ export type SrsEntry = { box: number; due: string };
 
 export type Progress = {
   started: number[];
+  songs: string[]; // ids de músicas próprias em estudo
   checks: Record<string, boolean[]>;
   srs: Record<string, SrsEntry>;
   imm: Record<string, number>;
@@ -48,11 +49,35 @@ export type Profile = {
   id: string;
   name: string;
   household_id: string | null;
-  settings: { lang?: string; dir?: 'it' | 'pt' | 'audio' };
+  settings: { lang?: string; dir?: 'it' | 'pt' | 'audio'; level?: Record<string, number> };
 };
 
 export type Household = { id: string; name: string; invite_code: string };
 
-export type StudyCard = { id: string; w?: number; it: string; pt: string; ex: string; exPt: string };
+export type StudyCard = { id: string; w?: number; it: string; pt: string; ex: string; exPt: string; label: string };
 
 export type Session = { queue: string[]; done: number; shown: boolean };
+
+export type SongAnalysis = {
+  level_reason: string;
+  signals: { speed: string; vocab: string; grammar: string[]; slang: string; wpm?: number | null };
+  theme: string;
+  about: string;
+  why: string;
+  hunt: string[];
+  lesson: string; // HTML sanitizado no servidor (p, b, i, br)
+  cards: Card[];
+  suggestions: { title: string; artist: string; level: number; reason: string }[];
+};
+
+export type Song = {
+  id: string;
+  user_id: string;
+  lang: string;
+  title: string;
+  artist: string;
+  level: number;
+  duration_sec: number | null;
+  analysis: SongAnalysis;
+  created_at: string;
+};

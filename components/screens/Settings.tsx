@@ -4,10 +4,11 @@ import { useStore, OLD_KEY, importedKey } from '@/lib/store';
 import { useApp } from '@/lib/nav';
 import { currentVoice, setVoicePref, useVoices } from '@/lib/voice';
 import { APP_VERSION } from '@/lib/version';
+import { LEVELS, userLevel } from '@/lib/level';
 
 export default function Settings() {
   const s = useStore();
-  const { course, lang, go, speak } = useApp();
+  const { course, lang, progress, go, speak } = useApp();
   const voices = useVoices(course?.meta.lang || 'xx');
   const [voiceUri, setVoiceUri] = useState('');
   const [code, setCode] = useState('');
@@ -91,6 +92,26 @@ export default function Settings() {
           </button>
         </div>
       </div>
+
+      {course && lang && progress && (
+        <div className="card">
+          <h3>🎯 Meu nível em {course.meta.name}</h3>
+          <select
+            value={s.profile.settings.level?.[lang] || 0}
+            onChange={(e) => s.setSetting('level', { ...(s.profile.settings.level || {}), [lang]: +e.target.value })}
+          >
+            <option value={0}>Automático, pela trilha (agora: {LEVELS[userLevel(course, progress)]})</option>
+            {[1, 2, 3, 4].map((l) => (
+              <option key={l} value={l}>
+                {LEVELS[l]}
+              </option>
+            ))}
+          </select>
+          <p className="mut" style={{ marginBottom: 0 }}>
+            Usado para dizer se uma música sua está no seu nível. Se você já sabia um pouco antes do app, escolha aqui.
+          </p>
+        </div>
+      )}
 
       {course && (
         <div className="card">

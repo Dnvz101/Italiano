@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function Login() {
-  const sb = useMemo(() => createClient(), []);
+  const sb = useMemo(() => (typeof window === 'undefined' ? (null as any) : createClient()), []);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<'email' | 'code'>('email');
@@ -60,18 +60,19 @@ export default function Login() {
               />
               <div style={{ marginTop: 12 }}>
                 <button className="btn" onClick={send} disabled={busy}>
-                  {busy ? 'Enviando…' : 'Receber código de acesso'}
+                  {busy ? 'Enviando…' : 'Receber link de acesso'}
                 </button>
               </div>
               <p className="mut" style={{ marginBottom: 0 }}>
-                Sem senha: mandamos um código para o seu e-mail. Primeira vez? A conta é criada automaticamente.
+                Sem senha: mandamos um link de acesso para o seu e-mail. Primeira vez? A conta é criada automaticamente.
               </p>
             </>
           ) : (
             <>
               <p style={{ marginTop: 0 }}>
-                Enviamos um código para <b>{email}</b>.
+                Enviamos um e-mail para <b>{email}</b>. <b>Toque no link do e-mail neste mesmo aparelho</b> para entrar.
               </p>
+              <p className="mut">Se o e-mail trouxer um código, você também pode digitar aqui:</p>
               <label>Código do e-mail</label>
               <input
                 className="otp"
@@ -88,7 +89,7 @@ export default function Login() {
                 </button>
               </div>
               <p className="mut" style={{ marginBottom: 0 }}>
-                Também dá para tocar no link do e-mail.{' '}
+                Não chegou? Olhe o spam.{' '}
                 <a href="#" onClick={(e) => (e.preventDefault(), setStep('email'), setCode(''))}>
                   Usar outro e-mail
                 </a>

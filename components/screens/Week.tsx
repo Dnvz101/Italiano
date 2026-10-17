@@ -2,7 +2,7 @@
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { roteiro } from '@/lib/course';
-import Spk from '../Spk';
+import CardList from '../CardList';
 import Lyrics from './Lyrics';
 
 export default function WeekView() {
@@ -67,7 +67,7 @@ export default function WeekView() {
         </p>
       </div>
 
-      <Lyrics key={`${lang}-${w.n}`} week={w} />
+      <Lyrics key={`${lang}-${w.n}`} songKey={'w' + w.n} label={`da semana ${w.n}`} />
 
       <div className="card lesson">
         <h3>💡 {w.theme}</h3>
@@ -98,23 +98,7 @@ export default function WeekView() {
         </div>
       )}
 
-      <div className="card">
-        <h3>🗂️ Expressões da semana</h3>
-        {w.cards.map((c) => (
-          <div key={c[0]} className="vc">
-            <Spk text={c[0]} />
-            <div>
-              <div className="it">{c[0]}</div>
-              <div className="mut">{c[1]}</div>
-              <div style={{ fontSize: 14, marginTop: 4 }}>
-                <i>{c[2]}</i> <Spk text={c[2]} />
-                <br />
-                <span className="mut">{c[3]}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <CardList title="🗂️ Expressões da semana" cards={w.cards} />
     </>
   );
 }

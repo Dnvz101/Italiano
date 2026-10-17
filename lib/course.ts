@@ -1,4 +1,4 @@
-import type { Course, Phrase, Progress, StudyCard, SrsEntry } from './types';
+import type { Course, Phrase, Progress, Song, StudyCard, SrsEntry } from './types';
 
 export const IV = [0, 1, 3, 7, 14, 30, 60, 120];
 export const IMM_GOAL = 30;
@@ -10,7 +10,7 @@ export const addDays = (d: string, n: number) => {
   return x.toLocaleDateString('sv');
 };
 
-export const blankProgress = (): Progress => ({ started: [1], checks: {}, srs: {}, imm: {} });
+export const blankProgress = (): Progress => ({ started: [1], songs: [], checks: {}, srs: {}, imm: {} });
 
 export function roteiro(course: Course): [string, string][] {
   return [
@@ -27,33 +27,45 @@ export function roteiro(course: Course): [string, string][] {
   ];
 }
 
-export function getCard(course: Course, phrases: Phrase[], id: string): StudyCard | null {
+export function getCard(course: Course, phrases: Phrase[], id: string, songs: Song[] = []): StudyCard | null {
   if (id.startsWith('m-')) {
     const m = phrases.find((x) => 'm-' + x.id === id);
-    return m ? { id, it: m.text, pt: m.meaning, ex: m.note || '', exPt: '' } : null;
+    return m ? { id, it: m.text, pt: m.meaning, ex: m.note || '', exPt: '', label: 'Minha frase' } : null;
+  }
+  const sm = /^s:(.+)-(\d+)$/.exec(id);
+  if (sm) {
+    const song = songs.find((x) => x.id === sm[1]);
+    const c = song?.analysis?.cards?.[+sm[2]];
+    return c ? { id, it: c[0], pt: c[1], ex: c[2], exPt: c[3], label: '🎤 ' + song.title } : null;
   }
   const r = /^w(\d+)-(\d+)$/.exec(id);
   if (!r) return null;
   const w = course.weeks.find((x) => x.n === +r[1]);
   const c = w && w.cards[+r[2]];
-  return c ? { id, w: w.n, it: c[0], pt: c[1], ex: c[2], exPt: c[3] } : null;
+  return c ? { id, w: w.n, it: c[0], pt: c[1], ex: c[2], exPt: c[3], label: `Semana ${w.n}` } : null;
 }
 
-export function deck(course: Course, p: Progress, phrases: Phrase[]) {
+/** Ordem importa: os cards novos do dia saem do começo da lista.
+ *  O que a pessoa escolheu (frases e músicas dela) vem antes da trilha. */
+export function deck(course: Course, p: Progress, phrases: Phrase[], songs: Song[] = []) {
   const ids: string[] = [];
+  phrases.forEach((m) => ids.push('m-' + m.id));
+  (p.songs || []).forEach((sid) => {
+    const song = songs.find((x) => x.id === sid);
+    song?.analysis?.cards?.forEach((_, i) => ids.push(`s:${sid}-${i}`));
+  });
   [...p.started].sort((a, b) => a - b).forEach((n) => {
     const w = course.weeks.find((x) => x.n === n);
     if (w) w.cards.forEach((_, i) => ids.push(`w${n}-${i}`));
   });
-  phrases.forEach((m) => ids.push('m-' + m.id));
   return ids;
 }
 
-export function dueList(course: Course, p: Progress, phrases: Phrase[]) {
+export function dueList(course: Course, p: Progress, phrases: Phrase[], songs: Song[] = []) {
   const t = today();
   const due: string[] = [];
   const fresh: string[] = [];
-  deck(course, p, phrases).forEach((id) => {
+  deck(course, p, phrases, songs).forEach((id) => {
     const s = p.srs[id];
     if (!s) fresh.push(id);
     else if (s.due <= t) due.push(id);
@@ -61,10 +73,10 @@ export function dueList(course: Course, p: Progress, phrases: Phrase[]) {
   return { due, fresh };
 }
 
-export function makeQueue(course: Course, p: Progress, phrases: Phrase[], extra: boolean) {
-  const { due, fresh } = dueList(course, p, phrases);
+export function makeQueue(course: Course, p: Progress, phrases: Phrase[], extra: boolean, songs: Song[] = []) {
+  const { due, fresh } = dueList(course, p, phrases, songs);
   let q = [...due, ...fresh.slice(0, 10)];
-  if (!q.length && extra) q = deck(course, p, phrases).sort(() => Math.random() - 0.5).slice(0, 20);
+  if (!q.length && extra) q = deck(course, p, phrases, songs).sort(() => Math.random() - 0.5).slice(0, 20);
   return q;
 }
 

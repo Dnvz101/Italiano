@@ -300,3 +300,39 @@ h3{font-weight:700;letter-spacing:-.01em}
 @starting-style{.bub,.recast{opacity:0;transform:translateY(6px)}}
 @media (min-width:960px){.composer{bottom:16px}}
 @media (prefers-reduced-motion:reduce){.typing i,.mic.on{animation:none!important}}
+/* v16 · Shadowing */
+.seg button{white-space:nowrap;padding:8px 4px}
+.shadow{margin-top:6px}
+.sh-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;margin-bottom:8px}
+.sh-line{background:var(--chip);border-radius:14px;padding:16px;margin-bottom:12px;position:relative;transition:box-shadow 200ms ease}
+.sh-line.rec{box-shadow:0 0 0 2px var(--bad)}
+.sh-line.model{box-shadow:0 0 0 2px var(--acc)}
+.sh-t{font-size:21px;font-weight:700;line-height:1.35;margin:0}
+.sh-tr{margin:8px 0 0;color:var(--mut);font-size:15px}
+.sh-line .link{margin-top:8px;font-size:14px;padding:0}
+.w-ok{color:var(--ok)}
+.w-miss{color:var(--acc2);text-decoration:underline wavy;text-underline-offset:4px;text-decoration-thickness:1px}
+.sh-best{position:absolute;top:8px;right:10px;font-size:12px;font-weight:600}
+.sh-best.ok,.sh-score.ok b{color:var(--ok)}.sh-best.mid,.sh-score.mid b{color:var(--acc)}.sh-best.low,.sh-score.low b{color:var(--acc2)}
+.btn.sh-go{font-size:17px;padding:14px 16px}
+.btn.sh-go.rec{background:var(--bad);color:#fff}
+.sh-bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:8px}
+.sh-bar i{display:block;height:100%;background:var(--bad);transform-origin:left;animation:shbar linear forwards}
+@keyframes shbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+.sh-row{align-items:center;margin-top:10px}
+.sh-row .switch{margin:0;flex:1;min-width:110px}
+.sh-row .btn,.sh-res .row .btn,.sh-nav .btn{flex:1;width:auto;white-space:nowrap}
+.sh-row .btn{padding:10px 8px}
+.sh-res{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.sh-score{display:flex;align-items:baseline;gap:10px}
+.sh-score b{font-size:30px}
+.sh-res p{margin:6px 0 10px}
+.sh-nav{margin-top:14px}
+.sh-dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.sh-dot{min-width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--mut);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.sh-dot.on{border-color:var(--acc);color:var(--ink);box-shadow:0 0 0 1px var(--acc)}
+.sh-dot.ok{background:color-mix(in srgb,var(--ok) 18%,var(--card));color:var(--ok)}
+.sh-dot.mid{background:color-mix(in srgb,var(--acc) 15%,var(--card));color:var(--acc)}
+.sh-dot.low{background:color-mix(in srgb,var(--acc2) 15%,var(--card));color:var(--acc2)}
+.sh-tip{font-size:13px;margin-bottom:0}
+@media (prefers-reduced-motion:reduce){.sh-bar i{animation:none}}

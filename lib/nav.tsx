@@ -18,7 +18,7 @@ export type AppCtx = {
   setSession: (s: Session | null) => void;
   startReview: (extra?: boolean) => void;
   autoSay: (s: Session) => void;
-  speak: (text: string, rate?: number) => void;
+  speak: (text: string, rate?: number, onEnd?: () => void) => void;
   setLang: (l: string) => void;
   closeImport: () => void;
 };

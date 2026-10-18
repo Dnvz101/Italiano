@@ -48,9 +48,10 @@ export function currentVoice(lang: string) {
   return (p && vs.find((v) => v.voiceURI === p)) || vs[0] || null;
 }
 
-export function say(text: string, lang: string, locale: string, rate = 0.88) {
+export function say(text: string, lang: string, locale: string, rate = 0.88, onEnd?: () => void) {
   if (!hasTTS()) {
-    alert('Seu navegador não tem leitura em voz alta.');
+    if (onEnd) onEnd();
+    else alert('Seu navegador não tem leitura em voz alta.');
     return;
   }
   speechSynthesis.cancel();
@@ -59,6 +60,19 @@ export function say(text: string, lang: string, locale: string, rate = 0.88) {
   u.lang = v ? v.lang : locale;
   if (v) u.voice = v;
   u.rate = rate;
+  if (onEnd) {
+    // alguns navegadores esquecem o onend: um relógio de segurança garante que o fluxo continua
+    let done = false;
+    const fin = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(t);
+      onEnd();
+    };
+    const t = setTimeout(fin, 1500 + (text.length * 95) / rate);
+    u.onend = fin;
+    u.onerror = fin;
+  }
   speechSynthesis.speak(u);
 }
 

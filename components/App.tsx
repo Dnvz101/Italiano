@@ -57,8 +57,8 @@ export default function App() {
   }, []);
 
   const speak = useCallback(
-    (text: string, rate?: number) => {
-      if (course) say(text, course.meta.lang, course.meta.locale, rate);
+    (text: string, rate?: number, onEnd?: () => void) => {
+      if (course) say(text, course.meta.lang, course.meta.locale, rate, onEnd);
     },
     [course]
   );

@@ -5,6 +5,7 @@ import { useCourse } from '@/lib/nav';
 import { chorusLines } from '@/lib/level';
 import Spk from '../Spk';
 import LyricsSearch from '../LyricsSearch';
+import Shadow from '../Shadow';
 
 export default function Lyrics({
   songKey,
@@ -27,7 +28,9 @@ export default function Lyrics({
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
-  const [readMode, setReadMode] = useState(false);
+  const [mode, setMode] = useState<'ex' | 'read' | 'shadow'>('ex');
+  const readMode = mode === 'read';
+  const [shadowAt, setShadowAt] = useState(-1);
   const [busy, setBusy] = useState(false);
   const [shown, setShown] = useState<Set<number>>(new Set());
   const [chorus, setChorus] = useState(chorusDefault);
@@ -109,15 +112,23 @@ export default function Lyrics({
     <div className="card">
       <h3>📄 Letra bilíngue</h3>
       <div className="seg">
-        <button className={readMode ? '' : 'on'} onClick={() => setReadMode(false)}>
+        <button className={mode === 'ex' ? 'on' : ''} onClick={() => setMode('ex')}>
           ✍️ Exercício
         </button>
-        <button className={readMode ? 'on' : ''} onClick={() => setReadMode(true)}>
+        <button className={mode === 'read' ? 'on' : ''} onClick={() => setMode('read')}>
           📖 Leitura
+        </button>
+        <button className={mode === 'shadow' ? 'on' : ''} onClick={() => setMode('shadow')}>
+          🎙️ Shadowing
         </button>
       </div>
       <p className="mut">
-        {readMode ? (
+        {mode === 'shadow' ? (
+          <>
+            Ouça a linha e repita na hora, imitando o jeito de falar. O app grava você e mostra quais palavras saíram
+            claras.
+          </>
+        ) : readMode ? (
           'A letra com a tradução da IA embaixo de cada linha.'
         ) : (
           <>
@@ -132,6 +143,16 @@ export default function Lyrics({
           {chorusIdx.size === 1 ? '1 linha que se repete' : `${chorusIdx.size} linhas que se repetem`})
         </label>
       )}
+      {mode === 'shadow' ? (
+        <Shadow
+          lines={row.lines}
+          order={row.lines.map((l, i) => i).filter((i) => row.lines[i].t && (!focus || chorusIdx.has(i)))}
+          songKey={`${lang}:${key}`}
+          startAt={shadowAt}
+          onLine={setShadowAt}
+        />
+      ) : (
+      <>
       <div className="row" style={{ marginBottom: 6 }}>
         <button className={`btn ${hasAi ? 'ghost' : ''} sm`} onClick={aiTranslate} disabled={busy}>
           {busy ? 'Traduzindo...' : hasAi ? '✨ Refazer IA' : '✨ Gerar tradução da IA'}
@@ -155,6 +176,16 @@ export default function Lyrics({
                   {open ? '🙈' : '👁️'}
                 </button>
               )}
+              <button
+                className="spk"
+                onClick={() => {
+                  setShadowAt(i);
+                  setMode('shadow');
+                }}
+                aria-label="Repetir esta linha (shadowing)"
+              >
+                🎙️
+              </button>
               <button className="spk" onClick={() => lineCard(i)} aria-label="Virar card">
                 ➕
               </button>
@@ -205,6 +236,8 @@ export default function Lyrics({
             Esconder todas
           </button>
         </div>
+      )}
+      </>
       )}
     </div>
   );

@@ -1,5 +1,14 @@
 # Histórico de versões — Ascolto em Família
 
+## v16 — 2026-10-18 · Shadowing
+- Novo modo **🎙️ Shadowing** na letra bilíngue (semanas e favoritas), ao lado de Exercício e Leitura, e um 🎙️ em cada linha que abre direto nela.
+- **▶️ Ouvir e repetir**: o app fala a linha e já começa a gravar você; para sozinho no tempo da linha (ou toque para parar).
+- Nota de 0 a 100% pelo reconhecimento de voz do navegador: palavras que saíram claras em verde, as que não saíram em laranja, e o que o app entendeu.
+- **▶️ Minha voz** e **🎧 Modelo + eu** (a linha e logo depois a sua gravação, para comparar).
+- 🐢 Devagar, "Só ouvir", "Só gravar", tradução da linha sob demanda, navegação por linha com a melhor nota de cada uma em cores, e média da música.
+- Funciona com "Só o refrão". Melhores notas ficam salvas no aparelho; praticar conta como dia de estudo.
+- Sem IA (custo zero) e sem mudança de banco.
+
 ## v15 — 2026-10-18 · Conversa
 - Nova aba **💬 Conversa** (barra do celular e menu lateral): bate-papo com a IA no seu nível, sobre a música da semana, uma favorita ou um tema do dia a dia.
 - Voz: 🎙️ para falar (reconhecimento de voz do navegador) e leitura das respostas em voz alta (opcional).

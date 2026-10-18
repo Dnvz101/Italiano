@@ -1,4 +1,4 @@
-# Ascolto em Família · v15
+# Ascolto em Família · v16
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -97,6 +97,12 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Cada resposta tem 🔊, 🐢 e "Traduzir".
 - A conversa fica salva no aparelho (por pessoa e idioma); não vai para o banco.
 - Limite próprio: `AI_CHAT_DAILY_LIMIT` (padrão 150 mensagens/24h), separado do limite das aulas e traduções. Modelo: `AI_MODEL_CHAT` (padrão = `ANTHROPIC_MODEL`, Haiku).
+
+## Shadowing (v16)
+- Na letra bilíngue, modo **🎙️ Shadowing** (ou o 🎙️ de qualquer linha): o app fala a linha, grava você repetindo e dá uma nota pelas palavras que o reconhecimento de voz entendeu.
+- Dá para ouvir a própria gravação e "Modelo + eu" para comparar ritmo e entonação.
+- O navegador pede permissão do microfone na primeira vez. No iPhone use o Safari; no Android, o Chrome. Sem IA, sem custo, sem mudança no banco; as notas ficam no aparelho.
+- A nota mede se as palavras saíram claras, não o sotaque: use o "Modelo + eu" para a melodia.
 
 ## IA
 - `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.

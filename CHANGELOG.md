@@ -1,5 +1,10 @@
 # Histórico de versões — Ascolto em Família
 
+## v22.2 — 2026-10-18 · Desfazer semana começada sem querer
+- No Roteiro de uma semana já começada aparece **"↩︎ Comecei esta semana sem querer: desfazer"**: tira a semana da lista e a semana atual volta a ser a anterior (o Início volta a mostrar a certa).
+- Começar uma semana pulando outras agora pede confirmação ("Você está na semana 1. Quer mesmo começar a semana 4?").
+- Sem mudança de banco.
+
 ## v22.1 — 2026-10-18 · Salvar a letra já prepara a aula
 - Na letra de cada semana, o botão agora é **✨ Salvar e preparar a aula**: salva a letra e, ao mesmo tempo, gera a tradução da IA linha por linha e a **aula completa** (antes era preciso ir à aba 🎓 Aula e apertar outro botão).
 - Anel de progresso enquanto prepara e aviso no fim ("Tradução e aula prontas! A aula completa está na aba 🎓 Aula").

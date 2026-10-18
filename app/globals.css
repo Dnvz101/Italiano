@@ -501,3 +501,4 @@ h2.ih{gap:12px}
 @media (prefers-reduced-motion:reduce){.ar-spin{animation-duration:2s}.ar-box,.ar-tag{transition:none}.ar-toast{animation:none}}
 .prep-ok{background:color-mix(in srgb,var(--ok) 12%,var(--card));color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14px;margin:4px 0 12px}
 .aiprog.prep-ring{margin:4px 0 12px}
+.link.undo-start{margin-top:10px;font-size:13px;color:var(--mut);font-weight:500}

@@ -1,7 +1,7 @@
 'use client';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
-import { roteiro } from '@/lib/course';
+import { currentWeek, roteiro } from '@/lib/course';
 import CardList from '../CardList';
 import { moduleOfWeek, modules } from '@/lib/modules';
 import Lyrics from './Lyrics';
@@ -24,9 +24,29 @@ export default function WeekView() {
   const next = course.weeks[idx + 1];
   const [tab, setTab] = useSection(['plan', 'lyrics', 'lesson', 'cards'], 'plan');
 
+  const cur = currentWeek(p);
   const startWeek = () => {
+    // evita pular semanas sem querer
+    if (
+      w.n > cur + 1 &&
+      !confirm(`Você está na semana ${cur}. Quer mesmo começar a semana ${w.n}? Ela passa a ser a sua semana atual.`)
+    )
+      return;
     s.updateProgress(lang, (x) => (x.started.includes(w.n) ? x : { ...x, started: [...x.started, w.n] }));
     s.markDay();
+  };
+  // começou sem querer: tira a semana da lista (a atual volta a ser a anterior)
+  const undoStart = () => {
+    const rest = p.started.filter((n) => n !== w.n);
+    if (!rest.length) return;
+    const back = Math.max(...rest);
+    if (!confirm(`Desfazer o início da semana ${w.n}? Sua semana atual volta a ser a ${back}.`)) return;
+    s.updateProgress(lang, (x) => {
+      const checks = { ...x.checks };
+      delete checks[w.n];
+      return { ...x, started: x.started.filter((n) => n !== w.n), checks };
+    });
+    go('week', back);
   };
   const toggleDay = (i: number) => {
     const next = [...(p.checks[w.n] || Array(7).fill(false))];
@@ -125,6 +145,11 @@ export default function WeekView() {
                     </div>
                   </div>
                 ))}
+                {p.started.length > 1 && (
+                  <button className="link undo-start" onClick={undoStart}>
+                    ↩︎ Comecei esta semana sem querer: desfazer
+                  </button>
+                )}
               </div>
             ) : (
               <div className="card">

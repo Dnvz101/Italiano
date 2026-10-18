@@ -1,4 +1,4 @@
-# Ascolto em Família · v21.2
+# Ascolto em Família · v22
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -104,6 +104,12 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Toda música sugerida é conferida no LRCLIB: se a letra não existe lá, a sugestão é descartada (evita música inventada). Se o LRCLIB estiver fora do ar, as sugestões aparecem sem essa conferência.
 - **⭐ Estudar** leva para "Adicionar favorita" com a música preenchida e a letra já buscada.
 - Custo: uma chamada do modelo de análise (`AI_MODEL_ANALYZE`, padrão Sonnet) por vez que a pessoa gera sugestões, uns ¥4–5.
+
+## Explorar com a câmera (v22)
+- Início → **📷 Explorar com a câmera**. Aponte para objetos: o nome aparece em cima, com o artigo na cor do gênero. Tocar no nome = ouvir, repetir com nota e virar card.
+- O reconhecimento roda no celular (TensorFlow.js, modelo COCO-SSD, 80 objetos). A imagem não é enviada a lugar nenhum e não gasta IA.
+- O modelo vem de `storage.googleapis.com` na primeira vez. Para hospedar você mesmo, coloque os arquivos do modelo em `public/` e defina `NEXT_PUBLIC_COCO_MODEL_URL`.
+- Nomes dos objetos: `lib/objects.ts`.
 
 ## Alfabeto e sons (v20)
 - Aba **Frases → 🔤 Alfabeto e sons**: cada letra com o nome no idioma, dica em português e nota de pronúncia; e os sons difíceis para brasileiros com palavras para repetir.

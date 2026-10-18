@@ -64,6 +64,19 @@ export default function Home() {
         </div>
       )}
 
+      <button className="card ar-cta" onClick={() => go('explore')}>
+        <span className="ar-cta-ic" aria-hidden="true">
+          📷
+        </span>
+        <span className="ar-cta-t">
+          <b>Explorar com a câmera</b>
+          <span className="mut">Aponte para as coisas da casa e veja o nome em {langPt(lang)}</span>
+        </span>
+        <span className="ar-cta-go" aria-hidden="true">
+          →
+        </span>
+      </button>
+
       <div className="stats">
         <div className="stat">
           <b>{streak(s.days)}</b>

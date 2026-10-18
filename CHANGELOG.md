@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v22 — 2026-10-18 · Explorar com a câmera (realidade aumentada)
+- Novo **📷 Explorar com a câmera** (cartão no Início): aponte a câmera para as coisas da casa e o nome aparece **flutuando em cima de cada objeto**, no idioma, com o artigo colorido pelo gênero (der/die/das; il/la/lo/i/gli/le).
+- Reconhece 80 objetos do dia a dia (xícara, cadeira, mesa, celular, gato, banana, geladeira, livro…), com nome em italiano e alemão revisado.
+- Tocar na etiqueta: ouve a palavra, **🎙️ Repetir** com nota (mesma avaliação do Shadowing) e **➕ Virar card**.
+- Jogo de coleção: cada objeto novo dá "🎉 Nova descoberta!" (falada em voz alta) e entra em **Sua coleção: X de 80**. Botão **⏸️ Congelar** para tocar nas etiquetas com calma.
+- Tudo roda **no próprio celular** (TensorFlow.js + COCO-SSD): as imagens da câmera não saem do aparelho e não há custo de IA. O detector (~5 MB) é baixado do Google na primeira vez; carregado só nesta tela (não pesa no resto do app).
+- Sem mudança de banco.
+
 ## v21.2 — 2026-10-18 · Boas-vindas do alemão
 - O alemão ganhou o seu vídeo: pretzel, caneca de chopp e salsicha, com o **"Hallo, Leandro!"** no balão de fala.
 - Cada idioma tem o seu banner (`components/HeroGreeting.tsx`), com a posição do balão ajustada para cada vídeo. O vídeo toca uma vez por idioma em cada sessão.

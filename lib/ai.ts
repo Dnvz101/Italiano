@@ -64,7 +64,9 @@ export async function callClaudeJSON<T = any>(
       model,
       max_tokens: maxTokens,
       tools: [{ name: tool.name, description: tool.description, input_schema: tool.schema }],
-      tool_choice: { type: 'tool', name: tool.name },
+      // "auto": alguns modelos não aceitam forçar a ferramenta ("tool"/"any").
+      // O prompt pede para usar a ferramenta; se vier texto, o plano B abaixo lê o JSON.
+      tool_choice: { type: 'auto' },
       messages: [{ role: 'user', content: prompt }],
     }),
     signal: AbortSignal.timeout(55000),
@@ -80,9 +82,11 @@ export async function callClaudeJSON<T = any>(
   if (!out) {
     // plano B: alguns modelos podem responder em texto; tenta extrair o JSON
     const text = (data.content || []).filter((b: any) => b.type === 'text').map((b: any) => b.text).join('');
-    const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
+    const clean = text.replace(/```(?:json)?/g, '');
+    const a = clean.indexOf('{');
+    const b = clean.lastIndexOf('}');
     try {
-      out = m ? JSON.parse(m[0]) : null;
+      out = a >= 0 && b > a ? JSON.parse(clean.slice(a, b + 1)) : null;
     } catch {}
   }
   if (!out || typeof out !== 'object') {

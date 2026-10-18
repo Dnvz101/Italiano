@@ -1,5 +1,9 @@
 # Histórico de versões — Ascolto em Família
 
+## v14.2 — 2026-10-18 · Correção: "tool_choice ... not supported for this model"
+- A ferramenta de resposta estruturada passa a ser oferecida com `tool_choice: auto` (o modelo em uso não aceita uso forçado). Se o modelo responder em texto, o JSON é lido do texto.
+- Sem mudança de banco.
+
 ## v14.1 — 2026-10-18 · Correção: "Resposta inesperada da IA"
 - As três chamadas de IA (aula completa, análise de música e tradução) agora usam saída estruturada (ferramenta da API da Anthropic): a resposta chega como JSON válido, sem quebrar por aspas ou texto extra.
 - Limite de resposta maior (8000 tokens); se mesmo assim a resposta for cortada, a mensagem diz isso.

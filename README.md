@@ -1,4 +1,4 @@
-# Ascolto em Família · v14.1
+# Ascolto em Família · v14.2
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 

@@ -65,7 +65,7 @@ export function chorusLines(lines: string[]) {
 }
 
 export function parseDuration(s: string): number | null {
-  const m = /^\s*(\d{1,2})[:.](\d{2})\s*$/.exec(s || '');
+  const m = /^\s*(\d{1,2})[:.,h'](\d{2})\s*$/.exec(s || '');
   if (!m) return null;
   const sec = +m[1] * 60 + +m[2];
   return sec >= 30 && sec <= 1200 ? sec : null;

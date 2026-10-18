@@ -34,9 +34,9 @@ export default function Mine() {
           estruturas da semana. Elas entram nos seus cards.
         </p>
         <label>Em {course.meta.name}</label>
-        <input value={text} onChange={(e) => setText(e.target.value)} />
+        <input value={text} onChange={(e) => setText(e.target.value)} enterKeyHint="next" />
         <label>Significado</label>
-        <input value={meaning} onChange={(e) => setMeaning(e.target.value)} />
+        <input value={meaning} onChange={(e) => setMeaning(e.target.value)} enterKeyHint="next" />
         <label>Cena / contexto (onde ouviu, quem disse, qual emoção)</label>
         <input
           value={note}

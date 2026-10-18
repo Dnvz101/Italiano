@@ -52,6 +52,10 @@ export default function Login() {
               <input
                 type="email"
                 inputMode="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                enterKeyHint="send"
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -77,6 +81,7 @@ export default function Login() {
               <input
                 className="otp"
                 inputMode="numeric"
+                enterKeyHint="go"
                 autoComplete="one-time-code"
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}

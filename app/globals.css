@@ -1,15 +1,17 @@
 :root{--bg:#f7f5f0;--card:#fff;--ink:#1c1b19;--mut:#6b6760;--line:#e6e2d9;--acc:#0f766e;--acc-ink:#fff;--acc2:#c2410c;--ok:#15803d;--bad:#b91c1c;--warn:#a16207;--chip:#e7f3f1}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141412;--card:#1e1d1a;--ink:#f1efe9;--mut:#a39e94;--line:#2f2d29;--acc:#2dd4bf;--acc-ink:#062e2a;--acc2:#fb923c;--ok:#4ade80;--bad:#f87171;--warn:#facc15;--chip:#1c2e2a}}
 :root[data-theme="dark"]{--bg:#141412;--card:#1e1d1a;--ink:#f1efe9;--mut:#a39e94;--line:#2f2d29;--acc:#2dd4bf;--acc-ink:#062e2a;--acc2:#fb923c;--ok:#4ade80;--bad:#f87171;--warn:#facc15;--chip:#1c2e2a}
+:root{--ease-out:cubic-bezier(0.23,1,0.32,1);--ease-in-out:cubic-bezier(0.77,0,0.175,1)}
 *{box-sizing:border-box}
+html{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overscroll-behavior:none}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;gap:10px}
 header h1{font-size:18px;margin:0;flex:1;letter-spacing:-.01em}
 header h1 span{color:var(--acc)}
 select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
 header select{width:auto}
-main{max-width:640px;margin:0 auto;padding:16px 16px 96px}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+main{max-width:640px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:5;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px max(4px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
 nav button{background:none;border:0;color:var(--mut);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;cursor:pointer}
 nav button b{font-size:20px;font-weight:400}
 nav button.on{color:var(--acc);font-weight:600}
@@ -55,7 +57,7 @@ h3{font-size:16px;margin:0 0 8px}
 .g3{border-color:var(--ok)!important;color:var(--ok)!important}
 .lesson p{margin:0 0 8px}
 .prog{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0}
-.prog i{display:block;height:100%;background:var(--acc)}
+.prog i{display:block;height:100%;width:100%;background:var(--acc);transform-origin:left;transition:transform 300ms var(--ease-out)}
 label{font-size:14px;color:var(--mut);display:block;margin:8px 0 4px}
 .del{background:none;border:0;color:var(--bad);cursor:pointer;font-size:14px}
 a{color:var(--acc)}
@@ -64,7 +66,7 @@ textarea{resize:vertical;min-height:120px}
 .lyt{display:flex;align-items:center;gap:6px}
 .lyt span{flex:1;font-weight:600}
 .lyt a.spk{text-decoration:none}
-.lytr{margin-top:6px;font-size:14px}
+.lytr{margin-top:6px}
 .lyai{margin-top:6px;font-size:14px;color:var(--acc);background:var(--chip);border-radius:8px;padding:6px 10px}
 .seg{display:flex;background:var(--line);border-radius:12px;padding:3px;margin-bottom:8px}
 .seg button{flex:1;border:0;background:transparent;color:var(--mut);font:inherit;font-weight:600;padding:8px;border-radius:10px;cursor:pointer}
@@ -90,3 +92,51 @@ textarea{resize:vertical;min-height:120px}
 .switch input{width:auto}
 nav button{padding:4px 2px;font-size:11px;min-width:0;flex:1}
 a.btn{text-decoration:none}
+
+/* ===== v11 · nativo no celular (mobile-native) ===== */
+select,input,textarea{font-size:16px} /* abaixo de 16px o iPhone dá zoom no campo */
+.otp{font-size:24px}
+button,a,[role="button"],.day,.flash,.switch{touch-action:manipulation}
+button,[role="button"],.day,.flash,nav,.seg,.chip,.lvl{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.flash.shown{-webkit-user-select:text;user-select:text}
+
+/* ===== v11 · acabamento e movimento (emil-design-eng) ===== */
+/* resposta ao toque: escala sutil no instante em que o dedo encosta */
+.btn,.wk,.langcard,.spk,.grades button,.seg button,nav button,.links a,.del{transition:transform 140ms var(--ease-out),background-color 160ms ease,color 160ms ease,border-color 160ms ease}
+.btn:active,.wk:active,.langcard:active,.grades button:active,.links a:active{transform:scale(0.97)}
+.spk:active,nav button:active,.del:active{transform:scale(0.92)}
+.seg button:active{transform:scale(0.98)}
+.btn[disabled]{transform:none}
+.flash{transition:transform 140ms var(--ease-out)}
+.flash:not(.shown):active{transform:scale(0.985)}
+.day{transition:opacity 160ms ease}
+.day:active{opacity:.7}
+.box{transition:background-color 160ms ease,border-color 160ms ease,transform 160ms var(--ease-out)}
+.day:active .box{transform:scale(0.9)}
+
+/* foco visível só para teclado */
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button:focus:not(:focus-visible){outline:none}
+
+/* coisas que aparecem: entram com opacidade + 6px, nunca do nada */
+.flash .back,.flash .ex,.grades,.lyai,.banner,.fit,.pop{transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out)}
+@starting-style{
+  .flash .back,.flash .ex,.grades,.lyai{opacity:0;transform:translateY(6px)}
+  .banner{opacity:0;transform:translateY(-100%)}
+  .pop{opacity:0;transform:scale(0.96)}
+}
+.pop{transition-duration:320ms} /* raro (semana completa): pode ter um pouco mais de presença */
+
+/* hover só onde existe mouse */
+@media (hover:hover) and (pointer:fine){
+  .wk:hover,.langcard:hover{border-color:var(--acc)}
+  .btn.ghost:hover{background:var(--chip)}
+  .spk:hover{filter:brightness(.95)}
+  nav button:hover{color:var(--ink)}
+  .links a:hover{border-color:var(--acc)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-property:opacity,background-color,border-color,color!important}
+  .btn:active,.wk:active,.langcard:active,.grades button:active,.links a:active,.spk:active,nav button:active,.del:active,.seg button:active,.flash:active,.day:active .box{transform:none}
+}

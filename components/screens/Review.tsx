@@ -95,7 +95,12 @@ export default function Review() {
           {card.label}
         </div>
       </div>
-      <div className="card flash" onClick={session.shown ? undefined : reveal}>
+      <div
+        className={`card flash ${session.shown ? 'shown' : ''}`}
+        onClick={session.shown ? undefined : reveal}
+        role={session.shown ? undefined : 'button'}
+        aria-label={session.shown ? undefined : 'Mostrar resposta'}
+      >
         <div className="front" style={au ? { fontSize: 20 } : undefined}>
           {front}
         </div>

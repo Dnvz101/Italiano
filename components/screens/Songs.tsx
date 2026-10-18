@@ -103,9 +103,9 @@ export default function Songs() {
         <div className="card">
           <h3>🎤 Nova música</h3>
           <label>Música</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex.: Baciami ancora" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="ex.: Baciami ancora" enterKeyHint="next" />
           <label>Artista</label>
-          <input value={artist} onChange={(e) => setArtist(e.target.value)} placeholder="ex.: Jovanotti" />
+          <input value={artist} onChange={(e) => setArtist(e.target.value)} placeholder="ex.: Jovanotti" enterKeyHint="next" />
           {q && (
             <div className="links">
               <a href={`https://www.google.com/search?q=${q}%20${course.meta.lyr}`} target="_blank" rel="noopener">
@@ -119,7 +119,7 @@ export default function Songs() {
           <label>Letra (copie e cole)</label>
           <textarea rows={8} value={lyrics} onChange={(e) => setLyrics(e.target.value)} placeholder="Cole a letra aqui..." />
           <label>Duração (opcional, ajuda a medir a velocidade)</label>
-          <input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="ex.: 3:45" inputMode="numeric" />
+          <input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="ex.: 3:45 ou 3.45" inputMode="decimal" enterKeyHint="done" />
           <div className="row" style={{ marginTop: 12 }}>
             <button className="btn sm" onClick={analyze} disabled={busy}>
               {busy ? 'Analisando… (uns 20 s)' : '✨ Analisar e montar a aula'}

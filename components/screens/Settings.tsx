@@ -86,7 +86,7 @@ export default function Settings() {
         )}
         <label>Entrar em outra família</label>
         <div className="row">
-          <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="código recebido" />
+          <input value={code} onChange={(e) => setCode(e.target.value)} placeholder="código recebido" autoCapitalize="characters" autoCorrect="off" spellCheck={false} enterKeyHint="go" />
           <button className="btn sm" style={{ flex: 'none' }} onClick={join} disabled={joining}>
             Entrar
           </button>

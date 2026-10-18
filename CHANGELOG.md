@@ -1,5 +1,19 @@
 # Histórico de versões — Ascolto em Família
 
+## v11 — 2026-10-18 · Nativo no celular + acabamento
+Aplicadas as skills mobile-native e emil-design-eng (Emil Kowalski, MIT). Sem mudança de banco.
+- Campo de tradução da letra em 16px: o iPhone não dá mais zoom ao digitar.
+- Duração da música com teclado decimal (aceita 3:45, 3.45, 3,45): o teclado numérico do iPhone não tinha ":".
+- Cabeçalho e barra inferior respeitam o notch e a barra do iPhone (safe areas); o último card não fica mais escondido.
+- Barra de status com a cor do cabeçalho, clara ou escura conforme o sistema.
+- Sem flash cinza ao tocar; resposta imediata ao toque (escala sutil de 0,97 em ~140 ms) em botões, cards e abas.
+- Sem seleção de texto ao segurar botões, dias do roteiro e o flashcard (o texto volta a ser selecionável depois de revelar).
+- Resposta do card, tradução da IA e aviso de erro entram com opacidade e 6 px de deslocamento; barra de progresso desliza.
+- "Semana completa" aparece com um pequeno destaque.
+- Dias do roteiro acessíveis por teclado e leitor de tela (checkbox).
+- Hover só em computador com mouse; movimento reduzido respeitado (prefers-reduced-motion).
+- Teclados certos: e-mail sem maiúscula, código da família em maiúsculas, tecla "ir/próximo".
+
 ## v10 — 2026-10-18 · Minha música
 - Nova aba **🎤 Músicas**: cole a letra de uma música que você ama e a IA mede o nível (1–4), calibrada pelas músicas da trilha, com sinais de velocidade, vocabulário, tempos verbais e gírias (e palavras por minuto, se informar a duração).
 - Aula gerada pela IA: tema, explicação, caça-palavras e 8–10 cards com exemplos originais.

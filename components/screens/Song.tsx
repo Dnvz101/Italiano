@@ -145,7 +145,7 @@ export default function SongView() {
         <div className="card">
           <h3>📅 Roteiro de 7 dias</h3>
           {roteiro(course).map((r, i) => (
-            <div key={i} className={`day ${ch[i] ? 'done' : ''}`} onClick={() => toggleDay(i)}>
+            <div key={i} className={`day ${ch[i] ? 'done' : ''}`} onClick={() => toggleDay(i)} role="checkbox" aria-checked={!!ch[i]} tabIndex={0} onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), toggleDay(i))}>
               <div className="box">{ch[i] ? '✓' : ''}</div>
               <div className="txt">
                 <b>

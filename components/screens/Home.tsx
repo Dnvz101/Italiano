@@ -55,7 +55,7 @@ export default function Home() {
           🎵 {w.title} <span className="mut">— {w.artist}</span>
         </h3>
         <div className="prog">
-          <i style={{ width: `${(done / 7) * 100}%` }} />
+          <i style={{ transform: `scaleX(${done / 7})` }} />
         </div>
         <div className="mut" style={{ marginBottom: 12 }}>
           Roteiro: {done}/7 dias
@@ -96,7 +96,7 @@ export default function Home() {
           Séries, podcasts, vídeos ou música de fundo, sem se preocupar em entender tudo. Meta: {IMM_GOAL} min/dia.
         </p>
         <div className="prog">
-          <i style={{ width: `${Math.min(100, (imToday / IMM_GOAL) * 100)}%` }} />
+          <i style={{ transform: `scaleX(${Math.min(1, imToday / IMM_GOAL)})` }} />
         </div>
         <div className="mut" style={{ marginBottom: 10 }}>
           Hoje: <b>{imToday} min</b> · Últimos 7 dias: <b>{Math.round(immWeek(p) / 6) / 10} h</b>
@@ -129,7 +129,7 @@ export default function Home() {
       </div>
 
       {done === 7 && cur < course.weeks.length && !p.started.includes(cur + 1) && (
-        <div className="card">
+        <div className="card pop">
           <h3>🎉 Semana {cur} completa!</h3>
           <button className="btn" onClick={() => startWeek(cur + 1)}>
             Começar semana {cur + 1}

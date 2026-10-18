@@ -43,7 +43,14 @@ export type Progress = {
 export type Phrase = { id: string; lang: string; text: string; meaning: string; note: string };
 
 export type LyricLine = { t: string; ai: string };
-export type Lyric = { id: string; lang: string; song_key: string; lines: LyricLine[] };
+export type FullLesson = {
+  excerpts: { line: string; translation: string; association: string; memorize: string; expand: [string, string][] }[];
+  sounds: { sound: string; how: string; examples: string[] }[];
+  trivia: string[];
+  model?: string;
+  created_at?: string;
+};
+export type Lyric = { id: string; lang: string; song_key: string; lines: LyricLine[]; lesson?: FullLesson | null };
 
 export type Profile = {
   id: string;

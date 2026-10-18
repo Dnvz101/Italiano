@@ -1,5 +1,12 @@
 # Histórico de versões — Ascolto em Família
 
+## v14 — 2026-10-18 · Aula completa
+- **✨ Gerar aula completa** em cada semana e favorita com letra: trechos comentados pela técnica A.M.E. (associação, memorização, expansão), sons difíceis da música com áudio lento (🐢) e curiosidades.
+- Versos citados pela IA são conferidos contra a letra real; inventados são descartados.
+- A aula é salva com a letra e compartilhada com a família (uma chamada de IA por música); botão para refazer.
+- **🎓 Aulas em vídeo**: atalho para aulas no YouTube sobre a música.
+- Banco: `0003_aula_completa.sql` (coluna `lesson` em `lyrics`).
+
 ## v13 — 2026-10-18 · Estante de discos
 - **Trilha como estante**: cada módulo é um disco que abre e fecha; as semanas são faixas numeradas; a semana atual aparece como "tocando agora" (equalizador).
 - **Minhas favoritas** viraram um álbum próprio na Trilha (cor framboesa), separado das músicas indicadas por nível; "+ Adicionar" fica dentro dele. A aba Músicas saiu (5 abas no celular).

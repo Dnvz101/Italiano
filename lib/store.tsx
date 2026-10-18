@@ -5,7 +5,7 @@ import { blankProgress, today } from '@/lib/course';
 import { setVoicePref } from '@/lib/voice';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
-import type { Course, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
+import type { Course, FullLesson, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
 
 export const OLD_KEY = 'ascolto-familia-v1';
 export const importedKey = (uid: string) => 'ascolto-imported-v9:' + uid;
@@ -32,6 +32,7 @@ type Store = Data & {
   deletePhrase: (id: string) => Promise<void>;
   saveLyrics: (lang: string, key: string, texts: string[]) => Promise<void>;
   setLyricAi: (lyricId: string, ais: string[]) => Promise<void>;
+  setLyricLesson: (lyricId: string, lesson: FullLesson) => Promise<void>;
   setAnswer: (lyricId: string, line: string, value: string) => void;
   setName: (name: string) => Promise<void>;
   setSetting: (k: keyof Profile['settings'], v: any) => void;
@@ -322,6 +323,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [sb, commit]
   );
 
+  const setLyricLesson = useCallback(
+    async (lyricId: string, lesson: FullLesson) => {
+      const d = latest.current!;
+      const entry = Object.entries(d.lyrics).find(([, l]) => l.id === lyricId);
+      if (!entry) return;
+      const [k, l] = entry;
+      commit((x) => ({ ...x, lyrics: { ...x.lyrics, [k]: { ...l, lesson } } }));
+      const { error } = await sb.from('lyrics').update({ lesson }).eq('id', lyricId);
+      report(error);
+    },
+    [sb, commit]
+  );
+
   const setAnswer = useCallback(
     (lyricId: string, line: string, value: string) => {
       commit((x) => ({ ...x, answers: { ...x.answers, [lyricId]: { ...(x.answers[lyricId] || {}), [line]: value } } }));
@@ -566,6 +580,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     deletePhrase,
     saveLyrics,
     setLyricAi,
+    setLyricLesson,
     setAnswer,
     setName,
     setSetting,

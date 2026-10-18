@@ -1,0 +1,150 @@
+'use client';
+import { useState } from 'react';
+import { useStore } from '@/lib/store';
+import { useCourse } from '@/lib/nav';
+import Spk from './Spk';
+
+/** Aula completa da música: trechos comentados (A.M.E.), sons e curiosidades. Uma chamada de IA, salva para a família. */
+export default function FullLessonCard({ songKey, title, artist }: { songKey: string; title: string; artist: string }) {
+  const s = useStore();
+  const { lang } = useCourse();
+  const row = s.lyrics[`${lang}:${songKey}`];
+  const lesson = row?.lesson;
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+
+  const generate = async () => {
+    if (!row || busy) return;
+    if (lesson && !confirm('Gerar a aula de novo? A atual será substituída para toda a família.')) return;
+    setBusy(true);
+    setErr('');
+    try {
+      const r = await fetch('/api/full-lesson', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ lang, title, artist, lines: row.lines.map((l) => l.t) }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
+      await s.setLyricLesson(row.id, d.lesson);
+    } catch (e: any) {
+      setErr(e.message);
+    }
+    setBusy(false);
+  };
+
+  if (!row)
+    return (
+      <div className="card lesson-cta">
+        <h3>🎓 Aula completa</h3>
+        <p className="mut" style={{ margin: 0 }}>
+          Busque ou cole a letra acima para liberar os trechos comentados, os sons e as curiosidades desta música.
+        </p>
+      </div>
+    );
+
+  if (!lesson)
+    return (
+      <div className="card lesson-cta">
+        <h3>🎓 Aula completa</h3>
+        <p className="mut" style={{ marginTop: 0 }}>
+          Versos comentados com associação, memorização e expansão, os sons difíceis da música e curiosidades. Fica salva
+          para a família toda.
+        </p>
+        <button className="btn" onClick={generate} disabled={busy}>
+          {busy ? 'Preparando a aula… (uns 20 s)' : '✨ Gerar aula completa'}
+        </button>
+        {err && (
+          <p className="err" role="alert">
+            {err}
+          </p>
+        )}
+      </div>
+    );
+
+  return (
+    <>
+      <div className="card">
+        <h3>🔍 Trechos comentados</h3>
+        <p className="mut" style={{ marginTop: 0 }}>
+          <b>A</b>ssociação com o português, <b>M</b>emorização do que importa e <b>E</b>xpansão com frases novas.
+        </p>
+        {lesson.excerpts.map((e, i) => (
+          <div key={i} className="exc">
+            <div className="exc-line">
+              <Spk text={e.line} />
+              <Spk text={e.line} slow />
+              <b>{e.line}</b>
+            </div>
+            <div className="exc-tr mut">{e.translation}</div>
+            <dl className="ame">
+              <dt>A</dt>
+              <dd>{e.association}</dd>
+              <dt>M</dt>
+              <dd>{e.memorize}</dd>
+              <dt>E</dt>
+              <dd>
+                {e.expand.map(([it, pt], j) => (
+                  <div key={j} className="exp">
+                    <Spk text={it} />
+                    <span>
+                      <i>{it}</i>
+                      <br />
+                      <span className="mut">{pt}</span>
+                    </span>
+                  </div>
+                ))}
+              </dd>
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      {lesson.sounds.length > 0 && (
+        <div className="card">
+          <h3>🗣️ Sons desta música</h3>
+          {lesson.sounds.map((x, i) => (
+            <div key={i} className="snd">
+              <div className="snd-h">
+                <span className="snd-k">{x.sound}</span>
+                <span>{x.how}</span>
+              </div>
+              <div className="snd-ex">
+                {x.examples.map((w) => (
+                  <span key={w} className="chip snd-chip">
+                    {w} <Spk text={w} slow />
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {lesson.trivia.length > 0 && (
+        <div className="card">
+          <h3>💡 Curiosidades</h3>
+          <ul className="trivia">
+            {lesson.trivia.map((t, i) => (
+              <li key={i}>{t}</li>
+            ))}
+          </ul>
+          <p className="mut" style={{ marginBottom: 0 }}>
+            Geradas por IA: confira antes de contar por aí.
+          </p>
+        </div>
+      )}
+
+      <div className="redo">
+        <button className="btn ghost sm" onClick={generate} disabled={busy}>
+          {busy ? 'Refazendo…' : 'Refazer aula'}
+        </button>
+        {err && (
+          <span className="err" role="alert">
+            {err}
+          </span>
+        )}
+      </div>
+    </>
+  );
+}

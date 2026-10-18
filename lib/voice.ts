@@ -48,7 +48,7 @@ export function currentVoice(lang: string) {
   return (p && vs.find((v) => v.voiceURI === p)) || vs[0] || null;
 }
 
-export function say(text: string, lang: string, locale: string) {
+export function say(text: string, lang: string, locale: string, rate = 0.88) {
   if (!hasTTS()) {
     alert('Seu navegador não tem leitura em voz alta.');
     return;
@@ -58,7 +58,7 @@ export function say(text: string, lang: string, locale: string) {
   const v = currentVoice(lang);
   u.lang = v ? v.lang : locale;
   if (v) u.voice = v;
-  u.rate = 0.88;
+  u.rate = rate;
   speechSynthesis.speak(u);
 }
 

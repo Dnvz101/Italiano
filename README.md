@@ -1,4 +1,4 @@
-# Ascolto em Família · v13
+# Ascolto em Família · v14
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -10,7 +10,7 @@ App para aprender idiomas com música, pelo método natural (Stephen Krashen). I
 
 ### 1. Supabase
 1. Crie uma conta em supabase.com → **New project**. Região sugerida: **Northeast Asia (Tokyo)**.
-2. Abra **SQL Editor** → cole o conteúdo de `supabase/migrations/0001_init.sql` → **Run**. Depois, numa nova query, `supabase/migrations/0002_minha_musica.sql` → **Run**.
+2. Abra **SQL Editor** → cole o conteúdo de `supabase/migrations/0001_init.sql` → **Run**. Depois, uma de cada vez, `supabase/migrations/0002_minha_musica.sql` e `0003_aula_completa.sql` → **Run**.
 3. No mesmo SQL Editor, cole `supabase/seed.sql` → **Run** (carrega as músicas e os cards).
 4. **Authentication → URL Configuration**
    - *Site URL:* `https://SEU-APP.vercel.app`
@@ -79,6 +79,16 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Fonte atual: **LRCLIB** (gratuito, comunitário). As letras de lá são enviadas por usuários, **sem licença das editoras**: serve para uso pessoal/família. Se o Ascolto virar produto, troque por um fornecedor licenciado (ex.: Musixmatch com plano comercial) em `lib/lyrics-provider.ts` e na variável `LYRICS_PROVIDER`.
 - A busca passa pelo servidor (`/api/lyrics/search`, só com login). Em Minha música, a duração vem junto e mede as palavras por minuto.
 - Não precisa de chave nem de variável nova na Vercel.
+
+## Aula completa (v14)
+- Em cada semana e em cada favorita com letra: **✨ Gerar aula completa**.
+  - **Trechos comentados** pela técnica A.M.E.: Associação com o português, Memorização do que importa, Expansão com frases novas (com 🔊 e 🐢 áudio lento).
+  - **Sons desta música**: 3–4 sons difíceis para brasileiros, com palavras da própria letra.
+  - **Curiosidades**: só fatos que a IA afirma ter certeza, com aviso para conferir.
+- O servidor só aceita versos que existem de verdade na letra colada (versos inventados pela IA são descartados).
+- Uma chamada de IA por música; a aula fica salva junto da letra, para a família toda.
+- Botão **🎓 Aulas em vídeo**: busca no YouTube aulas sobre aquela música.
+- **Atualizando**: rode `supabase/migrations/0003_aula_completa.sql` no SQL Editor (uma linha).
 
 ## IA
 - `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.

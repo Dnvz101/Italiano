@@ -5,6 +5,7 @@ import { roteiro } from '@/lib/course';
 import { LEVELS, songFit, userLevel } from '@/lib/level';
 import CardList from '../CardList';
 import Lyrics from './Lyrics';
+import FullLessonCard from '../FullLessonCard';
 
 export default function SongView() {
   const s = useStore();
@@ -65,6 +66,13 @@ export default function SongView() {
           </a>
           <a href={`https://open.spotify.com/search/${q}`} target="_blank" rel="noopener">
             🎧 Spotify
+          </a>
+          <a
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${lang === 'de' ? 'alemão' : 'italiano'} com música ${song.title} ${song.artist}`)}`}
+            target="_blank"
+            rel="noopener"
+          >
+            🎓 Aulas em vídeo
           </a>
         </div>
       </div>
@@ -144,6 +152,8 @@ export default function SongView() {
         artist={song.artist}
         chorusDefault={fit.kind === 'hard'}
       />
+
+      <FullLessonCard key={'fl-' + song.id} songKey={'song:' + song.id} title={song.title} artist={song.artist} />
 
       {a.lesson && (
         <div className="card lesson">

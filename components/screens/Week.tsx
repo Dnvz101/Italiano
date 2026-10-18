@@ -5,6 +5,7 @@ import { roteiro } from '@/lib/course';
 import CardList from '../CardList';
 import { moduleOfWeek, modules } from '@/lib/modules';
 import Lyrics from './Lyrics';
+import FullLessonCard from '../FullLessonCard';
 
 export default function WeekView() {
   const s = useStore();
@@ -66,6 +67,13 @@ export default function WeekView() {
           <a href={`https://www.google.com/search?q=${q}%20${course.meta.lyr}`} target="_blank" rel="noopener">
             📄 Letra
           </a>
+          <a
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${course.meta.lang === 'de' ? 'alemão' : 'italiano'} com música ${w.title} ${w.artist}`)}`}
+            target="_blank"
+            rel="noopener"
+          >
+            🎓 Aulas em vídeo
+          </a>
         </div>
       </div>
 
@@ -83,6 +91,8 @@ export default function WeekView() {
       </div>
 
       <Lyrics key={`${lang}-${w.n}`} songKey={'w' + w.n} label={`da semana ${w.n}`} title={w.title} artist={w.artist} />
+
+      <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />
 
       <div className="card lesson">
         <h3>💡 {w.theme}</h3>

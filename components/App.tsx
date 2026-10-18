@@ -12,6 +12,7 @@ import Songs from './screens/Songs';
 import SongView from './screens/Song';
 import WeekView from './screens/Week';
 import Review from './screens/Review';
+import Chat from './screens/Chat';
 import Mine from './screens/Mine';
 import Method from './screens/Method';
 import Settings from './screens/Settings';
@@ -20,6 +21,7 @@ import ImportLocal from './screens/ImportLocal';
 const TABS: [View, string, string][] = [
   ['home', '🏠', 'Início'],
   ['weeks', '🎵', 'Trilha'],
+  ['chat', '💬', 'Conversa'],
   ['review', '🃏', 'Cards'],
   ['mine', '✍️', 'Frases'],
   ['method', '📖', 'Método'],
@@ -117,6 +119,7 @@ export default function App() {
     week: WeekView,
     songs: Songs,
     song: SongView,
+    chat: Chat,
     review: Review,
     mine: Mine,
     method: Method,

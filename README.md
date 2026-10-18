@@ -1,4 +1,4 @@
-# Ascolto em Família · v14.2
+# Ascolto em Família · v15
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -89,6 +89,14 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Uma chamada de IA por música; a aula fica salva junto da letra, para a família toda.
 - Botão **🎓 Aulas em vídeo**: busca no YouTube aulas sobre aquela música.
 - **Atualizando**: rode `supabase/migrations/0003_aula_completa.sql` no SQL Editor (uma linha).
+
+## Conversa (v15)
+- Aba **💬 Conversa**: bate-papo com a IA no idioma, no nível da pessoa, sobre a música da semana, uma favorita ou um tema livre (apresentar-se, comida, viagem, família, trabalho, fim de semana).
+- Falar ou escrever: o 🎙️ usa o reconhecimento de voz do navegador (Chrome, Safari, Edge); as respostas podem ser lidas em voz alta.
+- Erros não são corrigidos com bronca: a IA responde normalmente e mostra "Mais natural: …" com uma dica curta. Dá para escrever em português quando não souber dizer algo.
+- Cada resposta tem 🔊, 🐢 e "Traduzir".
+- A conversa fica salva no aparelho (por pessoa e idioma); não vai para o banco.
+- Limite próprio: `AI_CHAT_DAILY_LIMIT` (padrão 150 mensagens/24h), separado do limite das aulas e traduções. Modelo: `AI_MODEL_CHAT` (padrão = `ANTHROPIC_MODEL`, Haiku).
 
 ## IA
 - `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.

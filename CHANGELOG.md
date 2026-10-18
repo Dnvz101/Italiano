@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v15 — 2026-10-18 · Conversa
+- Nova aba **💬 Conversa** (barra do celular e menu lateral): bate-papo com a IA no seu nível, sobre a música da semana, uma favorita ou um tema do dia a dia.
+- Voz: 🎙️ para falar (reconhecimento de voz do navegador) e leitura das respostas em voz alta (opcional).
+- Correção gentil: a resposta segue a conversa e mostra "Mais natural: …" com dica curta; dá para escrever em português quando faltar a palavra.
+- 🔊, 🐢 e "Traduzir" em cada fala da IA; conversa salva no aparelho.
+- Limite diário próprio para a conversa (150 mensagens por padrão), sem consumir o das aulas.
+- Sem mudança de banco.
+
 ## v14.2 — 2026-10-18 · Correção: "tool_choice ... not supported for this model"
 - A ferramenta de resposta estruturada passa a ser oferecida com `tool_choice: auto` (o modelo em uso não aceita uso forçado). Se o modelo responder em texto, o JSON é lido do texto.
 - Sem mudança de banco.

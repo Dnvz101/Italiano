@@ -6,6 +6,7 @@ import { LEVELS, songFit, userLevel, langPt } from '@/lib/level';
 import { isComplete, modules } from '@/lib/modules';
 import { Eq } from '../Disc';
 import Icon from '../Icon';
+import HeroGreeting from '../HeroGreeting';
 
 export default function Home() {
   const s = useStore();
@@ -41,9 +42,7 @@ export default function Home() {
 
   return (
     <>
-      <h2>
-        {course.meta.hello}, {s.profile.name}! 👋
-      </h2>
+      <HeroGreeting lang={lang} hello={course.meta.hello} name={s.profile.name} />
       {!mp?.sugg && !mp?.skipped && (
         <div className="card invite pop">
           <h3 className="ih"><Icon name="perfil-musical" size={34} /> Que tipo de música você curte?</h3>

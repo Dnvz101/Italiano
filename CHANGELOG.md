@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v21 — 2026-10-18 · Boas-vindas animadas
+- No Início (italiano), o "Ciao, Leandro!" agora aparece **dentro do balão de fala** do vídeo animado da turma: a pizza de chapéu de chef, a Vespa e a cafeteira moka.
+- Vídeo recortado, sem som, em loop com emenda suave (cross-fade) e comprimido para ~380 KB (`public/media/hero-it.mp4`), com imagem de capa enquanto carrega.
+- Toca sozinho e em silêncio (como exige o celular), pausa quando sai da tela ou o app vai para o fundo; com "Reduzir movimento" ligado, mostra só a imagem parada.
+- O nome aparece só com o primeiro nome e com inicial maiúscula; nomes longos diminuem a letra para caber no balão.
+- Alemão continua com o título normal ("Hallo, …") até ganhar o seu vídeo: basta adicionar `hero-de.mp4` e `hero-de.webp` e uma linha em `components/HeroGreeting.tsx`.
+- Sem mudança de banco.
+
 ## v20.2 — 2026-10-18 · Pronúncia no iPhone
 - Correção: no iPhone, o Alfabeto (e às vezes o Shadowing) dizia "Não entendi". O Safari, gravando e reconhecendo ao mesmo tempo, costuma devolver vazio, principalmente em palavras curtas e letras soltas.
 - No iPhone, com `GEMINI_API_KEY` configurada, a avaliação agora é feita pelo servidor, igual ao Android. A gravação do iPhone (mp4/AAC) é aceita.

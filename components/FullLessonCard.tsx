@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import Spk from './Spk';
+import AiProgress from './AiProgress';
 
 /** Aula completa da música: trechos comentados (A.M.E.), sons e curiosidades. Uma chamada de IA, salva para a família. */
 export default function FullLessonCard({ songKey, title, artist }: { songKey: string; title: string; artist: string }) {
@@ -52,8 +53,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
           para a família toda.
         </p>
         <button className="btn" onClick={generate} disabled={busy}>
-          {busy ? 'Preparando a aula… (uns 20 s)' : '✨ Gerar aula completa'}
+          {busy ? 'Preparando a aula…' : '✨ Gerar aula completa'}
         </button>
+        {busy && <AiProgress expectedMs={25000} steps={['Lendo a letra…', 'Escolhendo os melhores trechos…', 'Comentando os versos…', 'Separando os sons difíceis…', 'Buscando curiosidades…']} />}
         {err && (
           <p className="err" role="alert">
             {err}
@@ -139,6 +141,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
         <button className="btn ghost sm" onClick={generate} disabled={busy}>
           {busy ? 'Refazendo…' : 'Refazer aula'}
         </button>
+        {busy && <AiProgress expectedMs={25000} steps={['Lendo a letra…', 'Escolhendo os melhores trechos…', 'Comentando os versos…', 'Separando os sons difíceis…', 'Buscando curiosidades…']} />}
         {err && (
           <span className="err" role="alert">
             {err}

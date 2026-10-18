@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v17.1 — 2026-10-18 · Progresso nas esperas da IA
+- Anel de progresso com porcentagem e etapas ("Lendo a letra…", "Medindo velocidade e vocabulário…", "Conferindo se cada música existe…") em todas as esperas da IA: análise de música, aula completa (gerar e refazer), perfil musical e tradução da letra.
+- Tempo restante estimado; se passar muito do normal, avisa que ainda está trabalhando. O anel aparece na tela sozinho no celular.
+- A IA não informa o progresso real: o anel avança por estimativa e só some quando a resposta chega.
+- Sem mudança de banco.
+
 ## v17 — 2026-10-18 · Perfil musical
 - Novo **🎧 Perfil musical**, por idioma: a pessoa escolhe estilos, épocas e artistas que ama em qualquer idioma (até brasileiros), e a IA sugere ~6 artistas em italiano/alemão com a mesma vibe, com 2 músicas cada no nível dela.
 - Cada música sugerida é **conferida na base de letras**: títulos inventados pela IA são descartados.

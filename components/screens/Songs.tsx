@@ -4,6 +4,7 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { LEVELS, parseDuration, songFit, userLevel } from '@/lib/level';
 import LyricsSearch from '../LyricsSearch';
+import AiProgress from '../AiProgress';
 
 export default function Songs() {
   const s = useStore();
@@ -137,12 +138,18 @@ export default function Songs() {
           <input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="ex.: 3:45 ou 3.45" inputMode="decimal" enterKeyHint="done" />
           <div className="row" style={{ marginTop: 12 }}>
             <button className="btn sm" onClick={analyze} disabled={busy}>
-              {busy ? 'Analisando… (uns 20 s)' : '✨ Analisar e montar a aula'}
+              {busy ? 'Analisando…' : '✨ Analisar e montar a aula'}
             </button>
             <button className="btn ghost sm" onClick={() => setOpen(false)} disabled={busy}>
               Cancelar
             </button>
           </div>
+          {busy && (
+            <AiProgress
+              expectedMs={22000}
+              steps={['Lendo a letra…', 'Medindo velocidade e vocabulário…', 'Comparando com o seu nível…', 'Montando a aula e os cards…', 'Procurando músicas parecidas…']}
+            />
+          )}
           <p className="mut" style={{ marginBottom: 0 }}>
             Seu nível em {course.meta.name}: <b>{LEVELS[level]}</b>.{' '}
             <a href="#" onClick={(e) => (e.preventDefault(), go('settings'))}>

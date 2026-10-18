@@ -4,6 +4,7 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { LEVELS, songFit, userLevel, langPt } from '@/lib/level';
 import type { MusicProfile } from '@/lib/types';
+import AiProgress from '../AiProgress';
 
 const GENRES: Record<string, string[]> = {
   it: ['Pop', 'Cantautori (MPB italiana)', 'Rap / Trap', 'Indie', 'Rock', 'Romântica', 'Dançante', 'Eletrônica', 'Acústico'],
@@ -133,9 +134,10 @@ export default function Taste() {
             </button>
           </div>
           {busy && (
-            <p className="mut" style={{ textAlign: 'center' }}>
-              Leva uns 20 segundos: o app também confere se cada música existe e tem letra.
-            </p>
+            <AiProgress
+              expectedMs={22000}
+              steps={['Entendendo o seu gosto…', 'Procurando artistas com a mesma vibe…', 'Escolhendo músicas no seu nível…', 'Conferindo se cada música existe e tem letra…']}
+            />
           )}
           {err && <p className="err">{err}</p>}
           {mp.sugg && !busy && (
@@ -164,6 +166,12 @@ export default function Taste() {
                   {busy ? 'Procurando…' : '🔄 Outras sugestões'}
                 </button>
               </div>
+              {busy && (
+                <AiProgress
+              expectedMs={22000}
+              steps={['Entendendo o seu gosto…', 'Procurando artistas com a mesma vibe…', 'Escolhendo músicas no seu nível…', 'Conferindo se cada música existe e tem letra…']}
+            />
+              )}
               {err && <p className="err">{err}</p>}
             </div>
 

@@ -350,3 +350,18 @@ h3{font-weight:700;letter-spacing:-.01em}
 .btn.tstudy{width:auto;flex:none;padding:8px 10px;font-size:14px;white-space:nowrap}
 .tgot{font-size:13px;white-space:nowrap}
 .taste-sum .chip{margin-bottom:4px}
+/* v17.1 · progresso da IA */
+.aiprog{scroll-margin:80px 0 calc(96px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:14px;margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--chip)}
+.aiprog-ring{position:relative;width:56px;height:56px;flex:none}
+.aiprog-ring svg{width:100%;height:100%;display:block}
+.aiprog-ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.aiprog-ring .trk{stroke:color-mix(in srgb,var(--acc) 16%,transparent)}
+.aiprog-ring .bar{stroke:var(--acc);transition:stroke-dasharray 400ms var(--ease-out)}
+.aiprog-n{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.aiprog-n small{font-size:9px;font-weight:600;margin:3px 0 0 1px}
+.aiprog-t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.aiprog-t b{font-size:15px;animation:aiprog-in 300ms var(--ease-out)}
+.aiprog-t .mut{font-size:13px}
+@keyframes aiprog-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.redo .aiprog{width:100%}
+@media (prefers-reduced-motion:reduce){.aiprog-ring .bar{transition:none}.aiprog-t b{animation:none}}

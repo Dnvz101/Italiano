@@ -6,6 +6,7 @@ import { chorusLines } from '@/lib/level';
 import Spk from '../Spk';
 import LyricsSearch from '../LyricsSearch';
 import Shadow from '../Shadow';
+import AiProgress from '../AiProgress';
 
 export default function Lyrics({
   songKey,
@@ -161,6 +162,12 @@ export default function Lyrics({
           Editar letra
         </button>
       </div>
+      {busy && (
+        <AiProgress
+          expectedMs={4000 + total * 250}
+          steps={['Lendo a letra…', 'Traduzindo linha por linha…', 'Deixando a tradução natural…']}
+        />
+      )}
 
       {row.lines.map((l, i) => {
         if (focus && !chorusIdx.has(i)) return null;

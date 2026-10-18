@@ -18,14 +18,15 @@ import Method from './screens/Method';
 import Settings from './screens/Settings';
 import ImportLocal from './screens/ImportLocal';
 import Taste from './screens/Taste';
+import Icon, { type IconName } from './Icon';
 
-const TABS: [View, string, string][] = [
-  ['home', '🏠', 'Início'],
-  ['weeks', '🎵', 'Trilha'],
-  ['chat', '💬', 'Conversa'],
-  ['review', '🃏', 'Cards'],
-  ['mine', '✍️', 'Frases'],
-  ['method', '📖', 'Método'],
+const TABS: [View, IconName, string][] = [
+  ['home', 'home', 'Início'],
+  ['weeks', 'trilha', 'Trilha'],
+  ['chat', 'conversa', 'Conversa'],
+  ['review', 'cards', 'Cards'],
+  ['mine', 'frases', 'Frases'],
+  ['method', 'metodo', 'Método'],
 ];
 // a aba "Trilha" também cobre semanas, favoritas e músicas
 const tabOf = (v: View): View => (v === 'week' || v === 'songs' || v === 'song' ? 'weeks' : v === 'taste' ? 'home' : v);
@@ -138,7 +139,7 @@ export default function App() {
       aria-current={active === k ? 'page' : undefined}
       onClick={() => (k === 'review' ? startReview() : go(k))}
     >
-      <b aria-hidden="true">{ic}</b>
+      <Icon name={ic} size={28} className="nav-ic" />
       <span>{l}</span>
     </button>
   ));
@@ -159,7 +160,7 @@ export default function App() {
                 <span className="mut">trocar</span>
               </button>
               <button className={`side-set ${shown === 'settings' ? 'on' : ''}`} onClick={() => go('settings')}>
-                ⚙️ Ajustes
+                <Icon name="ajustes" size={22} /> Ajustes
               </button>
             </div>
           </aside>
@@ -172,8 +173,8 @@ export default function App() {
             <button className="spk" onClick={() => go('lang')} aria-label="Trocar idioma">
               {course ? course.meta.flag : '🌍'}
             </button>
-            <button className="spk" onClick={() => go('settings')} aria-label="Configurações">
-              ⚙️
+            <button className="spk ic-btn" onClick={() => go('settings')} aria-label="Configurações">
+              <Icon name="ajustes" size={22} />
             </button>
           </header>
           {s.saveError && <div className="banner">{s.saveError}</div>}

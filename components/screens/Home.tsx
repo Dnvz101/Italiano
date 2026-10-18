@@ -5,6 +5,7 @@ import { IMM_GOAL, currentWeek, dueList, immDay, immWeek, learnedCount, streak, 
 import { LEVELS, songFit, userLevel, langPt } from '@/lib/level';
 import { isComplete, modules } from '@/lib/modules';
 import { Eq } from '../Disc';
+import Icon from '../Icon';
 
 export default function Home() {
   const s = useStore();
@@ -45,7 +46,7 @@ export default function Home() {
       </h2>
       {!mp?.sugg && !mp?.skipped && (
         <div className="card invite pop">
-          <h3>🎧 Que tipo de música você curte?</h3>
+          <h3 className="ih"><Icon name="perfil-musical" size={34} /> Que tipo de música você curte?</h3>
           <p style={{ marginTop: 0 }}>
             Conte seus estilos e artistas favoritos (podem ser brasileiros) e o app acha músicas em{' '}
             {langPt(lang)} com a mesma vibe, no seu nível.
@@ -136,7 +137,7 @@ export default function Home() {
 
       {forYou.length > 0 && (
         <div className="card">
-          <h3>🎧 Para você</h3>
+          <h3 className="ih"><Icon name="perfil-musical" size={28} /> Para você</h3>
           {forYou.map((x) => {
             const f = songFit(x.level, level);
             return (
@@ -161,7 +162,7 @@ export default function Home() {
       )}
 
       <div className="card">
-        <h3>🎧 Imersão de hoje</h3>
+        <h3 className="ih"><Icon name="imersao" size={28} /> Imersão de hoje</h3>
         <p className="mut" style={{ marginTop: 0 }}>
           Séries, podcasts, vídeos ou música de fundo, sem se preocupar em entender tudo. Meta: {IMM_GOAL} min/dia.
         </p>

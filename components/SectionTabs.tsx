@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import Icon, { type IconName } from './Icon';
 
-export type Section = { id: string; icon: string; label: string; badge?: string | number | null };
+export type Section = { id: string; icon: IconName; label: string; badge?: string | number | null };
 
 const KEY = 'ascolto-section';
 
@@ -81,9 +82,7 @@ export default function SectionTabs({
           className={s.id === value ? 'on' : ''}
           onClick={() => pick(s.id)}
         >
-          <span className="stabs-i" aria-hidden="true">
-            {s.icon}
-          </span>
+          <Icon name={s.icon} size={24} className="stabs-i" />
           <span className="stabs-l">{s.label}</span>
           {s.badge != null && s.badge !== '' && <span className="stabs-b">{s.badge}</span>}
         </button>

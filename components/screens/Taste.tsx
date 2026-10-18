@@ -5,6 +5,7 @@ import { useCourse } from '@/lib/nav';
 import { LEVELS, songFit, userLevel, langPt } from '@/lib/level';
 import type { MusicProfile } from '@/lib/types';
 import AiProgress from '../AiProgress';
+import Icon from '../Icon';
 
 const GENRES: Record<string, string[]> = {
   it: ['Pop', 'Cantautori (MPB italiana)', 'Rap / Trap', 'Indie', 'Rock', 'Romântica', 'Dançante', 'Eletrônica', 'Acústico'],
@@ -77,7 +78,7 @@ export default function Taste() {
         <span aria-hidden="true">/</span>
         <span aria-current="page">Perfil musical</span>
       </nav>
-      <h2>🎧 Perfil musical</h2>
+      <h2 className="ih"><Icon name="perfil-musical" size={34} /> Perfil musical</h2>
 
       {editing ? (
         <div className="card">

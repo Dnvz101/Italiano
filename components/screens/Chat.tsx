@@ -6,6 +6,7 @@ import { currentWeek } from '@/lib/course';
 import { userLevel, LEVELS, langPt } from '@/lib/level';
 import { useListen } from '@/lib/listen';
 import Spk from '../Spk';
+import Icon from '../Icon';
 
 type Msg = { role: 'ai' | 'me'; text: string; tr?: string; recast?: string; tip?: string };
 type Topic = { id: string; label: string; title?: string; artist?: string; theme?: string; vocab?: string[]; free?: string };
@@ -155,7 +156,7 @@ export default function Chat() {
 
   return (
     <>
-      <h2>Conversa</h2>
+      <h2 className="ih"><Icon name="conversa" size={34} /> Conversa</h2>
       <p className="mut lead">
         Converse em {langPt(lang)} no seu nível ({LEVELS[level]}). Pode falar ou escrever, e se não souber
         dizer algo, escreva em português. Os erros viram dicas, não broncas.

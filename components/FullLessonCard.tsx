@@ -4,6 +4,7 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import Spk from './Spk';
 import AiProgress from './AiProgress';
+import Icon from './Icon';
 
 /** Aula completa da música: trechos comentados (A.M.E.), sons e curiosidades. Uma chamada de IA, salva para a família. */
 export default function FullLessonCard({ songKey, title, artist }: { songKey: string; title: string; artist: string }) {
@@ -37,7 +38,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
   if (!row)
     return (
       <div className="card lesson-cta">
-        <h3>🎓 Aula completa</h3>
+        <h3 className="ih"><Icon name="aula" size={28} /> Aula completa</h3>
         <p className="mut" style={{ margin: 0 }}>
           Busque ou cole a letra na aba 📄 Letra para liberar os trechos comentados, os sons e as curiosidades desta música.
         </p>
@@ -47,7 +48,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
   if (!lesson)
     return (
       <div className="card lesson-cta">
-        <h3>🎓 Aula completa</h3>
+        <h3 className="ih"><Icon name="aula" size={28} /> Aula completa</h3>
         <p className="mut" style={{ marginTop: 0 }}>
           Versos comentados com associação, memorização e expansão, os sons difíceis da música e curiosidades. Fica salva
           para a família toda.

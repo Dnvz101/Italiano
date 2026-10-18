@@ -1,4 +1,4 @@
-# Ascolto em Família · v18
+# Ascolto em Família · v19
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -110,6 +110,10 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Dá para ouvir a própria gravação e "Modelo + eu" para comparar ritmo e entonação.
 - O navegador pede permissão do microfone na primeira vez. No iPhone use o Safari; no Android, o Chrome. Sem IA, sem custo, sem mudança no banco; as notas ficam no aparelho.
 - A nota mede se as palavras saíram claras, não o sotaque: use o "Modelo + eu" para a melodia.
+
+## Ícones (v19)
+- Ficam em `public/icons/`: `nome.svg` (tema claro) e `nome-dark.svg` (tema escuro). O componente `components/Icon.tsx` lista os nomes.
+- Para trocar um ícone: gere um PNG chapado com fundo branco (Gemini, Recraft…), coloque numa pasta e rode `pip install vtracer pillow && python3 scripts/vectorize-icons.py pasta-png pasta-svg`. Copie o SVG para `public/icons/` e crie a versão escura trocando `#0b3d38` por `#4a958b`.
 
 ## IA
 - `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.

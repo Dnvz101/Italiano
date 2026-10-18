@@ -7,6 +7,7 @@ import Spk from '../Spk';
 import LyricsSearch from '../LyricsSearch';
 import Shadow from '../Shadow';
 import AiProgress from '../AiProgress';
+import Icon from '../Icon';
 
 export default function Lyrics({
   songKey,
@@ -83,7 +84,7 @@ export default function Lyrics({
   if (!row || editing)
     return (
       <div className="card">
-        <h3>📄 Letra bilíngue</h3>
+        <h3 className="ih"><Icon name="letra" size={28} /> Letra bilíngue</h3>
         <p className="mut" style={{ marginTop: 0 }}>
           Busque automaticamente ou cole a letra aqui. O app separa linha por linha. A letra fica visível só para a sua
           família.
@@ -111,7 +112,7 @@ export default function Lyrics({
 
   return (
     <div className="card">
-      <h3>📄 Letra bilíngue</h3>
+      <h3 className="ih"><Icon name="letra" size={28} /> Letra bilíngue</h3>
       <div className="seg">
         <button className={mode === 'ex' ? 'on' : ''} onClick={() => setMode('ex')}>
           ✍️ Exercício
@@ -120,7 +121,7 @@ export default function Lyrics({
           📖 Leitura
         </button>
         <button className={mode === 'shadow' ? 'on' : ''} onClick={() => setMode('shadow')}>
-          🎙️ Shadowing
+          <Icon name="shadowing" size={18} /> Shadowing
         </button>
       </div>
       <p className="mut">

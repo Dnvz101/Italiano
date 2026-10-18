@@ -7,6 +7,7 @@ import CardList from '../CardList';
 import Lyrics from './Lyrics';
 import FullLessonCard from '../FullLessonCard';
 import SectionTabs, { useSection } from '../SectionTabs';
+import Icon from '../Icon';
 
 export default function SongView() {
   const s = useStore();
@@ -87,13 +88,13 @@ export default function SongView() {
         sections={[
           {
             id: 'plan',
-            icon: '📅',
+            icon: 'roteiro',
             label: 'Roteiro',
             badge: studying ? `${ch.filter(Boolean).length}/7` : null,
           },
-          { id: 'lyrics', icon: '📄', label: 'Letra' },
-          { id: 'lesson', icon: '🎓', label: 'Aula' },
-          { id: 'cards', icon: '🗂️', label: 'Cards', badge: a.cards.length },
+          { id: 'lyrics', icon: 'letra', label: 'Letra' },
+          { id: 'lesson', icon: 'aula', label: 'Aula' },
+          { id: 'cards', icon: 'cards', label: 'Cards', badge: a.cards.length },
         ]}
       />
 
@@ -112,7 +113,7 @@ export default function SongView() {
             )}
             {studying ? (
               <div className="card">
-                <h3>📅 Roteiro de 7 dias</h3>
+                <h3 className="ih"><Icon name="roteiro" size={28} /> Roteiro de 7 dias</h3>
                 {roteiro(course).map((r, i) => (
                   <div
                     key={i}
@@ -175,7 +176,7 @@ export default function SongView() {
             </div>
             {a.hunt?.length > 0 && (
               <div className="card">
-                <h3>🔎 Caça-palavras</h3>
+                <h3 className="ih"><Icon name="cacapalavras" size={28} /> Caça-palavras</h3>
                 {a.hunt.map((h) => (
                   <span key={h} className="chip">
                     {h}

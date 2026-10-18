@@ -7,6 +7,7 @@ import { moduleOfWeek, modules } from '@/lib/modules';
 import Lyrics from './Lyrics';
 import FullLessonCard from '../FullLessonCard';
 import SectionTabs, { useSection } from '../SectionTabs';
+import Icon from '../Icon';
 
 export default function WeekView() {
   const s = useStore();
@@ -83,13 +84,13 @@ export default function WeekView() {
         sections={[
           {
             id: 'plan',
-            icon: '📅',
+            icon: 'roteiro',
             label: 'Roteiro',
             badge: st ? `${ch.filter(Boolean).length}/7` : null,
           },
-          { id: 'lyrics', icon: '📄', label: 'Letra' },
-          { id: 'lesson', icon: '🎓', label: 'Aula' },
-          { id: 'cards', icon: '🗂️', label: 'Cards', badge: w.cards.length },
+          { id: 'lyrics', icon: 'letra', label: 'Letra' },
+          { id: 'lesson', icon: 'aula', label: 'Aula' },
+          { id: 'cards', icon: 'cards', label: 'Cards', badge: w.cards.length },
         ]}
       />
 
@@ -104,7 +105,7 @@ export default function WeekView() {
             </div>
             {st ? (
               <div className="card">
-                <h3>📅 Roteiro da semana</h3>
+                <h3 className="ih"><Icon name="roteiro" size={28} /> Roteiro da semana</h3>
                 {roteiro(course).map((r, i) => (
                   <div
                     key={i}
@@ -136,7 +137,7 @@ export default function WeekView() {
               </div>
             )}
             <div className="card">
-              <h3>🔎 Caça-palavras</h3>
+              <h3 className="ih"><Icon name="cacapalavras" size={28} /> Caça-palavras</h3>
               <p className="mut" style={{ marginTop: 0 }}>
                 Palavras para pegar de ouvido nesta música:
               </p>

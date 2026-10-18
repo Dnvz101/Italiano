@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v19 — 2026-10-18 · Ícones ilustrados
+- Os emojis da navegação deram lugar a 15 ícones próprios no estilo "gordinho e colorido" (gerados no Gemini/Recraft, convertidos para SVG com a paleta do app; caça-palavras, imersão e favoritas desenhados à mão no mesmo estilo).
+- Onde aparecem: barra de baixo e menu lateral (Início, Trilha, Conversa, Cards, Frases, Método), Ajustes, abas da música (Roteiro, Letra, Aula, Cards), Shadowing, títulos de Letra, Aula completa, Roteiro, Caça-palavras, Imersão, Perfil musical e Conversa.
+- Abas inativas ficam em cinza e a ativa ganha cor (como nos apps de idioma); a aba ativa da música agora tem contorno, para o ícone não sumir no fundo.
+- Tema escuro com versão própria de cada ícone (os contornos escuros clareiam).
+- `scripts/vectorize-icons.py`: converte PNGs chapados em SVG com a paleta fixa, para trocar ícones no futuro.
+- Sem mudança de banco.
+
 ## v18 — 2026-10-18 · Página da música em abas
 - A página de cada semana e de cada favorita deixou de ser um rolo comprido: um cabeçalho compacto (nível, música, artista, YouTube/Spotify/Aulas) e quatro abas fixas no topo:
   - **📅 Roteiro**: sobre a música, o roteiro de 7 dias (com o progresso na aba, ex. 3/7), caça-palavras; nas favoritas também o encaixe no nível e as sugestões do mesmo artista.

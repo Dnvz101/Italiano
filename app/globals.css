@@ -389,3 +389,24 @@ h3{font-weight:700;letter-spacing:-.01em}
 }
 @media (min-width:960px){.shell.with-nav .stabs{top:0;margin:0 -8px 14px;padding:10px 8px}}
 @media (prefers-reduced-motion:reduce){.stab-body{animation:none}.stabs button:active{transform:none}}
+/* v19 · ícones ilustrados */
+.ic{display:inline-block;flex:none;line-height:0;vertical-align:middle}
+.ic img{width:100%;height:100%;display:block}
+.ic .ic-d{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ic .ic-l{display:none}:root:not([data-theme="light"]) .ic .ic-d{display:block}}
+:root[data-theme="dark"] .ic .ic-l{display:none}
+:root[data-theme="dark"] .ic .ic-d{display:block}
+.ih{display:flex;align-items:center;gap:10px}
+h2.ih{gap:12px}
+.nav-ic{transition:filter 200ms ease,opacity 200ms ease,transform 200ms var(--ease-out)}
+.tabbar button:not(.on) .nav-ic,.side-nav button:not(.on) .nav-ic{filter:grayscale(1);opacity:.55}
+.tabbar button.on .nav-ic{transform:translateY(-1px) scale(1.08)}
+.side-set{display:flex;align-items:center;gap:8px}
+.spk.ic-btn{padding:4px 6px;line-height:0}
+.stabs button:not(.on) .stabs-i{filter:grayscale(.6);opacity:.8}
+.stabs button.on .stabs-i{filter:drop-shadow(0 0 0 transparent)}
+.seg button .ic{margin-right:4px}
+.seg button:not(.on) .ic{filter:grayscale(1);opacity:.6}
+@media (prefers-reduced-motion:reduce){.nav-ic{transition:none}.tabbar button.on .nav-ic{transform:none}}
+.stabs button.on{background:var(--card);border-color:var(--acc);color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.stabs button.on .stabs-b{background:var(--acc);color:var(--acc-ink)}

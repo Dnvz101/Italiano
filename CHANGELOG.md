@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v22.1 — 2026-10-18 · Salvar a letra já prepara a aula
+- Na letra de cada semana, o botão agora é **✨ Salvar e preparar a aula**: salva a letra e, ao mesmo tempo, gera a tradução da IA linha por linha e a **aula completa** (antes era preciso ir à aba 🎓 Aula e apertar outro botão).
+- Anel de progresso enquanto prepara e aviso no fim ("Tradução e aula prontas! A aula completa está na aba 🎓 Aula").
+- Opção "Preparar também a tradução e a aula completa (IA)" para quem quer só salvar a letra.
+- Só gasta IA no que falta: se a tradução já existe, não traduz de novo; a aula é refeita apenas se a letra mudou.
+- Se a pessoa trocar de aba no meio, tudo continua e é salvo do mesmo jeito.
+- Sem mudança de banco.
+
 ## v22 — 2026-10-18 · Explorar com a câmera (realidade aumentada)
 - Novo **📷 Explorar com a câmera** (cartão no Início): aponte a câmera para as coisas da casa e o nome aparece **flutuando em cima de cada objeto**, no idioma, com o artigo colorido pelo gênero (der/die/das; il/la/lo/i/gli/le).
 - Reconhece 80 objetos do dia a dia (xícara, cadeira, mesa, celular, gato, banana, geladeira, livro…), com nome em italiano e alemão revisado.

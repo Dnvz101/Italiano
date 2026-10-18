@@ -5,6 +5,7 @@ import { useCourse } from '@/lib/nav';
 import Spk from './Spk';
 import AiProgress from './AiProgress';
 import Icon from './Icon';
+import { requestLesson } from '@/lib/lesson';
 
 /** Aula completa da música: trechos comentados (A.M.E.), sons e curiosidades. Uma chamada de IA, salva para a família. */
 export default function FullLessonCard({ songKey, title, artist }: { songKey: string; title: string; artist: string }) {
@@ -21,14 +22,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
     setBusy(true);
     setErr('');
     try {
-      const r = await fetch('/api/full-lesson', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ lang, title, artist, lines: row.lines.map((l) => l.t) }),
-      });
-      const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
-      await s.setLyricLesson(row.id, d.lesson);
+      await s.setLyricLesson(row.id, await requestLesson(lang, title, artist, row.lines.map((l) => l.t)));
     } catch (e: any) {
       setErr(e.message);
     }

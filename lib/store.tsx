@@ -30,7 +30,7 @@ type Store = Data & {
   markDay: () => void;
   addPhrase: (lang: string, text: string, meaning: string, note: string) => Promise<void>;
   deletePhrase: (id: string) => Promise<void>;
-  saveLyrics: (lang: string, key: string, texts: string[]) => Promise<void>;
+  saveLyrics: (lang: string, key: string, texts: string[]) => Promise<Lyric | null>;
   setLyricAi: (lyricId: string, ais: string[]) => Promise<void>;
   setLyricLesson: (lyricId: string, lesson: FullLesson) => Promise<void>;
   setAnswer: (lyricId: string, line: string, value: string) => void;
@@ -288,12 +288,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               return { ...x, lyrics };
             });
         }
-        return;
+        return null;
       }
       const lines: LyricLine[] = texts.map((t) => ({ t, ai: old?.lines.find((o) => o.t === t && o.ai)?.ai || '' }));
       if (!d.profile.household_id) {
         setSaveError('Sem família configurada.');
-        return;
+        return null;
       }
       const { data: row, error } = await sb
         .from('lyrics')
@@ -305,6 +305,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         .single();
       report(error);
       if (row) commit((x) => ({ ...x, lyrics: { ...x.lyrics, [lkey(lang, key)]: row } }));
+      return (row as Lyric) || null;
     },
     [sb, commit]
   );

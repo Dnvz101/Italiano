@@ -8,6 +8,7 @@ import LyricsSearch from '../LyricsSearch';
 import Shadow from '../Shadow';
 import AiProgress from '../AiProgress';
 import Icon from '../Icon';
+import { requestLesson, requestTranslation } from '@/lib/lesson';
 
 export default function Lyrics({
   songKey,
@@ -42,12 +43,62 @@ export default function Lyrics({
     setEditing(true);
   };
 
+  // salvar a letra já prepara a tradução e a aula completa (sem precisar ir na aba Aula)
+  const [prepare, setPrepare] = useState(true);
+  const [prep, setPrep] = useState<{ tr: boolean; lesson: boolean } | null>(null);
+  const [prepMsg, setPrepMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
   const save = async () => {
     const lines = draft.replace(/\r/g, '').split('\n').map((x) => x.trim());
     while (lines.length && !lines[lines.length - 1]) lines.pop();
-    await s.saveLyrics(lang, key, lines);
+    const changed = !row || row.lines.map((l) => l.t).join('\n') !== lines.join('\n');
+    const saved = await s.saveLyrics(lang, key, lines);
     setEditing(false);
+    if (!saved || !prepare || !lines.some(Boolean)) return;
+    const texts = saved.lines.map((l) => l.t);
+    const filled = saved.lines.filter((l) => l.t && l.ai).length;
+    const needTr = filled < saved.lines.filter((l) => l.t).length * 0.8;
+    const needLesson = !saved.lesson || changed;
+    if (!needTr && !needLesson) return;
+    setPrepMsg(null);
+    setPrep({ tr: needTr, lesson: needLesson });
+    const errs: string[] = [];
+    await Promise.all([
+      needTr &&
+        requestTranslation(lang, texts)
+          .then((t) => s.setLyricAi(saved.id, t))
+          .catch((e) => errs.push('tradução: ' + e.message)),
+      needLesson &&
+        requestLesson(lang, title, artist, texts)
+          .then((l) => s.setLyricLesson(saved.id, l))
+          .catch((e) => errs.push('aula: ' + e.message)),
+    ]);
+    setPrep(null);
+    setPrepMsg(
+      errs.length
+        ? { ok: false, text: `Não deu para preparar tudo (${errs.join('; ')}). Tente de novo pelos botões.` }
+        : {
+            ok: true,
+            text: needLesson ? '✅ Tradução e aula prontas! A aula completa está na aba 🎓 Aula.' : '✅ Tradução pronta!',
+          }
+    );
   };
+
+  const prepBox = prep ? (
+    <AiProgress
+      className="prep-ring"
+      expectedMs={prep.lesson ? 25000 : 4000 + draft.split('\n').length * 250}
+      steps={
+        prep.lesson
+          ? ['Salvando a letra…', 'Traduzindo linha por linha…', 'Escolhendo os melhores trechos…', 'Comentando os versos…', 'Separando os sons difíceis…', 'Buscando curiosidades…']
+          : ['Traduzindo linha por linha…', 'Deixando a tradução natural…']
+      }
+    />
+  ) : prepMsg ? (
+    <p className={prepMsg.ok ? 'prep-ok' : 'err'} role="status">
+      {prepMsg.text}
+    </p>
+  ) : null;
 
   const toggle = (i: number) => {
     const n = new Set(shown);
@@ -92,8 +143,8 @@ export default function Lyrics({
         <LyricsSearch title={title} artist={artist} onPick={(t) => setDraft(t)} />
         <textarea rows={8} placeholder="Cole a letra aqui..." value={draft} onChange={(e) => setDraft(e.target.value)} />
         <div className="row" style={{ marginTop: 10 }}>
-          <button className="btn sm" onClick={save}>
-            Salvar letra
+          <button className="btn sm" onClick={save} disabled={!draft.trim()}>
+            {prepare ? '✨ Salvar e preparar a aula' : 'Salvar letra'}
           </button>
           {row && (
             <button className="btn ghost sm" onClick={() => setEditing(false)}>
@@ -101,6 +152,10 @@ export default function Lyrics({
             </button>
           )}
         </div>
+        <label className="switch" style={{ marginTop: 10, marginBottom: 0 }}>
+          <input type="checkbox" checked={prepare} onChange={(e) => setPrepare(e.target.checked)} /> Preparar também a
+          tradução e a aula completa (IA)
+        </label>
       </div>
     );
 
@@ -113,6 +168,7 @@ export default function Lyrics({
   return (
     <div className="card">
       <h3 className="ih"><Icon name="letra" size={28} /> Letra bilíngue</h3>
+      {prepBox}
       <div className="seg">
         <button className={mode === 'ex' ? 'on' : ''} onClick={() => setMode('ex')}>
           ✍️ Exercício

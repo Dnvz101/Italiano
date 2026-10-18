@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v21.1 — 2026-10-18 · Vídeo de boas-vindas toca sozinho
+- Correção: em alguns celulares aparecia o botão de play. O React não grava o atributo `muted` no HTML e, sem ele, o iPhone recusa tocar sozinho; agora o app marca o vídeo como mudo antes de dar o play.
+- O vídeo toca **uma vez** quando o app abre e para no último quadro (com o "Ciao" no balão). Voltar ao Início na mesma sessão mostra a imagem parada; **tocar no cartão repete**.
+- Se o celular bloquear vídeo automático (modo economia de bateria), mostra a imagem parada, sem botão de play.
+- Sem mudança de banco.
+
 ## v21 — 2026-10-18 · Boas-vindas animadas
 - No Início (italiano), o "Ciao, Leandro!" agora aparece **dentro do balão de fala** do vídeo animado da turma: a pizza de chapéu de chef, a Vespa e a cafeteira moka.
 - Vídeo recortado, sem som, em loop com emenda suave (cross-fade) e comprimido para ~380 KB (`public/media/hero-it.mp4`), com imagem de capa enquanto carrega.

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { AiError, callClaude, checkQuota, logUsage } from '@/lib/ai';
+import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
 const MAX_LINES = 150;
@@ -30,19 +31,28 @@ export async function POST(req: Request) {
 Regras:
 - Tradução natural, como um brasileiro diria, mas fiel ao sentido. Se houver gíria ou expressão idiomática, traduza o sentido.
 - Mantenha exatamente ${lines.length} itens, na mesma ordem. Linha vazia vira string vazia.
-- Responda SOMENTE com um array JSON de strings, sem comentários.
+- Entregue chamando a ferramenta salvar_traducao, com a lista "translations".
 
 ${numbered}`;
 
-    const { text, model, usage } = await callClaude(prompt);
+    const model = process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5';
+    const { data, usage } = await callClaudeJSON<{ translations: string[] }>(
+      prompt,
+      {
+        name: 'salvar_traducao',
+        description: 'Salva a tradução de cada linha, na mesma ordem.',
+        schema: {
+          type: 'object',
+          properties: { translations: { type: 'array', items: { type: 'string' } } },
+          required: ['translations'],
+        },
+      },
+      8000,
+      model
+    );
     await logUsage(sb, user.id, 'translate', model, usage);
-
-    const match = text.match(/\[[\s\S]*\]/);
-    let out: any = null;
-    try {
-      out = match ? JSON.parse(match[0]) : null;
-    } catch {}
-    if (!Array.isArray(out)) throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
+    const out: any = Array.isArray(data.translations) ? data.translations : null;
+    if (!out) throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
     const translations = lines.map((l, i) => (l.trim() ? String(out[i] ?? '') : ''));
     return NextResponse.json({ translations });
   } catch (e: any) {

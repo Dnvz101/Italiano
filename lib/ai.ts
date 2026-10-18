@@ -43,6 +43,55 @@ export async function callClaude(prompt: string, maxTokens = 4096, modelOverride
   return { text, model, usage: data.usage || {} };
 }
 
+/**
+ * Pede a resposta como chamada de ferramenta: a API devolve um objeto JSON já validado
+ * contra o schema, sem o risco de aspas soltas ou texto em volta.
+ */
+export async function callClaudeJSON<T = any>(
+  prompt: string,
+  tool: { name: string; description: string; schema: Record<string, any> },
+  maxTokens = 8000,
+  modelOverride?: string
+): Promise<{ data: T; model: string; usage: any }> {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) throw new AiError('ANTHROPIC_API_KEY não configurada na Vercel.');
+  const model = modelOverride || MODEL();
+  const base = process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com';
+  const r = await fetch(`${base}/v1/messages`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+    body: JSON.stringify({
+      model,
+      max_tokens: maxTokens,
+      tools: [{ name: tool.name, description: tool.description, input_schema: tool.schema }],
+      tool_choice: { type: 'tool', name: tool.name },
+      messages: [{ role: 'user', content: prompt }],
+    }),
+    signal: AbortSignal.timeout(55000),
+  }).catch((e) => {
+    throw new AiError(e?.name === 'TimeoutError' ? 'A IA demorou demais para responder. Tente de novo.' : 'Falha de conexão com a IA.', 504);
+  });
+  const data: any = await r.json().catch(() => ({}));
+  if (!r.ok) throw new AiError(data?.error?.message || 'Erro na API da IA.', 502);
+  if (data.stop_reason === 'max_tokens')
+    throw new AiError('A resposta da IA ficou grande demais e foi cortada. Tente de novo.', 502);
+  const block = (data.content || []).find((b: any) => b.type === 'tool_use' && b.name === tool.name);
+  let out = block?.input;
+  if (!out) {
+    // plano B: alguns modelos podem responder em texto; tenta extrair o JSON
+    const text = (data.content || []).filter((b: any) => b.type === 'text').map((b: any) => b.text).join('');
+    const m = text.replace(/```(?:json)?/g, '').match(/\{[\s\S]*\}/);
+    try {
+      out = m ? JSON.parse(m[0]) : null;
+    } catch {}
+  }
+  if (!out || typeof out !== 'object') {
+    console.error('Resposta da IA sem JSON', { stop_reason: data.stop_reason, content: JSON.stringify(data.content)?.slice(0, 500) });
+    throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
+  }
+  return { data: out as T, model, usage: data.usage || {} };
+}
+
 export async function logUsage(
   sb: SupabaseClient,
   userId: string,

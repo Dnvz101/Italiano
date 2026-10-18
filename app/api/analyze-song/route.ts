@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { AiError, callClaude, checkQuota, logUsage } from '@/lib/ai';
+import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
 
@@ -12,6 +12,38 @@ const COURSES: Record<string, any> = { it: bundledIt, de: bundledDe };
 const LEVEL_NAMES = ['', 'Iniciante', 'Básico', 'Intermediário', 'Avançado'];
 
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);
+const str = { type: 'string' };
+const ANALYSIS_TOOL = {
+  name: 'salvar_analise',
+  description: 'Salva a análise de nível e a aula da música.',
+  schema: {
+    type: 'object',
+    properties: {
+      level: { type: 'integer', minimum: 1, maximum: 4 },
+      level_reason: str,
+      signals: {
+        type: 'object',
+        properties: { speed: str, vocab: str, grammar: { type: 'array', items: str }, slang: str },
+        required: ['speed', 'vocab', 'grammar', 'slang'],
+      },
+      theme: str,
+      about: str,
+      why: str,
+      hunt: { type: 'array', items: str },
+      lesson: str,
+      cards: { type: 'array', items: { type: 'array', items: str } },
+      suggestions: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { title: str, artist: str, level: { type: 'integer' }, reason: str },
+          required: ['title', 'artist', 'level', 'reason'],
+        },
+      },
+    },
+    required: ['level', 'level_reason', 'signals', 'theme', 'about', 'why', 'hunt', 'lesson', 'cards', 'suggestions'],
+  },
+};
 const sanitize = (html: string) =>
   clip(html, 4000)
     .replace(/<(?!\/?(p|b|i|br)\s*\/?>)[^>]*>/gi, '')
@@ -70,7 +102,7 @@ Música: "${title}" — ${artist}
 Letra:
 ${lines.join('\n')}
 
-Responda SOMENTE com um objeto JSON válido, sem texto antes ou depois, neste formato:
+Entregue a análise chamando a ferramenta salvar_analise, com estes campos:
 {
   "level": 1 a 4,
   "level_reason": "1 ou 2 frases em português explicando o nível (ritmo, vocabulário, tempos verbais)",
@@ -91,15 +123,8 @@ Regras:
   try {
     await checkQuota(sb, user.id);
     const model = process.env.AI_MODEL_ANALYZE || process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5';
-    const { text, usage } = await callClaude(prompt, 4000, model);
+    const { data: a, usage } = await callClaudeJSON<any>(prompt, ANALYSIS_TOOL, 8000, model);
     await logUsage(sb, user.id, 'analyze-song', model, usage);
-
-    let a: any = null;
-    try {
-      const m = text.match(/\{[\s\S]*\}/);
-      a = m ? JSON.parse(m[0]) : null;
-    } catch {}
-    if (!a || typeof a !== 'object') throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
 
     const level = Math.min(4, Math.max(1, Math.round(Number(a.level)) || 2));
     const cards = (Array.isArray(a.cards) ? a.cards : [])

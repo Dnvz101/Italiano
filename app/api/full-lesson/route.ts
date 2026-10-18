@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { AiError, callClaude, checkQuota, logUsage } from '@/lib/ai';
+import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
@@ -11,6 +11,40 @@ const SOUND_HINTS: Record<string, string> = {
   de: 'ch (ich × ach), ü, ö, ä, ei × ie, o "r" alemão, sch, z, w, consoante final que ensurdece (Tag)',
 };
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);
+const str = { type: 'string' };
+const LESSON_TOOL = {
+  name: 'salvar_aula',
+  description: 'Salva a aula completa da música (trechos comentados, sons e curiosidades).',
+  schema: {
+    type: 'object',
+    properties: {
+      excerpts: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            line: str,
+            translation: str,
+            association: str,
+            memorize: str,
+            expand: { type: 'array', items: { type: 'array', items: str } },
+          },
+          required: ['line', 'translation', 'association', 'memorize', 'expand'],
+        },
+      },
+      sounds: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { sound: str, how: str, examples: { type: 'array', items: str } },
+          required: ['sound', 'how', 'examples'],
+        },
+      },
+      trivia: { type: 'array', items: str },
+    },
+    required: ['excerpts', 'sounds', 'trivia'],
+  },
+};
 const norm = (s: string) =>
   s
     .toLowerCase()
@@ -47,7 +81,7 @@ Monte a aula da música "${title}"${artist ? ` de ${artist}` : ''} usando a téc
 Letra:
 ${lines.join('\n')}
 
-Responda SOMENTE com um objeto JSON válido, sem texto antes ou depois:
+Entregue a aula chamando a ferramenta salvar_aula, com estes campos:
 {
   "excerpts": [
     {
@@ -72,15 +106,8 @@ Regras:
   try {
     await checkQuota(sb, user.id);
     const model = process.env.AI_MODEL_ANALYZE || process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5';
-    const { text, usage } = await callClaude(prompt, 4000, model);
+    const { data: a, usage } = await callClaudeJSON<any>(prompt, LESSON_TOOL, 8000, model);
     await logUsage(sb, user.id, 'full-lesson', model, usage);
-
-    let a: any = null;
-    try {
-      const m = text.match(/\{[\s\S]*\}/);
-      a = m ? JSON.parse(m[0]) : null;
-    } catch {}
-    if (!a || typeof a !== 'object') throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
 
     // só aceita versos que existem de verdade na letra colada
     const byNorm = new Map(lines.filter((l) => l.trim()).map((l) => [norm(l), l]));

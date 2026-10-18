@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v14.1 — 2026-10-18 · Correção: "Resposta inesperada da IA"
+- As três chamadas de IA (aula completa, análise de música e tradução) agora usam saída estruturada (ferramenta da API da Anthropic): a resposta chega como JSON válido, sem quebrar por aspas ou texto extra.
+- Limite de resposta maior (8000 tokens); se mesmo assim a resposta for cortada, a mensagem diz isso.
+- Tempo máximo de 60 s também na tradução; erro de conexão ou demora com mensagem clara.
+- Sem mudança de banco.
+
 ## v14 — 2026-10-18 · Aula completa
 - **✨ Gerar aula completa** em cada semana e favorita com letra: trechos comentados pela técnica A.M.E. (associação, memorização, expansão), sons difíceis da música com áudio lento (🐢) e curiosidades.
 - Versos citados pela IA são conferidos contra a letra real; inventados são descartados.

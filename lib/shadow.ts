@@ -53,45 +53,138 @@ function near(x: string, y: string) {
   return x.slice(i + 1) === y.slice(i + 1) || x.slice(i + 1) === y.slice(i) || x.slice(i) === y.slice(i + 1);
 }
 
-/* ---------- gravação + reconhecimento ao mesmo tempo ---------- */
+/* ---------- gravação + avaliação ---------- */
 
-export type Take = { url: string | null; heard: string };
+export type Take = { url: string | null; heard: string; via: 'browser' | 'server' | 'none' };
+type Mode = 'both' | 'server' | 'sr-only' | 'rec-only' | 'none';
+
+const isAndroid = () => typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+
+/** Converte a gravação (webm/mp4) em WAV 16 kHz mono: leve e aceito por qualquer serviço de transcrição. */
+async function toWav(blob: Blob): Promise<{ b64: string; mime: string }> {
+  const raw = await blob.arrayBuffer();
+  try {
+    const AC = (window as any).AudioContext || (window as any).webkitAudioContext;
+    const ctx = new AC();
+    const buf: AudioBuffer = await ctx.decodeAudioData(raw.slice(0));
+    ctx.close?.();
+    const rate = 16000;
+    const off = new OfflineAudioContext(1, Math.ceil(buf.duration * rate), rate);
+    const src = off.createBufferSource();
+    src.buffer = buf;
+    src.connect(off.destination);
+    src.start();
+    const pcm = (await off.startRendering()).getChannelData(0);
+    const out = new DataView(new ArrayBuffer(44 + pcm.length * 2));
+    const w = (o: number, t: string) => [...t].forEach((c, i) => out.setUint8(o + i, c.charCodeAt(0)));
+    w(0, 'RIFF');
+    out.setUint32(4, 36 + pcm.length * 2, true);
+    w(8, 'WAVE');
+    w(12, 'fmt ');
+    out.setUint32(16, 16, true);
+    out.setUint16(20, 1, true);
+    out.setUint16(22, 1, true);
+    out.setUint32(24, rate, true);
+    out.setUint32(28, rate * 2, true);
+    out.setUint16(32, 2, true);
+    out.setUint16(34, 16, true);
+    w(36, 'data');
+    out.setUint32(40, pcm.length * 2, true);
+    for (let i = 0; i < pcm.length; i++) out.setInt16(44 + i * 2, Math.max(-1, Math.min(1, pcm[i])) * 0x7fff, true);
+    return { b64: b64(new Uint8Array(out.buffer)), mime: 'audio/wav' };
+  } catch {
+    return { b64: b64(new Uint8Array(raw)), mime: (blob.type || 'audio/webm').split(';')[0] };
+  }
+}
+function b64(bytes: Uint8Array) {
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
+let serverCheck: Promise<boolean> | null = null;
+const serverStt = () =>
+  (serverCheck ||= fetch('/api/transcribe')
+    .then((r) => r.json())
+    .then((d) => !!d.enabled)
+    .catch(() => false));
 
 /**
- * Grava a voz (para ouvir de volta) e, em paralelo, pede ao navegador para reconhecer o que foi dito
- * (para comparar com a linha). Se um dos dois não existir no aparelho, o outro funciona sozinho.
+ * Grava a voz (para ouvir de volta) e descobre o que foi dito (para comparar com a linha).
+ * - Computador e iPhone: grava e reconhece ao mesmo tempo, no próprio navegador.
+ * - Android: o Chrome não deixa os dois usarem o microfone juntos. Se o servidor tiver transcrição
+ *   (chave do Gemini), grava e manda o áudio para avaliar; senão, só reconhece (sem gravação para ouvir).
+ * - Se o navegador gravou mas não entendeu nada, e o servidor puder, a gravação vai para o servidor.
  */
-export function useShadowRec(locale: string) {
-  const [state, setState] = useState<'idle' | 'rec'>('idle');
+export function useShadowRec(locale: string, lang: string) {
+  const [state, setState] = useState<'idle' | 'rec' | 'stt'>('idle');
   const [error, setError] = useState('');
-  const [canRecord, setCanRecord] = useState(false);
-  const [canRecognize, setCanRecognize] = useState(false);
+  const [mode, setMode] = useState<Mode>('none');
+  const [server, setServer] = useState(false);
+  const [ready, setReady] = useState(false);
   const mr = useRef<MediaRecorder | null>(null);
   const sr = useRef<any>(null);
   const stream = useRef<MediaStream | null>(null);
   const chunks = useRef<Blob[]>([]);
+  const blob = useRef<Blob | null>(null);
   const heard = useRef('');
   const timer = useRef<any>(null);
   const finish = useRef<((t: Take) => void) | null>(null);
   const pending = useRef(0);
   const url = useRef<string | null>(null);
+  const alive = useRef(true);
 
   useEffect(() => {
-    setCanRecord(typeof window !== 'undefined' && !!navigator.mediaDevices?.getUserMedia && 'MediaRecorder' in window);
-    setCanRecognize(!!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition));
+    const canRec = !!navigator.mediaDevices?.getUserMedia && 'MediaRecorder' in window;
+    const canSR = !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+    serverStt().then((srv) => {
+      if (!alive.current) return;
+      setServer(srv);
+      if (isAndroid()) setMode(canRec && srv ? 'server' : canSR ? 'sr-only' : canRec ? 'rec-only' : 'none');
+      else setMode(canRec && canSR ? 'both' : canRec ? (srv ? 'server' : 'rec-only') : canSR ? 'sr-only' : 'none');
+      setReady(true);
+    });
+    return () => {
+      alive.current = false;
+    };
   }, []);
 
-  const done = useCallback(() => {
+  const transcribe = async (b: Blob): Promise<string> => {
+    const { b64: audio, mime } = await toWav(b);
+    const r = await fetch('/api/transcribe', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ lang, audio, mime }),
+    });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
+    return String(d.text || '');
+  };
+
+  const done = useCallback(async () => {
     pending.current--;
-    if (pending.current > 0) return;
+    if (pending.current !== 0) return; // ainda falta um, ou é um aviso repetido de fim
     clearTimeout(timer.current);
     stream.current?.getTracks().forEach((t) => t.stop());
     stream.current = null;
+    let text = heard.current.trim();
+    let via: Take['via'] = text ? 'browser' : 'none';
+    if (!text && blob.current && server) {
+      setState('stt');
+      try {
+        text = (await transcribe(blob.current)).trim();
+        via = text ? 'server' : 'none';
+      } catch (e: any) {
+        setError(e.message);
+      }
+    }
+    if (!alive.current) return;
     setState('idle');
     const f = finish.current;
     finish.current = null;
-    f?.({ url: url.current, heard: heard.current.trim() });
-  }, []);
+    f?.({ url: url.current, heard: text, via });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [server, lang]);
 
   const stop = useCallback(() => {
     clearTimeout(timer.current);
@@ -105,24 +198,28 @@ export function useShadowRec(locale: string) {
 
   const start = useCallback(
     async (maxMs: number, onDone: (t: Take) => void) => {
-      if (state === 'rec') return;
+      if (state !== 'idle' || mode === 'none') return;
       setError('');
       heard.current = '';
       chunks.current = [];
+      blob.current = null;
       if (url.current) URL.revokeObjectURL(url.current);
       url.current = null;
       finish.current = onDone;
       pending.current = 0;
 
-      // 1) gravação
-      if (canRecord) {
+      // 1) gravação (para ouvir de volta e, se preciso, mandar ao servidor)
+      if (mode === 'both' || mode === 'server' || mode === 'rec-only') {
         try {
           const s = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
           stream.current = s;
           const rec = new MediaRecorder(s);
           rec.ondataavailable = (e) => e.data.size && chunks.current.push(e.data);
           rec.onstop = () => {
-            if (chunks.current.length) url.current = URL.createObjectURL(new Blob(chunks.current, { type: rec.mimeType }));
+            if (chunks.current.length) {
+              blob.current = new Blob(chunks.current, { type: rec.mimeType });
+              url.current = URL.createObjectURL(blob.current);
+            }
             done();
           };
           mr.current = rec;
@@ -137,24 +234,23 @@ export function useShadowRec(locale: string) {
         }
       }
 
-      // 2) reconhecimento
+      // 2) reconhecimento do próprio navegador
       const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SR) {
+      if (SR && (mode === 'both' || mode === 'sr-only')) {
         try {
           const r = new SR();
           r.lang = locale;
           r.interimResults = true;
-          r.continuous = true;
+          r.continuous = mode !== 'sr-only'; // no Android o modo contínuo repete frases
           r.maxAlternatives = 1;
-          let finals = '';
           r.onresult = (e: any) => {
+            let finals = '';
             let interim = '';
-            finals = '';
             for (let i = 0; i < e.results.length; i++) {
               if (e.results[i].isFinal) finals += ' ' + e.results[i][0].transcript;
               else interim += ' ' + e.results[i][0].transcript;
             }
-            heard.current = (finals + interim).trim();
+            heard.current = (finals || interim).trim();
           };
           r.onerror = (e: any) => {
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed')
@@ -169,13 +265,12 @@ export function useShadowRec(locale: string) {
 
       if (!pending.current) {
         finish.current = null;
-        if (!canRecord && !SR) setError('Este navegador não grava nem reconhece voz. Tente o Chrome ou o Safari.');
         return;
       }
       setState('rec');
       timer.current = setTimeout(stop, maxMs);
     },
-    [canRecord, locale, state, done, stop]
+    [mode, locale, state, done, stop]
   );
 
   useEffect(
@@ -188,7 +283,17 @@ export function useShadowRec(locale: string) {
     [stop]
   );
 
-  return { state, error, canRecord, canRecognize, supported: canRecord || canRecognize, start, stop };
+  return {
+    state,
+    error,
+    mode,
+    canRecord: mode === 'both' || mode === 'server' || mode === 'rec-only',
+    canRecognize: mode === 'both' || mode === 'sr-only' || mode === 'server' || server,
+    supported: !ready || mode !== 'none',
+    ready,
+    start,
+    stop,
+  };
 }
 
 /* ---------- melhores notas por linha (neste aparelho) ---------- */

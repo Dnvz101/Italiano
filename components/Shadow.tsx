@@ -29,7 +29,7 @@ export default function Shadow({
 }) {
   const s = useStore();
   const { lang, course, speak } = useCourse();
-  const rec = useShadowRec(course.meta.locale);
+  const rec = useShadowRec(course.meta.locale, lang);
 
   const [pos, setPos] = useState(() => Math.max(0, order.indexOf(startAt)));
   const [slow, setSlow] = useState(false);
@@ -153,12 +153,20 @@ export default function Shadow({
       <button
         className={`btn sh-go ${phase === 'rec' ? 'rec' : ''}`}
         onClick={listenAndRepeat}
-        disabled={phase === 'model' || !rec.supported}
+        disabled={phase === 'model' || rec.state === 'stt' || !rec.ready || !rec.supported}
         aria-live="polite"
       >
-        {phase === 'model' ? '🔊 Ouça…' : phase === 'rec' ? '⏺ Repita agora · toque para parar' : take ? '🔁 Ouvir e repetir de novo' : '▶️ Ouvir e repetir'}
+        {phase === 'model'
+          ? '🔊 Ouça…'
+          : rec.state === 'stt'
+            ? '⏳ Avaliando sua pronúncia…'
+            : phase === 'rec'
+              ? '⏺ Repita agora · toque para parar'
+              : take
+                ? '🔁 Ouvir e repetir de novo'
+                : '▶️ Ouvir e repetir'}
       </button>
-      {phase === 'rec' && (
+      {phase === 'rec' && rec.state === 'rec' && (
         <div className="sh-bar" aria-hidden="true">
           <i style={{ animationDuration: `${maxMs}ms` }} />
         </div>
@@ -171,7 +179,7 @@ export default function Shadow({
         <button className="btn ghost sm" onClick={() => speak(line.t, rate)} disabled={phase === 'rec'}>
           🔊 Só ouvir
         </button>
-        <button className="btn ghost sm" onClick={record} disabled={phase === 'rec' || phase === 'model' || !rec.supported}>
+        <button className="btn ghost sm" onClick={record} disabled={phase === 'rec' || phase === 'model' || !rec.ready || !rec.supported}>
           🎙️ Só gravar
         </button>
       </div>
@@ -207,7 +215,13 @@ export default function Shadow({
         </div>
       )}
       {rec.error && <p className="err">{rec.error}</p>}
-      {!rec.supported && (
+      {rec.mode === 'sr-only' && (
+        <p className="mut sh-tip">
+          Neste celular o app avalia a pronúncia, mas não guarda a gravação para você se ouvir (o Android não deixa fazer
+          os dois ao mesmo tempo).
+        </p>
+      )}
+      {rec.ready && !rec.supported && (
         <p className="mut">Este navegador não grava áudio. No celular, use o Chrome (Android) ou o Safari (iPhone).</p>
       )}
 

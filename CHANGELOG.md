@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v19.1 — 2026-10-18 · Shadowing no Android
+- Correção: no Android a gravação funcionava, mas a nota não saía. O Chrome do Android não deixa gravar e reconhecer a voz ao mesmo tempo (o gravador fica com o microfone).
+- No Android, com a variável `GEMINI_API_KEY` configurada: o app grava, converte para WAV leve e o servidor manda para o Gemini transcrever. Nota e "Minha voz" funcionam juntos. Botão mostra "Avaliando sua pronúncia…".
+- No Android sem a chave: o app só reconhece (nota funciona) e avisa que a gravação não fica guardada.
+- Em qualquer aparelho: se o navegador gravou mas não entendeu nada, a gravação vai para o servidor (quando a chave existe).
+- Limite próprio: `AI_STT_DAILY_LIMIT` (300 avaliações por pessoa a cada 24h), separado das aulas e da conversa.
+- Sem mudança de banco.
+
 ## v19 — 2026-10-18 · Ícones ilustrados
 - Os emojis da navegação deram lugar a 15 ícones próprios no estilo "gordinho e colorido" (gerados no Gemini/Recraft, convertidos para SVG com a paleta do app; caça-palavras, imersão e favoritas desenhados à mão no mesmo estilo).
 - Onde aparecem: barra de baixo e menu lateral (Início, Trilha, Conversa, Cards, Frases, Método), Ajustes, abas da música (Roteiro, Letra, Aula, Cards), Shadowing, títulos de Letra, Aula completa, Roteiro, Caça-palavras, Imersão, Perfil musical e Conversa.

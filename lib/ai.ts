@@ -15,18 +15,25 @@ export class AiError extends Error {
  * Bloqueia quem passou do limite de chamadas nas últimas 24h.
  * A conversa ("chat") tem limite próprio, para não consumir o das aulas e traduções.
  */
-export async function checkQuota(sb: SupabaseClient, userId: string, kind: 'chat' | 'other' = 'other') {
-  const limit = kind === 'chat' ? Number(process.env.AI_CHAT_DAILY_LIMIT || 150) : Number(process.env.AI_DAILY_LIMIT || 30);
+export async function checkQuota(sb: SupabaseClient, userId: string, kind: 'chat' | 'stt' | 'other' = 'other') {
+  const limit =
+    kind === 'chat'
+      ? Number(process.env.AI_CHAT_DAILY_LIMIT || 150)
+      : kind === 'stt'
+        ? Number(process.env.AI_STT_DAILY_LIMIT || 300)
+        : Number(process.env.AI_DAILY_LIMIT || 30);
   const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
   let q = sb.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', since);
-  q = kind === 'chat' ? q.eq('kind', 'chat') : q.neq('kind', 'chat');
+  q = kind === 'other' ? q.not('kind', 'in', '(chat,stt)') : q.eq('kind', kind);
   const { count, error } = await q;
   if (error) throw new AiError('Erro ao verificar o limite de uso.');
   if ((count || 0) >= limit)
     throw new AiError(
       kind === 'chat'
         ? `Limite de ${limit} mensagens de conversa por dia atingido. Volte amanhã!`
-        : `Limite de ${limit} usos da IA por dia atingido. Tente amanhã.`,
+        : kind === 'stt'
+          ? `Limite de ${limit} gravações avaliadas por dia atingido. Volte amanhã!`
+          : `Limite de ${limit} usos da IA por dia atingido. Tente amanhã.`,
       429
     );
 }

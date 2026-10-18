@@ -13,9 +13,11 @@ export default function SongView() {
   if (!song)
     return (
       <>
-        <button className="btn ghost sm" onClick={() => go('songs')}>
-          ← Minhas músicas
-        </button>
+        <nav className="crumbs" aria-label="Você está em">
+        <button onClick={() => go('weeks', { open: 'fav' })}>Trilha</button>
+        <span aria-hidden="true">/</span>
+        <button onClick={() => go('weeks', { open: 'fav' })}>Minhas favoritas</button>
+      </nav>
         <p className="mut">Música não encontrada.</p>
       </>
     );
@@ -41,11 +43,13 @@ export default function SongView() {
 
   return (
     <>
-      <button className="btn ghost sm" onClick={() => go('songs')}>
-        ← Minhas músicas
-      </button>
+      <nav className="crumbs" aria-label="Você está em">
+        <button onClick={() => go('weeks', { open: 'fav' })}>Trilha</button>
+        <span aria-hidden="true">/</span>
+        <button onClick={() => go('weeks', { open: 'fav' })}>Minhas favoritas</button>
+      </nav>
 
-      <div className="card" style={{ marginTop: 12 }}>
+      <div className="card">
         <span className={`lvl l${song.level}`}>{LEVELS[song.level]}</span>
         <h3 style={{ marginTop: 10, fontSize: 20 }}>🎤 {song.title}</h3>
         <div className="mut">{song.artist}</div>
@@ -184,7 +188,7 @@ export default function SongView() {
           onClick={async () => {
             if (!confirm('Apagar esta música, a letra e os cards dela?')) return;
             await s.deleteSong(song.id);
-            go('songs');
+            go('weeks', { open: 'fav' });
           }}
         >
           Apagar música

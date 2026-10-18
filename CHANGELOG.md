@@ -1,5 +1,15 @@
 # Histórico de versões — Ascolto em Família
 
+## v13 — 2026-10-18 · Estante de discos
+- **Trilha como estante**: cada módulo é um disco que abre e fecha; as semanas são faixas numeradas; a semana atual aparece como "tocando agora" (equalizador).
+- **Minhas favoritas** viraram um álbum próprio na Trilha (cor framboesa), separado das músicas indicadas por nível; "+ Adicionar" fica dentro dele. A aba Músicas saiu (5 abas no celular).
+- **Computador**: menu lateral fixo (Início, Trilha, Cards, Frases, Método, idioma e Ajustes) no lugar da barra de baixo.
+- **Início**: "Sua estante" mostra o progresso de cada módulo e das favoritas e abre a Trilha no lugar certo.
+- **Semana e música**: caminho no topo (Trilha / Módulo / Semana) e botões de semana anterior e próxima.
+- Os módulos abertos ficam lembrados no aparelho.
+- Nova identidade: fundo verde-acinzentado (no lugar do bege), tipografia Bricolage Grotesque, números de faixa alinhados.
+- Sem mudança de banco.
+
 ## v12 — 2026-10-18 · Letras automáticas
 - **🔎 Buscar letra automaticamente** na letra bilíngue de cada semana e em Minha música, via LRCLIB (gratuito). Mostra as versões encontradas (álbum, duração, nº de linhas); a escolhida vai para o campo para conferir antes de salvar.
 - Letras só sincronizadas (formato LRC) são convertidas em texto simples.

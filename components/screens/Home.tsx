@@ -3,6 +3,8 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IMM_GOAL, currentWeek, dueList, immDay, immWeek, learnedCount, streak, today } from '@/lib/course';
 import { LEVELS, songFit, userLevel } from '@/lib/level';
+import { isComplete, modules } from '@/lib/modules';
+import { Eq } from '../Disc';
 
 export default function Home() {
   const s = useStore();
@@ -48,8 +50,8 @@ export default function Home() {
       </div>
 
       <div className="card">
-        <div className="mut">
-          Semana {cur} · {w.level}
+        <div className="mut now-label">
+          <Eq /> Tocando agora: semana {cur}, {w.level.toLowerCase()}
         </div>
         <h3 style={{ marginTop: 4 }}>
           🎵 {w.title} <span className="mut">— {w.artist}</span>
@@ -65,28 +67,40 @@ export default function Home() {
         </button>
       </div>
 
-      <div className="card">
-        <h3>🎤 Minhas músicas</h3>
-        {studying.length ? (
-          studying.slice(0, 3).map((x) => (
-            <button key={x.id} className="wk" onClick={() => go('song', x.id)}>
-              <div className="n">{songFit(x.level, level).emoji}</div>
-              <div className="t">
-                <div>{x.title}</div>
-                <div className="mut">{x.artist}</div>
-              </div>
-              <div className="mut" style={{ fontSize: 12 }}>
-                {(p.checks['s:' + x.id] || []).filter(Boolean).length}/7 dias
-              </div>
+      <div className="card shelf">
+        <h3>Sua estante</h3>
+        {modules(course).map((m, i, all) => {
+          const done = m.weeks.filter((w) => isComplete(p, w.n)).length;
+          return (
+            <button key={m.key} className="shelf-row" onClick={() => go('weeks', { open: m.key })}>
+              <span className="shelf-dot" aria-hidden="true" />
+              <span className="shelf-t">
+                <b>{all.length > 1 ? `Módulo ${i + 1}: ${m.name}` : m.name}</b>
+                <span className="disc-bar" aria-hidden="true">
+                  <i style={{ transform: `scaleX(${done / m.weeks.length})` }} />
+                </span>
+              </span>
+              <span className="mut">
+                {done}/{m.weeks.length}
+              </span>
             </button>
-          ))
-        ) : (
-          <p className="mut" style={{ marginTop: 0 }}>
-            Estude com as músicas que você ama. A IA mede o nível e monta a aula (seu nível: {LEVELS[level]}).
-          </p>
-        )}
-        <button className="btn ghost sm" style={{ width: '100%' }} onClick={() => go('songs')}>
-          {songs.length ? 'Ver minhas músicas' : '🎤 Adicionar uma música que eu amo'}
+          );
+        })}
+        <button className="shelf-row fav" onClick={() => go('weeks', { open: 'fav' })}>
+          <span className="shelf-dot" aria-hidden="true" />
+          <span className="shelf-t">
+            <b>Minhas favoritas</b>
+            <span className="mut">
+              {(() => {
+                const mine = songs.filter((x) => x.user_id === s.userId);
+                const list = studying.length ? studying : mine;
+                return list.length
+                  ? list.map((x) => `${songFit(x.level, level).emoji} ${x.title}`).join('   ')
+                  : `Traga uma música que você ama (seu nível: ${LEVELS[level]})`;
+              })()}
+            </span>
+          </span>
+          <span className="mut">{songs.filter((x) => x.user_id === s.userId).length}</span>
         </button>
       </div>
 

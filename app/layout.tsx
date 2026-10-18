@@ -15,8 +15,8 @@ export const viewport: Viewport = {
   colorScheme: 'light dark',
   // cor da barra de status = cor do cabeçalho (não a cor da marca)
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f7f5f0' },
-    { media: '(prefers-color-scheme: dark)', color: '#141412' },
+    { media: '(prefers-color-scheme: light)', color: '#eef1ee' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f1513' },
   ],
 };
 

@@ -20,11 +20,12 @@ import ImportLocal from './screens/ImportLocal';
 const TABS: [View, string, string][] = [
   ['home', '🏠', 'Início'],
   ['weeks', '🎵', 'Trilha'],
-  ['songs', '🎤', 'Músicas'],
   ['review', '🃏', 'Cards'],
   ['mine', '✍️', 'Frases'],
   ['method', '📖', 'Método'],
 ];
+// a aba "Trilha" também cobre semanas, favoritas e músicas
+const tabOf = (v: View): View => (v === 'week' || v === 'songs' || v === 'song' ? 'weeks' : v);
 
 export default function App() {
   const s = useStore();
@@ -124,37 +125,59 @@ export default function App() {
   }[shown];
   const showNav = lang && shown !== 'lang' && shown !== 'import';
 
+  const active = tabOf(shown);
+  const tabButtons = TABS.map(([k, ic, l]) => (
+    <button
+      key={k}
+      className={active === k ? 'on' : ''}
+      aria-current={active === k ? 'page' : undefined}
+      onClick={() => (k === 'review' ? startReview() : go(k))}
+    >
+      <b aria-hidden="true">{ic}</b>
+      <span>{l}</span>
+    </button>
+  ));
+
   return (
     <AppContext.Provider value={ctx}>
-      <header>
-        <h1>
-          Ascolto <span>{course ? `· ${course.meta.name}` : 'em Família'}</span>
-        </h1>
-        <button className="spk" onClick={() => go('lang')} aria-label="Trocar idioma">
-          {course ? course.meta.flag : '🌍'}
-        </button>
-        <button className="spk" onClick={() => go('settings')} aria-label="Configurações">
-          ⚙️
-        </button>
-      </header>
-      {s.saveError && <div className="banner">{s.saveError}</div>}
-      <main>
-        <Screen />
-      </main>
-      {showNav && (
-        <nav>
-          {TABS.map(([k, ic, l]) => (
-            <button
-              key={k}
-              className={view === k || (k === 'weeks' && view === 'week') || (k === 'songs' && view === 'song') ? 'on' : ''}
-              onClick={() => (k === 'review' ? startReview() : go(k))}
-            >
-              <b>{ic}</b>
-              {l}
+      <div className={`shell ${showNav ? 'with-nav' : ''}`}>
+        {showNav && (
+          <aside className="side" aria-label="Menu">
+            <div className="brand">
+              Ascolto
+              <span>em Família</span>
+            </div>
+            <nav className="side-nav">{tabButtons}</nav>
+            <div className="side-foot">
+              <button className="side-lang" onClick={() => go('lang')}>
+                <b aria-hidden="true">{course?.meta.flag}</b> {course?.meta.name}
+                <span className="mut">trocar</span>
+              </button>
+              <button className={`side-set ${shown === 'settings' ? 'on' : ''}`} onClick={() => go('settings')}>
+                ⚙️ Ajustes
+              </button>
+            </div>
+          </aside>
+        )}
+        <div className="content">
+          <header className="topbar">
+            <h1>
+              Ascolto <span>{course ? course.meta.name : 'em Família'}</span>
+            </h1>
+            <button className="spk" onClick={() => go('lang')} aria-label="Trocar idioma">
+              {course ? course.meta.flag : '🌍'}
             </button>
-          ))}
-        </nav>
-      )}
+            <button className="spk" onClick={() => go('settings')} aria-label="Configurações">
+              ⚙️
+            </button>
+          </header>
+          {s.saveError && <div className="banner">{s.saveError}</div>}
+          <main>
+            <Screen />
+          </main>
+        </div>
+        {showNav && <nav className="tabbar">{tabButtons}</nav>}
+      </div>
     </AppContext.Provider>
   );
 }

@@ -12,7 +12,7 @@ export default function Songs() {
   const mine = s.songs.filter((x) => x.lang === lang && x.user_id === s.userId);
   const family = s.songs.filter((x) => x.lang === lang && x.user_id !== s.userId);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [duration, setDuration] = useState('');
@@ -91,7 +91,12 @@ export default function Songs() {
 
   return (
     <>
-      <h2>Minhas músicas</h2>
+      <nav className="crumbs" aria-label="Você está em">
+        <button onClick={() => go('weeks', { open: 'fav' })}>Trilha</button>
+        <span aria-hidden="true">/</span>
+        <button onClick={() => go('weeks', { open: 'fav' })}>Minhas favoritas</button>
+      </nav>
+      <h2>Adicionar favorita</h2>
       <p className="mut">
         Traga as músicas que você ama: a IA mede o nível, compara com o seu (<b>{LEVELS[level]}</b>) e monta a aula.
       </p>

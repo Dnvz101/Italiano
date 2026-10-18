@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import Spk from '../Spk';
+import Alphabet from '../Alphabet';
+import Icon from '../Icon';
 
 export default function Mine() {
   const s = useStore();
@@ -11,6 +13,19 @@ export default function Mine() {
   const [meaning, setMeaning] = useState('');
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
+  const [tab, setTab] = useState<'mine' | 'abc'>(() => {
+    try {
+      return localStorage.getItem('ascolto-frases-tab') === 'abc' ? 'abc' : 'mine';
+    } catch {
+      return 'mine';
+    }
+  });
+  const pickTab = (t: 'mine' | 'abc') => {
+    setTab(t);
+    try {
+      localStorage.setItem('ascolto-frases-tab', t);
+    } catch {}
+  };
 
   const add = async () => {
     if (!text.trim() || !meaning.trim()) {
@@ -25,9 +40,33 @@ export default function Mine() {
     setBusy(false);
   };
 
+  const head = (
+    <>
+      <h2 className="ih">
+        <Icon name="frases" size={34} /> Frases e pronúncia
+      </h2>
+      <div className="seg">
+        <button className={tab === 'mine' ? 'on' : ''} onClick={() => pickTab('mine')}>
+          ✍️ Minhas frases
+        </button>
+        <button className={tab === 'abc' ? 'on' : ''} onClick={() => pickTab('abc')}>
+          🔤 Alfabeto e sons
+        </button>
+      </div>
+    </>
+  );
+
+  if (tab === 'abc')
+    return (
+      <>
+        {head}
+        <Alphabet />
+      </>
+    );
+
   return (
     <>
-      <h2>Minhas frases</h2>
+      {head}
       <div className="card">
         <p className="mut" style={{ marginTop: 0 }}>
           Anote frases e expressões que você pegou de ouvido (músicas, séries, conversas) ou que você mesmo montou com as

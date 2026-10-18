@@ -1,5 +1,14 @@
 # Histórico de versões — Ascolto em Família
 
+## v20 — 2026-10-18 · Alfabeto e sons
+- A aba **Frases** virou **Frases e pronúncia**, com duas partes: ✍️ Minhas frases (como antes) e **🔤 Alfabeto e sons**.
+- **Letras**: o alfabeto completo do idioma (italiano: 21 + 5 estrangeiras; alemão: 26 + Ä Ö Ü ß). Cada letra mostra como se diz ("H se diz acca"), uma dica em português, 🔊/🐢 e **🎙️ Repetir** com nota. Embaixo, uma palavra de exemplo com nota própria.
+- **Sons difíceis**: os pedaços que travam brasileiros (italiano: ce/ci, che/chi, ge/gi, ghe/ghi, gli, gn, sce/sci, sca/schi, z, dobradas, R vibrado, H mudo, ti/di; alemão: ei, ie, eu/äu, ch de "ich" e de "ach", sch, sp/st, -ig, consoante final, -er, w/v, z, ä/ö/ü, h mudo, s, pf, tsch/qu), cada um com regra curta e 3 palavras para repetir com nota.
+- Grade colorida pela melhor nota de cada letra e bolinhas por som; contadores de quantas letras e sons já treinou. Notas ficam no aparelho; treinar conta como dia de estudo.
+- A nota do nome da letra aceita as formas que o reconhecimento costuma devolver (ex.: "acca" ou "H").
+- Shadowing: quando o reconhecimento termina, a gravação para junto (antes esperava o tempo máximo).
+- Usa a mesma avaliação do Shadowing (no Android, pelo Gemini quando configurado). Sem IA da Anthropic e sem mudança de banco.
+
 ## v19.1 — 2026-10-18 · Shadowing no Android
 - Correção: no Android a gravação funcionava, mas a nota não saía. O Chrome do Android não deixa gravar e reconhecer a voz ao mesmo tempo (o gravador fica com o microfone).
 - No Android, com a variável `GEMINI_API_KEY` configurada: o app grava, converte para WAV leve e o servidor manda para o Gemini transcrever. Nota e "Minha voz" funcionam juntos. Botão mostra "Avaliando sua pronúncia…".

@@ -1,4 +1,4 @@
-# Ascolto em Família · v19.1
+# Ascolto em Família · v20
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -104,6 +104,10 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Toda música sugerida é conferida no LRCLIB: se a letra não existe lá, a sugestão é descartada (evita música inventada). Se o LRCLIB estiver fora do ar, as sugestões aparecem sem essa conferência.
 - **⭐ Estudar** leva para "Adicionar favorita" com a música preenchida e a letra já buscada.
 - Custo: uma chamada do modelo de análise (`AI_MODEL_ANALYZE`, padrão Sonnet) por vez que a pessoa gera sugestões, uns ¥4–5.
+
+## Alfabeto e sons (v20)
+- Aba **Frases → 🔤 Alfabeto e sons**: cada letra com o nome no idioma, dica em português e nota de pronúncia; e os sons difíceis para brasileiros com palavras para repetir.
+- O conteúdo fica em `lib/alphabet.ts` (fácil de corrigir ou ampliar).
 
 ## Shadowing (v16)
 - Na letra bilíngue, modo **🎙️ Shadowing** (ou o 🎙️ de qualquer linha): o app fala a linha, grava você repetindo e dá uma nota pelas palavras que o reconhecimento de voz entendeu.

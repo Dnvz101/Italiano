@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 /* ---------- comparação palavra por palavra ---------- */
 
-const norm = (w: string) =>
+export const norm = (w: string) =>
   w
     .toLowerCase()
     .normalize('NFD')
@@ -256,7 +256,13 @@ export function useShadowRec(locale: string, lang: string) {
             if (e.error === 'not-allowed' || e.error === 'service-not-allowed')
               setError('Permita o uso do microfone para este site.');
           };
-          r.onend = () => done();
+          r.onend = () => {
+            // o reconhecimento terminou (a pessoa parou de falar): encerra a gravação junto
+            try {
+              if (mr.current && mr.current.state === 'recording') mr.current.stop();
+            } catch {}
+            done();
+          };
           sr.current = r;
           r.start();
           pending.current++;

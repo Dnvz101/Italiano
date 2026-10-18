@@ -410,3 +410,44 @@ h2.ih{gap:12px}
 @media (prefers-reduced-motion:reduce){.nav-ic{transition:none}.tabbar button.on .nav-ic{transform:none}}
 .stabs button.on{background:var(--card);border-color:var(--acc);color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
 .stabs button.on .stabs-b{background:var(--acc);color:var(--acc-ink)}
+/* v20 · Alfabeto e sons */
+.sayit{margin-top:10px}
+.sayit-row{display:flex;align-items:center;gap:6px}
+.sayit-row .spk{padding:8px 10px}
+.btn.sayit-go{width:auto;flex:1;white-space:nowrap}
+.btn.sayit-go.rec{background:var(--bad);color:#fff}
+.sayit.compact{margin-top:6px}
+.sayit.compact .btn.sayit-go{flex:0 1 auto;padding:8px 12px}
+.sayit-score,.sayit-best{font-weight:700;font-size:15px;min-width:46px;text-align:right;font-variant-numeric:tabular-nums}
+.sayit-best{opacity:.75;font-size:13px}
+.sayit-score.ok,.sayit-best.ok{color:var(--ok)}.sayit-score.mid,.sayit-best.mid{color:var(--acc)}.sayit-score.low,.sayit-best.low{color:var(--acc2)}
+.sayit-res{font-size:13px;margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sayit-res .link{padding:0;font-size:13px}
+.alpha .seg span.mut{font-size:12px;font-weight:600;margin-left:4px}
+.al-head{display:flex;align-items:center;gap:16px}
+.al-big{font-size:56px;font-weight:800;line-height:1;color:var(--acc);min-width:64px;text-align:center;background:var(--chip);border-radius:18px;padding:10px 8px}
+.al-name{font-size:18px}
+.al-name b{color:var(--fav)}
+.al-ex{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.al-nav{margin-top:14px}
+.al-nav .btn{flex:1;width:auto}
+.al-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px;margin-bottom:8px}
+.al-tile{display:flex;flex-direction:column;align-items:center;gap:0;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 2px 6px;font:inherit;cursor:pointer;transition:transform 140ms var(--ease-out),border-color 160ms ease}
+.al-tile:active{transform:scale(0.95)}
+.al-tile b{font-size:20px}
+.al-tile small{font-size:10px;color:var(--mut);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.al-tile.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.al-tile.ok{background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.al-tile.mid{background:color-mix(in srgb,var(--acc) 12%,var(--card))}
+.al-tile.low{background:color-mix(in srgb,var(--acc2) 14%,var(--card))}
+.al-sound{padding:0}
+.al-sound summary{list-style:none;cursor:pointer;padding:14px 16px;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline}
+.al-sound summary::-webkit-details-marker{display:none}
+.al-st{font-size:18px;color:var(--fav);grid-row:span 2;min-width:64px}
+.al-sp{font-size:13px}
+.al-dots{display:flex;gap:4px;grid-column:2}
+.al-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.al-dots i.ok{background:var(--ok)}.al-dots i.mid{background:var(--acc)}.al-dots i.low{background:var(--acc2)}
+.al-word{padding:10px 16px;border-top:1px solid var(--line)}
+.al-sound[open] summary{border-bottom:0}
+@media (prefers-reduced-motion:reduce){.al-tile:active{transform:none}}

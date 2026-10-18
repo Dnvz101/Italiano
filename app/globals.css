@@ -365,3 +365,27 @@ h3{font-weight:700;letter-spacing:-.01em}
 @keyframes aiprog-in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 .redo .aiprog{width:100%}
 @media (prefers-reduced-motion:reduce){.aiprog-ring .bar{transition:none}.aiprog-t b{animation:none}}
+/* v18 · página da música em abas */
+.song-head{padding:14px 16px}
+.sh-meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sh-meta .mut{font-size:13px}
+.sh-title{margin:8px 0 2px;font-size:24px;line-height:1.15}
+.links.compact{margin-top:12px;gap:6px}
+.links.compact a{min-width:0;padding:7px 6px;font-size:13px}
+.stabs{position:sticky;top:calc(57px + env(safe-area-inset-top,0px));z-index:4;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:8px 16px;background:var(--bg)}
+.stabs::-webkit-scrollbar{display:none}
+.stabs button{flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:14px;font-weight:600;border-radius:999px;padding:9px 12px;cursor:pointer;white-space:nowrap;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,transform 140ms var(--ease-out)}
+.stabs button:active{transform:scale(0.97)}
+.stabs button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.stabs-b{font-size:11px;font-weight:700;background:var(--chip);color:var(--acc);border-radius:999px;padding:1px 6px;min-width:18px;text-align:center}
+.stabs button.on .stabs-b{background:color-mix(in srgb,var(--acc-ink) 22%,transparent);color:var(--acc-ink)}
+.stab-body{animation:stab-in 220ms var(--ease-out)}
+@keyframes stab-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (max-width:560px){
+  .stabs{gap:4px;overflow:visible}
+  .stabs button{flex:1 1 0;min-width:0;flex-direction:column;gap:1px;padding:6px 2px 5px;border-radius:12px;font-size:12px;position:relative}
+  .stabs-i{font-size:18px;line-height:1.2}
+  .stabs-b{position:absolute;top:3px;right:4px;font-size:10px;padding:0 5px;min-width:0}
+}
+@media (min-width:960px){.shell.with-nav .stabs{top:0;margin:0 -8px 14px;padding:10px 8px}}
+@media (prefers-reduced-motion:reduce){.stab-body{animation:none}.stabs button:active{transform:none}}

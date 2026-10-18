@@ -6,6 +6,7 @@ import CardList from '../CardList';
 import { moduleOfWeek, modules } from '@/lib/modules';
 import Lyrics from './Lyrics';
 import FullLessonCard from '../FullLessonCard';
+import SectionTabs, { useSection } from '../SectionTabs';
 
 export default function WeekView() {
   const s = useStore();
@@ -20,6 +21,7 @@ export default function WeekView() {
   const idx = course.weeks.findIndex((x) => x.n === w.n);
   const prev = course.weeks[idx - 1];
   const next = course.weeks[idx + 1];
+  const [tab, setTab] = useSection(['plan', 'lyrics', 'lesson', 'cards'], 'plan');
 
   const startWeek = () => {
     s.updateProgress(lang, (x) => (x.started.includes(w.n) ? x : { ...x, started: [...x.started, w.n] }));
@@ -28,7 +30,10 @@ export default function WeekView() {
   const toggleDay = (i: number) => {
     const next = [...(p.checks[w.n] || Array(7).fill(false))];
     next[i] = !next[i];
-    s.updateProgress(lang, (x) => ({ ...x, checks: { ...x.checks, [w.n]: next } }));
+    s.updateProgress(lang, (x) => ({
+      ...x,
+      checks: { ...x.checks, [w.n]: next },
+    }));
     if (next[i]) s.markDay();
   };
 
@@ -45,85 +50,130 @@ export default function WeekView() {
         <span aria-hidden="true">/</span>
         <span aria-current="page">Semana {w.n}</span>
       </nav>
-      <h2>Semana {w.n}</h2>
 
-      <div className="card">
-        <span className={`lvl l${w.lv}`}>{w.level}</span>
-        <h3 style={{ marginTop: 10, fontSize: 20 }}>🎵 {w.title}</h3>
+      <div className="card song-head">
+        <div className="sh-meta">
+          <span className={`lvl l${w.lv}`}>{w.level}</span>
+          <span className="mut">Semana {w.n}</span>
+        </div>
+        <h2 className="sh-title">{w.title}</h2>
         <div className="mut">
           {w.artist} · {w.year}
         </div>
-        <p>{w.about}</p>
-        <p className="mut">
-          <b>Por que esta música:</b> {w.why}
-        </p>
-        <div className="links">
+        <div className="links compact">
           <a href={`https://www.youtube.com/results?search_query=${q}`} target="_blank" rel="noopener">
             ▶️ YouTube
           </a>
           <a href={`https://open.spotify.com/search/${q}`} target="_blank" rel="noopener">
             🎧 Spotify
           </a>
-          <a href={`https://www.google.com/search?q=${q}%20${course.meta.lyr}`} target="_blank" rel="noopener">
-            📄 Letra
-          </a>
           <a
             href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${course.meta.lang === 'de' ? 'alemão' : 'italiano'} com música ${w.title} ${w.artist}`)}`}
             target="_blank"
             rel="noopener"
           >
-            🎓 Aulas em vídeo
+            🎓 Aulas
           </a>
         </div>
       </div>
 
-      <div className="card">
-        <h3>🔎 Caça-palavras</h3>
-        <p className="mut">Palavras para pegar de ouvido nesta música:</p>
-        {w.hunt.map((h) => (
-          <span key={h} className="chip">
-            {h}
-          </span>
-        ))}
-        <p className="mut" style={{ marginBottom: 0 }}>
-          Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.
-        </p>
-      </div>
+      <SectionTabs
+        value={tab}
+        onChange={setTab}
+        sections={[
+          {
+            id: 'plan',
+            icon: '📅',
+            label: 'Roteiro',
+            badge: st ? `${ch.filter(Boolean).length}/7` : null,
+          },
+          { id: 'lyrics', icon: '📄', label: 'Letra' },
+          { id: 'lesson', icon: '🎓', label: 'Aula' },
+          { id: 'cards', icon: '🗂️', label: 'Cards', badge: w.cards.length },
+        ]}
+      />
 
-      <Lyrics key={`${lang}-${w.n}`} songKey={'w' + w.n} label={`da semana ${w.n}`} title={w.title} artist={w.artist} />
-
-      <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />
-
-      <div className="card lesson">
-        <h3>💡 {w.theme}</h3>
-        <div dangerouslySetInnerHTML={{ __html: w.lesson }} />
-      </div>
-
-      {st ? (
-        <div className="card">
-          <h3>📅 Roteiro da semana</h3>
-          {roteiro(course).map((r, i) => (
-            <div key={i} className={`day ${ch[i] ? 'done' : ''}`} onClick={() => toggleDay(i)} role="checkbox" aria-checked={!!ch[i]} tabIndex={0} onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), toggleDay(i))}>
-              <div className="box">{ch[i] ? '✓' : ''}</div>
-              <div className="txt">
-                <b>
-                  Dia {i + 1} · {r[0]}
-                </b>
-                <div className="mut">{r[1]}</div>
-              </div>
+      <div className="stab-body" role="tabpanel" key={tab}>
+        {tab === 'plan' && (
+          <>
+            <div className="card">
+              <p style={{ marginTop: 0 }}>{w.about}</p>
+              <p className="mut" style={{ marginBottom: 0 }}>
+                <b>Por que esta música:</b> {w.why}
+              </p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="card">
-          <p>Comece a semana para liberar o roteiro e colocar os cards na sua revisão.</p>
-          <button className="btn" onClick={startWeek}>
-            Começar semana {w.n}
-          </button>
-        </div>
-      )}
+            {st ? (
+              <div className="card">
+                <h3>📅 Roteiro da semana</h3>
+                {roteiro(course).map((r, i) => (
+                  <div
+                    key={i}
+                    className={`day ${ch[i] ? 'done' : ''}`}
+                    onClick={() => toggleDay(i)}
+                    role="checkbox"
+                    aria-checked={!!ch[i]}
+                    tabIndex={0}
+                    onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), toggleDay(i))}
+                  >
+                    <div className="box">{ch[i] ? '✓' : ''}</div>
+                    <div className="txt">
+                      <b>
+                        Dia {i + 1} · {r[0]}
+                      </b>
+                      <div className="mut">{r[1]}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="card">
+                <p style={{ marginTop: 0 }}>
+                  Comece a semana para liberar o roteiro e colocar os cards na sua revisão.
+                </p>
+                <button className="btn" onClick={startWeek}>
+                  Começar semana {w.n}
+                </button>
+              </div>
+            )}
+            <div className="card">
+              <h3>🔎 Caça-palavras</h3>
+              <p className="mut" style={{ marginTop: 0 }}>
+                Palavras para pegar de ouvido nesta música:
+              </p>
+              {w.hunt.map((h) => (
+                <span key={h} className="chip">
+                  {h}
+                </span>
+              ))}
+              <p className="mut" style={{ marginBottom: 0 }}>
+                Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.
+              </p>
+            </div>
+          </>
+        )}
 
-      <CardList title="🗂️ Expressões da semana" cards={w.cards} />
+        {tab === 'lyrics' && (
+          <Lyrics
+            key={`${lang}-${w.n}`}
+            songKey={'w' + w.n}
+            label={`da semana ${w.n}`}
+            title={w.title}
+            artist={w.artist}
+          />
+        )}
+
+        {tab === 'lesson' && (
+          <>
+            <div className="card lesson">
+              <h3>💡 {w.theme}</h3>
+              <div dangerouslySetInnerHTML={{ __html: w.lesson }} />
+            </div>
+            <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />
+          </>
+        )}
+
+        {tab === 'cards' && <CardList title="🗂️ Expressões da semana" cards={w.cards} />}
+      </div>
 
       <div className="pager">
         {prev ? (

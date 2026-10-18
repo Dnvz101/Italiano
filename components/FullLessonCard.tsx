@@ -39,7 +39,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
       <div className="card lesson-cta">
         <h3>🎓 Aula completa</h3>
         <p className="mut" style={{ margin: 0 }}>
-          Busque ou cole a letra acima para liberar os trechos comentados, os sons e as curiosidades desta música.
+          Busque ou cole a letra na aba 📄 Letra para liberar os trechos comentados, os sons e as curiosidades desta música.
         </p>
       </div>
     );

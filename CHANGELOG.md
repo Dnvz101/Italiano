@@ -1,5 +1,16 @@
 # Histórico de versões — Ascolto em Família
 
+## v18 — 2026-10-18 · Página da música em abas
+- A página de cada semana e de cada favorita deixou de ser um rolo comprido: um cabeçalho compacto (nível, música, artista, YouTube/Spotify/Aulas) e quatro abas fixas no topo:
+  - **📅 Roteiro**: sobre a música, o roteiro de 7 dias (com o progresso na aba, ex. 3/7), caça-palavras; nas favoritas também o encaixe no nível e as sugestões do mesmo artista.
+  - **📄 Letra**: letra bilíngue com Exercício, Leitura e Shadowing.
+  - **🎓 Aula**: a lição do tema e a aula completa da IA.
+  - **🗂️ Cards**: as expressões (com o número de cards na aba).
+- As abas grudam embaixo da barra do topo enquanto se rola; trocar de aba volta para o começo da seção.
+- O app lembra a última aba: quem está na Letra continua na Letra ao ir para a próxima semana.
+- No celular, as abas ficam com ícone em cima e nome embaixo, para caberem as quatro.
+- Sem mudança de banco.
+
 ## v17.1 — 2026-10-18 · Progresso nas esperas da IA
 - Anel de progresso com porcentagem e etapas ("Lendo a letra…", "Medindo velocidade e vocabulário…", "Conferindo se cada música existe…") em todas as esperas da IA: análise de música, aula completa (gerar e refazer), perfil musical e tradução da letra.
 - Tempo restante estimado; se passar muito do normal, avisa que ainda está trabalhando. O anel aparece na tela sozinho no celular.

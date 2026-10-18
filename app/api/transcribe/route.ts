@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { AiError, checkQuota } from '@/lib/ai';
 
 export const runtime = 'nodejs';
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 // Transcrição da gravação do Shadowing pelo Gemini (a API da Anthropic não recebe áudio).
 // Usada no Android, onde o navegador não consegue gravar e reconhecer a voz ao mesmo tempo.
@@ -12,9 +12,69 @@ const MAX_B64 = 2_800_000; // ~2 MB de áudio: bem mais que uma linha de música
 const MIMES = ['audio/wav', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/m4a', 'audio/aac', 'audio/mpeg'];
 
 const enabled = () => !!process.env.GEMINI_API_KEY;
+// Modelos "lite" respondem rápido e quase não "pensam": ideais para transcrever uma frase.
+const MODELS = () =>
+  [process.env.GEMINI_MODEL, 'gemini-3.5-flash-lite', 'gemini-2.5-flash-lite', 'gemini-2.5-flash'].filter(
+    (m, i, a): m is string => !!m && a.indexOf(m) === i
+  );
 
-export async function GET() {
-  return NextResponse.json({ enabled: enabled() });
+async function call(model: string, parts: any[], timeoutMs: number) {
+  const base = process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com';
+  const t0 = Date.now();
+  const r = await fetch(`${base}/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
+    body: JSON.stringify({
+      contents: [{ role: 'user', parts }],
+      generationConfig: { temperature: 0, maxOutputTokens: 1024 },
+    }),
+    signal: AbortSignal.timeout(timeoutMs),
+  });
+  const d = await r.json().catch(() => ({}));
+  return { ok: r.ok, status: r.status, d, ms: Date.now() - t0 };
+}
+
+/** Tenta o modelo configurado e, se ele não existir ou falhar, os "lite" em seguida. */
+async function gemini(parts: any[]) {
+  let last = '';
+  const started = Date.now();
+  for (const model of MODELS()) {
+    const left = 50000 - (Date.now() - started);
+    if (left < 5000) break;
+    try {
+      const r = await call(model, parts, Math.min(25000, left));
+      if (r.ok) return { d: r.d, model };
+      last = `${model}: ${r.status} ${JSON.stringify(r.d?.error?.message || r.d).slice(0, 160)}`;
+      console.error('Gemini STT', last);
+      if (r.status === 401 || r.status === 403 || r.status === 429) break; // chave ou cota: outro modelo não resolve
+    } catch (e: any) {
+      last = `${model}: ${e?.name === 'TimeoutError' ? 'demorou demais' : e?.message}`;
+      console.error('Gemini STT', last);
+    }
+  }
+  throw new AiError(`Não consegui avaliar a gravação agora (${last}). Tente de novo.`, 502);
+}
+
+export async function GET(req: Request) {
+  const u = new URL(req.url);
+  if (u.searchParams.get('diag') !== '1') return NextResponse.json({ enabled: enabled() });
+  // diagnóstico: abre /api/transcribe?diag=1 logado e mostra quais modelos respondem e em quanto tempo
+  const sb = await createClient();
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Faça login.' }, { status: 401 });
+  if (!enabled()) return NextResponse.json({ enabled: false });
+  const out: any[] = [];
+  for (const model of MODELS()) {
+    try {
+      const r = await call(model, [{ text: 'Responda só: ok' }], 20000);
+      out.push({ model, status: r.status, ms: r.ms, error: r.ok ? undefined : r.d?.error?.message });
+    } catch (e: any) {
+      out.push({ model, error: e?.name === 'TimeoutError' ? 'demorou mais de 20 s' : e?.message });
+    }
+  }
+  return NextResponse.json({ enabled: true, models: out });
 }
 
 export async function POST(req: Request) {
@@ -35,33 +95,14 @@ export async function POST(req: Request) {
 
   try {
     await checkQuota(sb, user.id, 'stt');
-    const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
-    const base = process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com';
-    const r = await fetch(`${base}/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY! },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              {
-                text: `Transcreva exatamente o que a pessoa fala neste áudio, em ${LANGS[lang]}. É um aluno repetindo um verso de música: escreva as palavras como ele de fato pronunciou, sem corrigir e sem completar. Responda só com a transcrição, sem aspas. Se não houver fala, responda com uma linha vazia.`,
-              },
-              { inline_data: { mime_type: mime, data: audio } },
-            ],
-          },
-        ],
-        generationConfig: { temperature: 0, maxOutputTokens: 200 },
-      }),
-      signal: AbortSignal.timeout(25000),
-    });
-    const d = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      console.error('Gemini STT', r.status, JSON.stringify(d).slice(0, 400));
-      throw new AiError('Não consegui avaliar a gravação agora. Tente de novo.', 502);
-    }
+    const { d, model } = await gemini([
+      {
+        text: `Transcreva exatamente o que a pessoa fala neste áudio, em ${LANGS[lang]}. É um aluno repetindo um verso de música ou uma palavra: escreva as palavras como ele de fato pronunciou, sem corrigir e sem completar. Responda só com a transcrição, sem aspas. Se não houver fala, responda com uma linha vazia.`,
+      },
+      { inline_data: { mime_type: mime === 'audio/mp4' ? 'audio/m4a' : mime, data: audio } }, // iPhone grava em mp4 (AAC)
+    ]);
     const text = (d?.candidates?.[0]?.content?.parts || [])
+      .filter((p: any) => !p?.thought)
       .map((p: any) => p?.text || '')
       .join(' ')
       .replace(/^["“”']+|["“”']+$/g, '')

@@ -1,4 +1,4 @@
-# Ascolto em Família · v20
+# Ascolto em Família · v20.2
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -114,7 +114,7 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Dá para ouvir a própria gravação e "Modelo + eu" para comparar ritmo e entonação.
 - O navegador pede permissão do microfone na primeira vez. No iPhone use o Safari; no Android, o Chrome. Sem IA, sem custo, sem mudança no banco; as notas ficam no aparelho.
 - A nota mede se as palavras saíram claras, não o sotaque: use o "Modelo + eu" para a melodia.
-- **Android (v19.1):** o Chrome do Android não grava e reconhece ao mesmo tempo. Para ter nota **e** gravação no Android, crie uma chave grátis do Gemini em aistudio.google.com/apikey e coloque na Vercel como `GEMINI_API_KEY` (tipo Secret). Sem a chave, o Android dá a nota mas não guarda a gravação.
+- **Android e iPhone (v19.1/v20.2):** no celular, gravar e reconhecer ao mesmo tempo falha. Para ter nota **e** gravação no celular, crie uma chave grátis do Gemini em aistudio.google.com/apikey e coloque na Vercel como `GEMINI_API_KEY` (tipo Secret). Sem a chave, o Android dá a nota mas não guarda a gravação.
 
 ## Ícones (v19)
 - Ficam em `public/icons/`: `nome.svg` (tema claro) e `nome-dark.svg` (tema escuro). O componente `components/Icon.tsx` lista os nomes.

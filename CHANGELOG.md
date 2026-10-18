@@ -1,5 +1,19 @@
 # Histórico de versões — Ascolto em Família
 
+## v20.2 — 2026-10-18 · Pronúncia no iPhone
+- Correção: no iPhone, o Alfabeto (e às vezes o Shadowing) dizia "Não entendi". O Safari, gravando e reconhecendo ao mesmo tempo, costuma devolver vazio, principalmente em palavras curtas e letras soltas.
+- No iPhone, com `GEMINI_API_KEY` configurada, a avaliação agora é feita pelo servidor, igual ao Android. A gravação do iPhone (mp4/AAC) é aceita.
+- Quando não há reconhecimento do navegador (iPhone e Android), a gravação **para sozinha depois de ~1 s de silêncio**, sem precisar tocar para parar.
+- Inclui as correções da v20.1 (modelos "lite" do Gemini, erro detalhado e diagnóstico em `/api/transcribe?diag=1`).
+- Sem mudança de banco.
+
+## v20.1 — 2026-10-18 · Correção: "a avaliação demorou demais" no Android
+- O modelo padrão do Gemini (3.8 Flash) "pensa" antes de responder e estourava o tempo numa simples transcrição. Agora usa modelos **lite** (rápidos, sem raciocínio longo): `gemini-3.5-flash-lite`, e se não existir ou falhar, `gemini-2.5-flash-lite` e `gemini-2.5-flash`. `GEMINI_MODEL` continua tendo prioridade se for definido.
+- Mais tempo para a função (60 s) e limite de resposta maior.
+- A mensagem de erro agora diz qual modelo falhou e por quê.
+- Diagnóstico: logado, abra `/api/transcribe?diag=1` para ver quais modelos respondem e em quanto tempo.
+- Sem mudança de banco.
+
 ## v20 — 2026-10-18 · Alfabeto e sons
 - A aba **Frases** virou **Frases e pronúncia**, com duas partes: ✍️ Minhas frases (como antes) e **🔤 Alfabeto e sons**.
 - **Letras**: o alfabeto completo do idioma (italiano: 21 + 5 estrangeiras; alemão: 26 + Ä Ö Ü ß). Cada letra mostra como se diz ("H se diz acca"), uma dica em português, 🔊/🐢 e **🎙️ Repetir** com nota. Embaixo, uma palavra de exemplo com nota própria.

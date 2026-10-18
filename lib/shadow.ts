@@ -59,6 +59,9 @@ export type Take = { url: string | null; heard: string; via: 'browser' | 'server
 type Mode = 'both' | 'server' | 'sr-only' | 'rec-only' | 'none';
 
 const isAndroid = () => typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
+const isIOS = () =>
+  typeof navigator !== 'undefined' &&
+  (/iPhone|iPad|iPod/i.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1));
 
 /** Converte a gravação (webm/mp4) em WAV 16 kHz mono: leve e aceito por qualquer serviço de transcrição. */
 async function toWav(blob: Blob): Promise<{ b64: string; mime: string }> {
@@ -102,6 +105,44 @@ function b64(bytes: Uint8Array) {
   return btoa(s);
 }
 
+/** Observa o volume do microfone: depois que a pessoa falou, 1 s de silêncio encerra a gravação. */
+function watchSilence(stream: MediaStream, onSilence: () => void) {
+  try {
+    const AC = (window as any).AudioContext || (window as any).webkitAudioContext;
+    const ctx = new AC();
+    const an = ctx.createAnalyser();
+    an.fftSize = 1024;
+    ctx.createMediaStreamSource(stream).connect(an);
+    const buf = new Float32Array(an.fftSize);
+    let spoke = false;
+    let quietSince = 0;
+    const t0 = performance.now();
+    const id = setInterval(() => {
+      const live = stream.getAudioTracks().some((t) => t.readyState === 'live');
+      if (!live) return finish();
+      an.getFloatTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      const rms = Math.sqrt(sum / buf.length);
+      const now = performance.now();
+      if (rms > 0.03) {
+        spoke = true;
+        quietSince = 0;
+      } else if (spoke && now - t0 > 700) {
+        quietSince ||= now;
+        if (now - quietSince > 1000) {
+          finish();
+          onSilence();
+        }
+      }
+    }, 100);
+    function finish() {
+      clearInterval(id);
+      ctx.close?.();
+    }
+  } catch {}
+}
+
 let serverCheck: Promise<boolean> | null = null;
 const serverStt = () =>
   (serverCheck ||= fetch('/api/transcribe')
@@ -141,6 +182,8 @@ export function useShadowRec(locale: string, lang: string) {
       if (!alive.current) return;
       setServer(srv);
       if (isAndroid()) setMode(canRec && srv ? 'server' : canSR ? 'sr-only' : canRec ? 'rec-only' : 'none');
+      // iPhone: gravar e reconhecer juntos costuma devolver vazio (sobretudo em palavras curtas); o servidor é mais confiável
+      else if (isIOS() && canRec && srv) setMode('server');
       else setMode(canRec && canSR ? 'both' : canRec ? (srv ? 'server' : 'rec-only') : canSR ? 'sr-only' : 'none');
       setReady(true);
     });
@@ -225,6 +268,8 @@ export function useShadowRec(locale: string, lang: string) {
           mr.current = rec;
           rec.start();
           pending.current++;
+          // sem reconhecimento do navegador para avisar o fim: para sozinho depois de ~1 s de silêncio
+          if (mode !== 'both') watchSilence(s, () => rec.state === 'recording' && rec.stop());
         } catch (e: any) {
           setError(
             e?.name === 'NotAllowedError'

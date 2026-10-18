@@ -1,4 +1,4 @@
-# Ascolto em Família · v16
+# Ascolto em Família · v17
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -98,6 +98,13 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - A conversa fica salva no aparelho (por pessoa e idioma); não vai para o banco.
 - Limite próprio: `AI_CHAT_DAILY_LIMIT` (padrão 150 mensagens/24h), separado do limite das aulas e traduções. Modelo: `AI_MODEL_CHAT` (padrão = `ANTHROPIC_MODEL`, Haiku).
 
+## Perfil musical (v17)
+- No Início aparece o convite "Que tipo de música você curte?" (ou ⚙️ → Perfil musical). Cada idioma tem o seu perfil.
+- A pessoa marca estilos e épocas e escreve artistas que ama, em qualquer idioma. A IA sugere artistas em italiano/alemão com a mesma vibe e músicas no nível dela.
+- Toda música sugerida é conferida no LRCLIB: se a letra não existe lá, a sugestão é descartada (evita música inventada). Se o LRCLIB estiver fora do ar, as sugestões aparecem sem essa conferência.
+- **⭐ Estudar** leva para "Adicionar favorita" com a música preenchida e a letra já buscada.
+- Custo: uma chamada do modelo de análise (`AI_MODEL_ANALYZE`, padrão Sonnet) por vez que a pessoa gera sugestões, uns ¥4–5.
+
 ## Shadowing (v16)
 - Na letra bilíngue, modo **🎙️ Shadowing** (ou o 🎙️ de qualquer linha): o app fala a linha, grava você repetindo e dá uma nota pelas palavras que o reconhecimento de voz entendeu.
 - Dá para ouvir a própria gravação e "Modelo + eu" para comparar ritmo e entonação.
@@ -138,4 +145,4 @@ supabase/       schema SQL e seed
 ```
 
 ## Próximas versões
-- **v11:** perfil musical na entrada (artistas e estilos favoritos) e sugestões de músicas a partir dele.
+- Módulo 2 do alemão; compartilhar trechos de letra com a família.

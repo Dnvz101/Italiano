@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { LyricsResult } from '@/lib/lyrics-provider';
 
 const fmt = (s: number | null) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
@@ -9,10 +9,12 @@ export default function LyricsSearch({
   title,
   artist,
   onPick,
+  autoKey = '',
 }: {
   title: string;
   artist: string;
   onPick: (text: string, durationSec: number | null) => void;
+  autoKey?: string; // quando muda (e não está vazio), busca sozinho: vindo de uma sugestão
 }) {
   const [busy, setBusy] = useState(false);
   const [results, setResults] = useState<LyricsResult[] | null>(null);
@@ -38,6 +40,15 @@ export default function LyricsSearch({
     }
     setBusy(false);
   };
+
+  const lastAuto = useRef('');
+  useEffect(() => {
+    if (autoKey && autoKey !== lastAuto.current) {
+      lastAuto.current = autoKey;
+      search();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoKey]);
 
   const pick = (x: LyricsResult) => {
     onPick(x.text, x.duration_sec);

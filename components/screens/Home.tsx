@@ -2,7 +2,7 @@
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IMM_GOAL, currentWeek, dueList, immDay, immWeek, learnedCount, streak, today } from '@/lib/course';
-import { LEVELS, songFit, userLevel } from '@/lib/level';
+import { LEVELS, songFit, userLevel, langPt } from '@/lib/level';
 import { isComplete, modules } from '@/lib/modules';
 import { Eq } from '../Disc';
 
@@ -17,6 +17,15 @@ export default function Home() {
   const done = (p.checks[cur] || []).filter(Boolean).length;
   const n = due.length + Math.min(fresh.length, 10);
   const imToday = immDay(p, today());
+  const all = s.profile.settings.music || {};
+  const mp = all[lang];
+  const have = new Set(songs.map((x) => x.title.toLowerCase()));
+  const forYou = (mp?.sugg?.artists || [])
+    .flatMap((a) => a.songs.map((x) => ({ ...x, artist: a.name })))
+    .filter((x) => !have.has(x.title.toLowerCase()))
+    .sort((a, b) => Math.abs(a.level - level - 0.5) - Math.abs(b.level - level - 0.5))
+    .filter((x, i, arr) => arr.findIndex((y) => y.artist === x.artist) === i)
+    .slice(0, 3);
 
   const addImm = (m: number) => {
     const t = today();
@@ -34,6 +43,27 @@ export default function Home() {
       <h2>
         {course.meta.hello}, {s.profile.name}! 👋
       </h2>
+      {!mp?.sugg && !mp?.skipped && (
+        <div className="card invite pop">
+          <h3>🎧 Que tipo de música você curte?</h3>
+          <p style={{ marginTop: 0 }}>
+            Conte seus estilos e artistas favoritos (podem ser brasileiros) e o app acha músicas em{' '}
+            {langPt(lang)} com a mesma vibe, no seu nível.
+          </p>
+          <div className="row">
+            <button className="btn sm" onClick={() => go('taste')}>
+              Montar meu perfil musical
+            </button>
+            <button
+              className="btn ghost sm"
+              onClick={() => s.setSetting('music', { ...all, [lang]: { genres: [], artists: [], eras: [], ...mp, skipped: true } })}
+            >
+              Agora não
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="stats">
         <div className="stat">
           <b>{streak(s.days)}</b>
@@ -103,6 +133,32 @@ export default function Home() {
           <span className="mut">{songs.filter((x) => x.user_id === s.userId).length}</span>
         </button>
       </div>
+
+      {forYou.length > 0 && (
+        <div className="card">
+          <h3>🎧 Para você</h3>
+          {forYou.map((x) => {
+            const f = songFit(x.level, level);
+            return (
+              <div key={x.artist + x.title} className="tsong">
+                <span className="tfit" title={f.title}>
+                  {f.emoji}
+                </span>
+                <div className="t">
+                  <b>{x.title}</b>
+                  <div className="mut">{x.artist}</div>
+                </div>
+                <button className="btn sm tstudy" onClick={() => go('songs', { title: x.title, artist: x.artist, auto: true })}>
+                  ⭐ Estudar
+                </button>
+              </div>
+            );
+          })}
+          <button className="link" onClick={() => go('taste')} style={{ marginTop: 6 }}>
+            Ver todas as sugestões →
+          </button>
+        </div>
+      )}
 
       <div className="card">
         <h3>🎧 Imersão de hoje</h3>

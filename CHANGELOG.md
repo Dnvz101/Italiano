@@ -1,5 +1,15 @@
 # Histórico de versões — Ascolto em Família
 
+## v17 — 2026-10-18 · Perfil musical
+- Novo **🎧 Perfil musical**, por idioma: a pessoa escolhe estilos, épocas e artistas que ama em qualquer idioma (até brasileiros), e a IA sugere ~6 artistas em italiano/alemão com a mesma vibe, com 2 músicas cada no nível dela.
+- Cada música sugerida é **conferida na base de letras**: títulos inventados pela IA são descartados.
+- **⭐ Estudar** abre "Adicionar favorita" já preenchido e busca a letra sozinho; depois é só analisar.
+- No Início: convite para montar o perfil (com "Agora não") e, depois, o card **Para você** com 3 sugestões que melhor encaixam no nível.
+- Na Conversa: novo tema **🎧 Minhas músicas**, sobre o gosto musical da pessoa.
+- Em ⚙️ Ajustes: atalho para ver e editar o perfil.
+- Textos passam a dizer "em alemão"/"em italiano" (antes: "em deutsch").
+- Uma chamada de IA (Sonnet) por perfil gerado, conta no limite diário de 30. Sem mudança de banco (o perfil fica em `profiles.settings`).
+
 ## v16 — 2026-10-18 · Shadowing
 - Novo modo **🎙️ Shadowing** na letra bilíngue (semanas e favoritas), ao lado de Exercício e Leitura, e um 🎙️ em cada linha que abre direto nela.
 - **▶️ Ouvir e repetir**: o app fala a linha e já começa a gravar você; para sozinho no tempo da linha (ou toque para parar).

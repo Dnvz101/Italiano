@@ -126,6 +126,7 @@ export default function Songs() {
           <LyricsSearch
             title={title}
             artist={artist}
+            autoKey={param?.auto && title === param.title ? `${param.title}|${param.artist}` : ''}
             onPick={(t, d) => {
               setLyrics(t);
               if (d && !duration.trim()) setDuration(`${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}`);

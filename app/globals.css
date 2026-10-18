@@ -336,3 +336,17 @@ h3{font-weight:700;letter-spacing:-.01em}
 .sh-dot.low{background:color-mix(in srgb,var(--acc2) 15%,var(--card));color:var(--acc2)}
 .sh-tip{font-size:13px;margin-bottom:0}
 @media (prefers-reduced-motion:reduce){.sh-bar i{animation:none}}
+/* v17 · Perfil musical */
+.pick{display:flex;flex-wrap:wrap;gap:6px}
+.chip.pk{border:1px solid var(--line);font:inherit;font-size:14px;cursor:pointer;color:var(--ink);background:var(--card);padding:7px 12px;margin:0}
+.chip.pk.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:600}
+.card.invite{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 7%,var(--card))}
+.tsong{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.tsong .t{flex:1;min-width:0}
+.tsong .t .mut{font-size:13px}
+.tfit{font-size:18px;flex:none}
+.tact{display:flex;align-items:center;gap:6px;flex:none}
+.tact a.spk{text-decoration:none;padding:6px 8px}
+.btn.tstudy{width:auto;flex:none;padding:8px 10px;font-size:14px;white-space:nowrap}
+.tgot{font-size:13px;white-space:nowrap}
+.taste-sum .chip{margin-bottom:4px}

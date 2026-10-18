@@ -93,6 +93,20 @@ export default function Settings() {
         </div>
       </div>
 
+      {course && lang && (
+        <div className="card">
+          <h3>🎧 Perfil musical ({course.meta.name})</h3>
+          <p className="mut" style={{ marginTop: 0 }}>
+            {s.profile.settings.music?.[lang]?.sugg
+              ? 'Seus estilos e artistas favoritos, e as músicas sugeridas a partir deles.'
+              : 'Conte o que você gosta de ouvir e receba músicas sob medida.'}
+          </p>
+          <button className="btn ghost sm" onClick={() => go('taste')}>
+            {s.profile.settings.music?.[lang]?.sugg ? 'Ver e editar' : 'Montar meu perfil'}
+          </button>
+        </div>
+      )}
+
       {course && lang && progress && (
         <div className="card">
           <h3>🎯 Meu nível em {course.meta.name}</h3>

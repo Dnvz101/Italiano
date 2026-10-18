@@ -70,3 +70,6 @@ export function parseDuration(s: string): number | null {
   const sec = +m[1] * 60 + +m[2];
   return sec >= 30 && sec <= 1200 ? sec : null;
 }
+
+/** Nome do idioma em português, para frases como "músicas em alemão" */
+export const langPt = (code: string) => ({ it: 'italiano', de: 'alemão' } as Record<string, string>)[code] || code;

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { currentWeek } from '@/lib/course';
-import { userLevel, LEVELS } from '@/lib/level';
+import { userLevel, LEVELS, langPt } from '@/lib/level';
 import { useListen } from '@/lib/listen';
 import Spk from '../Spk';
 
@@ -44,9 +44,17 @@ export default function Chat() {
           vocab: (x.analysis?.cards || []).map((c) => c[0]),
         })
       );
+    const mp = s.profile.settings.music?.[lang];
+    const fav = [...(mp?.artists || []), ...(mp?.sugg?.artists || []).slice(0, 3).map((a) => a.name)];
+    if (fav.length || mp?.genres?.length)
+      list.push({
+        id: 'gosto',
+        label: '🎧 Minhas músicas',
+        free: `o gosto musical do aluno: ${[...(mp?.genres || []), ...fav].join(', ')}`,
+      });
     FREE.forEach(([id, label]) => list.push({ id, label, free: label.replace(/^\S+\s/, '') }));
     return list;
-  }, [course, p, songs, s.userId]);
+  }, [course, p, songs, s.userId, s.profile.settings.music, lang]);
 
   const [topicId, setTopicId] = useState<string>('');
   const [msgs, setMsgs] = useState<Msg[]>([]);
@@ -149,7 +157,7 @@ export default function Chat() {
     <>
       <h2>Conversa</h2>
       <p className="mut lead">
-        Converse em {course.meta.name.toLowerCase()} no seu nível ({LEVELS[level]}). Pode falar ou escrever, e se não souber
+        Converse em {langPt(lang)} no seu nível ({LEVELS[level]}). Pode falar ou escrever, e se não souber
         dizer algo, escreva em português. Os erros viram dicas, não broncas.
       </p>
 

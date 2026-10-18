@@ -17,6 +17,7 @@ import Mine from './screens/Mine';
 import Method from './screens/Method';
 import Settings from './screens/Settings';
 import ImportLocal from './screens/ImportLocal';
+import Taste from './screens/Taste';
 
 const TABS: [View, string, string][] = [
   ['home', '🏠', 'Início'],
@@ -27,7 +28,7 @@ const TABS: [View, string, string][] = [
   ['method', '📖', 'Método'],
 ];
 // a aba "Trilha" também cobre semanas, favoritas e músicas
-const tabOf = (v: View): View => (v === 'week' || v === 'songs' || v === 'song' ? 'weeks' : v);
+const tabOf = (v: View): View => (v === 'week' || v === 'songs' || v === 'song' ? 'weeks' : v === 'taste' ? 'home' : v);
 
 export default function App() {
   const s = useStore();
@@ -125,6 +126,7 @@ export default function App() {
     method: Method,
     settings: Settings,
     import: ImportLocal,
+    taste: Taste,
   }[shown];
   const showNav = lang && shown !== 'lang' && shown !== 'import';
 

@@ -56,7 +56,23 @@ export type Profile = {
   id: string;
   name: string;
   household_id: string | null;
-  settings: { lang?: string; dir?: 'it' | 'pt' | 'audio'; level?: Record<string, number> };
+  settings: {
+    lang?: string;
+    dir?: 'it' | 'pt' | 'audio';
+    level?: Record<string, number>;
+    music?: Record<string, MusicProfile>;
+  };
+};
+
+export type TasteSong = { title: string; year?: number | null; level: number; why: string; found?: boolean };
+export type TasteArtist = { name: string; why: string; songs: TasteSong[] };
+/** Perfil musical por idioma: o que a pessoa gosta e as sugestões que a IA montou a partir disso */
+export type MusicProfile = {
+  genres: string[];
+  artists: string[];
+  eras: string[];
+  skipped?: boolean;
+  sugg?: { summary: string; artists: TasteArtist[]; at: string; level: number } | null;
 };
 
 export type Household = { id: string; name: string; invite_code: string };

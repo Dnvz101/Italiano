@@ -4,8 +4,21 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { chorusLines } from '@/lib/level';
 import Spk from '../Spk';
+import LyricsSearch from '../LyricsSearch';
 
-export default function Lyrics({ songKey, label, chorusDefault = false }: { songKey: string; label: string; chorusDefault?: boolean }) {
+export default function Lyrics({
+  songKey,
+  label,
+  title,
+  artist,
+  chorusDefault = false,
+}: {
+  songKey: string;
+  label: string;
+  title: string;
+  artist: string;
+  chorusDefault?: boolean;
+}) {
   const s = useStore();
   const { lang, course } = useCourse();
   const key = songKey;
@@ -68,9 +81,10 @@ export default function Lyrics({ songKey, label, chorusDefault = false }: { song
       <div className="card">
         <h3>📄 Letra bilíngue</h3>
         <p className="mut" style={{ marginTop: 0 }}>
-          Abra a letra (botão <b>Letra</b>), copie e cole aqui. O app separa linha por linha. A letra fica visível só para a
-          sua família.
+          Busque automaticamente ou cole a letra aqui. O app separa linha por linha. A letra fica visível só para a sua
+          família.
         </p>
+        <LyricsSearch title={title} artist={artist} onPick={(t) => setDraft(t)} />
         <textarea rows={8} placeholder="Cole a letra aqui..." value={draft} onChange={(e) => setDraft(e.target.value)} />
         <div className="row" style={{ marginTop: 10 }}>
           <button className="btn sm" onClick={save}>

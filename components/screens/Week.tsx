@@ -67,7 +67,7 @@ export default function WeekView() {
         </p>
       </div>
 
-      <Lyrics key={`${lang}-${w.n}`} songKey={'w' + w.n} label={`da semana ${w.n}`} />
+      <Lyrics key={`${lang}-${w.n}`} songKey={'w' + w.n} label={`da semana ${w.n}`} title={w.title} artist={w.artist} />
 
       <div className="card lesson">
         <h3>💡 {w.theme}</h3>

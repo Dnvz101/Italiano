@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { LEVELS, parseDuration, songFit, userLevel } from '@/lib/level';
+import LyricsSearch from '../LyricsSearch';
 
 export default function Songs() {
   const s = useStore();
@@ -116,8 +117,16 @@ export default function Songs() {
               </a>
             </div>
           )}
-          <label>Letra (copie e cole)</label>
-          <textarea rows={8} value={lyrics} onChange={(e) => setLyrics(e.target.value)} placeholder="Cole a letra aqui..." />
+          <label>Letra</label>
+          <LyricsSearch
+            title={title}
+            artist={artist}
+            onPick={(t, d) => {
+              setLyrics(t);
+              if (d && !duration.trim()) setDuration(`${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}`);
+            }}
+          />
+          <textarea rows={8} value={lyrics} onChange={(e) => setLyrics(e.target.value)} placeholder="…ou cole a letra aqui" style={{ marginTop: 8 }} />
           <label>Duração (opcional, ajuda a medir a velocidade)</label>
           <input value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="ex.: 3:45 ou 3.45" inputMode="decimal" enterKeyHint="done" />
           <div className="row" style={{ marginTop: 12 }}>

@@ -1,4 +1,4 @@
-# Ascolto em Família · v11
+# Ascolto em Família · v12
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -73,6 +73,12 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 - Nunca bloqueia: a pessoa sempre pode estudar a música que escolheu.
 - "Começar a estudar" coloca os cards da música na revisão, com prioridade sobre os da trilha.
 - As músicas aparecem para a família (seção "Da família"); progresso e cards continuam de cada um.
+
+## Letras automáticas (v12)
+- Botão **🔎 Buscar letra automaticamente** na letra de cada semana e no formulário de Minha música. A pessoa escolhe a versão certa, confere e salva.
+- Fonte atual: **LRCLIB** (gratuito, comunitário). As letras de lá são enviadas por usuários, **sem licença das editoras**: serve para uso pessoal/família. Se o Ascolto virar produto, troque por um fornecedor licenciado (ex.: Musixmatch com plano comercial) em `lib/lyrics-provider.ts` e na variável `LYRICS_PROVIDER`.
+- A busca passa pelo servidor (`/api/lyrics/search`, só com login). Em Minha música, a duração vem junto e mede as palavras por minuto.
+- Não precisa de chave nem de variável nova na Vercel.
 
 ## IA
 - `app/api/translate` e `app/api/analyze-song` só aceitam quem está logado.

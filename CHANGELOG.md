@@ -1,5 +1,12 @@
 # Histórico de versões — Ascolto em Família
 
+## v12 — 2026-10-18 · Letras automáticas
+- **🔎 Buscar letra automaticamente** na letra bilíngue de cada semana e em Minha música, via LRCLIB (gratuito). Mostra as versões encontradas (álbum, duração, nº de linhas); a escolhida vai para o campo para conferir antes de salvar.
+- Letras só sincronizadas (formato LRC) são convertidas em texto simples.
+- Em Minha música, a duração é preenchida sozinha (melhora a medição de palavras por minuto).
+- Fornecedor isolado em `lib/lyrics-provider.ts`: trocar por um licenciado no futuro muda um arquivo só.
+- Sem mudança de banco.
+
 ## v11 — 2026-10-18 · Nativo no celular + acabamento
 Aplicadas as skills mobile-native e emil-design-eng (Emil Kowalski, MIT). Sem mudança de banco.
 - Campo de tradução da letra em 16px: o iPhone não dá mais zoom ao digitar.

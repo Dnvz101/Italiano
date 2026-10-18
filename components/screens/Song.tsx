@@ -132,7 +132,14 @@ export default function SongView() {
         </div>
       )}
 
-      <Lyrics key={song.id} songKey={'song:' + song.id} label={`de ${song.title}`} chorusDefault={fit.kind === 'hard'} />
+      <Lyrics
+        key={song.id}
+        songKey={'song:' + song.id}
+        label={`de ${song.title}`}
+        title={song.title}
+        artist={song.artist}
+        chorusDefault={fit.kind === 'hard'}
+      />
 
       {a.lesson && (
         <div className="card lesson">

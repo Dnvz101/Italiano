@@ -140,3 +140,5 @@ button:focus:not(:focus-visible){outline:none}
   *,*::before,*::after{transition-property:opacity,background-color,border-color,color!important}
   .btn:active,.wk:active,.langcard:active,.grades button:active,.links a:active,.spk:active,nav button:active,.del:active,.seg button:active,.flash:active,.day:active .box{transform:none}
 }
+.lsearch{margin:4px 0 10px}
+.lresults .wk{margin-bottom:6px}

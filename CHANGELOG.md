@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v21.2 — 2026-10-18 · Boas-vindas do alemão
+- O alemão ganhou o seu vídeo: pretzel, caneca de chopp e salsicha, com o **"Hallo, Leandro!"** no balão de fala.
+- Cada idioma tem o seu banner (`components/HeroGreeting.tsx`), com a posição do balão ajustada para cada vídeo. O vídeo toca uma vez por idioma em cada sessão.
+- Vídeo cortado antes do zoom final, emenda suave, sem som, ~375 KB (`public/media/hero-de.mp4`).
+- Sem mudança de banco.
+
 ## v21.1 — 2026-10-18 · Vídeo de boas-vindas toca sozinho
 - Correção: em alguns celulares aparecia o botão de play. O React não grava o atributo `muted` no HTML e, sem ele, o iPhone recusa tocar sozinho; agora o app marca o vídeo como mudo antes de dar o play.
 - O vídeo toca **uma vez** quando o app abre e para no último quadro (com o "Ciao" no balão). Voltar ao Início na mesma sessão mostra a imagem parada; **tocar no cartão repete**.

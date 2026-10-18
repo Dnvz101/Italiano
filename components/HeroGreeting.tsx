@@ -2,13 +2,28 @@
 import { useEffect, useRef, useState } from 'react';
 
 // Vídeos de boas-vindas por idioma (public/media). Quem não tem vídeo mostra só o título.
-const HERO: Record<string, { video: string; poster: string; end: string }> = {
-  it: { video: '/media/hero-it.mp4', poster: '/media/hero-it.webp', end: '/media/hero-it-end.webp' },
+// bubble: onde fica o balão de fala no vídeo (em % do cartão), para o "Ciao/Hallo" cair dentro dele.
+type Hero = { video: string; poster: string; end: string; bubble: { left: number; top: number; w: number; h: number } };
+const HERO: Record<string, Hero> = {
+  // pizza de chef, Vespa e cafeteira moka
+  it: {
+    video: '/media/hero-it.mp4',
+    poster: '/media/hero-it.webp',
+    end: '/media/hero-it-end.webp',
+    bubble: { left: 76.2, top: 5.5, w: 20.6, h: 33 },
+  },
+  // pretzel, caneca de chopp e salsicha
+  de: {
+    video: '/media/hero-de.mp4',
+    poster: '/media/hero-de.webp',
+    end: '/media/hero-de-end.webp',
+    bubble: { left: 77, top: 7, w: 19.7, h: 32.4 },
+  },
 };
 const SEEN = 'ascolto-hero-seen';
 
 /**
- * "Ciao, Leandro!" dentro do balão de fala do vídeo da turma (pizza, vespa e moka).
+ * "Ciao, Leandro!" / "Hallo, Leandro!" dentro do balão de fala do vídeo de cada idioma.
  * Toca sozinho uma vez quando o app abre; depois fica parado no último quadro. Tocar no cartão repete.
  */
 export default function HeroGreeting({ lang, hello, name }: { lang: string; hello: string; name: string }) {
@@ -81,7 +96,16 @@ export default function HeroGreeting({ lang, hello, name }: { lang: string; hell
           onEnded={() => setMode('still')}
         />
       )}
-      <h2 className={`hero-bubble ${long ? 'long' : ''}`} aria-hidden="true">
+      <h2
+        className={`hero-bubble ${long ? 'long' : ''}`}
+        aria-hidden="true"
+        style={{
+          left: `${hero.bubble.left}%`,
+          top: `${hero.bubble.top}%`,
+          width: `${hero.bubble.w}%`,
+          height: `${hero.bubble.h}%`,
+        }}
+      >
         <span>{hello},</span>
         <b>{first}!</b>
       </h2>

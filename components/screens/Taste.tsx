@@ -9,11 +9,12 @@ import Icon from '../Icon';
 
 const GENRES: Record<string, string[]> = {
   it: ['Pop', 'Cantautori (MPB italiana)', 'Rap / Trap', 'Indie', 'Rock', 'Romântica', 'Dançante', 'Eletrônica', 'Acústico'],
+  ja: ['J-pop', 'Anime', 'City pop (anos 80)', 'Rock', 'Idol', 'Vocaloid', 'Enka (tradicional)', 'Rap / Hip-hop', 'Acústico', 'Ghibli e trilhas'],
   de: ['Pop', 'Deutschrap', 'Indie', 'Rock', 'Punk', 'Liedermacher (voz e violão)', 'Dançante', 'Eletrônica', 'Schlager', 'Neue Deutsche Welle (anos 80)'],
 };
 const ERAS = ['Clássicos (até 1990)', '1990 a 2010', 'Atuais (2010 em diante)'];
 
-const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]/gu, '');
 
 export default function Taste() {
   const s = useStore();

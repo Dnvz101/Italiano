@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 import { searchLyrics } from '@/lib/lyrics-provider';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
+import bundledJa from '@/content/ja.json';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
-const COURSES: Record<string, any> = { it: bundledIt, de: bundledDe };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
+const COURSES: Record<string, any> = { it: bundledIt, de: bundledDe, ja: bundledJa };
 const LEVEL_NAMES = ['', 'Iniciante', 'Básico', 'Intermediário', 'Avançado'];
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);
 const list = (v: any, n: number, len = 80) =>
@@ -57,16 +59,18 @@ const norm = (s: string) =>
     .toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]/g, '');
+    .replace(/[^\p{L}\p{N}]/gu, '');
 
 /** Confere na base de letras se a música existe de verdade (a IA às vezes inventa títulos). */
 async function verify(title: string, artist: string): Promise<boolean | null> {
   try {
     const rs = await searchLyrics(title, artist);
     const a = norm(artist);
+    const t = norm(title);
     return rs.some((r) => {
       const ra = norm(r.artist);
-      return ra && (ra.includes(a) || a.includes(ra));
+      // artista japonês pode vir em kanji numa fonte e em romaji na outra: o título exato também vale
+      return (ra && a && (ra.includes(a) || a.includes(ra))) || (!!t && norm((r as any).title || '') === t && /[\u3040-\u9fff]/.test(title));
     });
   } catch {
     return null; // serviço fora do ar: não dá para saber
@@ -117,7 +121,7 @@ Regras:
 - Só músicas que você tem CERTEZA que existem, com o título exato como aparece nas plataformas. Na dúvida, não inclua.
 - Priorize músicas no nível dela ou um pouco acima (i+1): ritmo não muito rápido, refrão que se repete, pronúncia clara. Indique o nível de cada uma (1 a 4) pela régua.
 - Varie: não repita o mesmo artista. Não sugira estas, que ela já tem: ${avoid.join('; ') || '(nenhuma)'}.
-- "why" sempre em português, curto e concreto.
+- "why" sempre em português, curto e concreto.${lang === 'ja' ? '\n- Japonês: escreva o nome do artista e o título EXATAMENTE como aparecem no Japão (ex.: 米津玄師, あいみょん, 夜に駆ける), não em romaji. Inclua J-pop, anime e city pop conforme o gosto.' : ''}
 Entregue chamando a ferramenta salvar_sugestoes.`;
 
   try {

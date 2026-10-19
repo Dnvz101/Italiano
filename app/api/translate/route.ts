@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
 const MAX_LINES = 150;
 const MAX_CHARS = 12000;
 
@@ -30,21 +31,24 @@ export async function POST(req: Request) {
     const prompt = `Você é um professor de ${LANGS[from]} para brasileiros. Traduza cada linha abaixo para o português do Brasil.
 Regras:
 - Tradução natural, como um brasileiro diria, mas fiel ao sentido. Se houver gíria ou expressão idiomática, traduza o sentido.
-- Mantenha exatamente ${lines.length} itens, na mesma ordem. Linha vazia vira string vazia.
-- Entregue chamando a ferramenta salvar_traducao, com a lista "translations".
+${from === 'ja' ? `- Em "readings", dê a leitura de cada linha SÓ em hiragana (katakana e kanji viram hiragana), com espaço entre as palavras, como num livro infantil. Mesma quantidade de itens.\n` : ''}- Mantenha exatamente ${lines.length} itens, na mesma ordem. Linha vazia vira string vazia.
+- Entregue chamando a ferramenta salvar_traducao, com a lista "translations"${from === 'ja' ? ' e a lista "readings"' : ''}.
 
 ${numbered}`;
 
     const model = process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5';
-    const { data, usage } = await callClaudeJSON<{ translations: string[] }>(
+    const { data, usage } = await callClaudeJSON<{ translations: string[]; readings?: string[] }>(
       prompt,
       {
         name: 'salvar_traducao',
         description: 'Salva a tradução de cada linha, na mesma ordem.',
         schema: {
           type: 'object',
-          properties: { translations: { type: 'array', items: { type: 'string' } } },
-          required: ['translations'],
+          properties: {
+            translations: { type: 'array', items: { type: 'string' } },
+            ...(from === 'ja' ? { readings: { type: 'array', items: { type: 'string' } } } : {}),
+          },
+          required: from === 'ja' ? ['translations', 'readings'] : ['translations'],
         },
       },
       8000,
@@ -54,6 +58,11 @@ ${numbered}`;
     const out: any = Array.isArray(data.translations) ? data.translations : null;
     if (!out) throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);
     const translations = lines.map((l, i) => (l.trim() ? String(out[i] ?? '') : ''));
+    if (from === 'ja') {
+      const rd: any[] = Array.isArray(data.readings) ? data.readings : [];
+      const readings = lines.map((l, i) => (l.trim() ? String(rd[i] ?? '').slice(0, 400) : ''));
+      return NextResponse.json({ translations, readings });
+    }
     return NextResponse.json({ translations });
   } catch (e: any) {
     const status = e instanceof AiError ? e.status : 500;

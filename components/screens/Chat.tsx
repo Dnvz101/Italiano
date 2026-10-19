@@ -1,4 +1,5 @@
 'use client';
+import Jt from '../Jt';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
@@ -190,7 +191,9 @@ export default function Chat() {
         {msgs.map((m, i) =>
           m.role === 'ai' ? (
             <div key={i} className="bub ai">
-              <p>{m.text}</p>
+              <p>
+                <Jt text={m.text} />
+              </p>
               <div className="bub-act">
                 <Spk text={m.text} />
                 <Spk text={m.text} slow />
@@ -209,7 +212,9 @@ export default function Chat() {
               </div>
               {m.recast && (
                 <div className="recast">
-                  <span className="mut">Mais natural:</span> <b>{m.recast}</b> <Spk text={m.recast} />
+                  <span className="mut">Mais natural:</span> <b>
+                    <Jt text={m.recast} ro />
+                  </b> <Spk text={m.recast} />
                   {m.tip && <div className="mut">{m.tip}</div>}
                 </div>
               )}

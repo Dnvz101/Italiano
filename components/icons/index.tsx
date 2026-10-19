@@ -68,7 +68,9 @@ export default function Ic({ name, size = 24, className = '' }: { name: IcName; 
 export function Flag({ lang, size = 26 }: { lang: string; size?: number }) {
   const h = Math.round(size * 0.72);
   const bands =
-    lang === 'de'
+    lang === 'ja'
+      ? ['<rect width="26" height="18" fill="#ffffff"/>', '<circle cx="13" cy="9" r="5.2" fill="#d62839"/>']
+      : lang === 'de'
       ? ['#1f1f1f', '#dd2f2f', '#f6c21c'].map((c, i) => `<rect y="${(i * 18) / 3}" width="26" height="6" fill="${c}"/>`)
       : ['#1f9d55', '#ffffff', '#e1393a'].map((c, i) => `<rect x="${(i * 26) / 3}" width="8.67" height="18" fill="${c}"/>`);
   return (

@@ -1,4 +1,5 @@
 'use client';
+import { furiHtml } from '@/lib/kana';
 import { useCourse } from '@/lib/nav';
 
 export default function Method() {
@@ -48,7 +49,7 @@ export default function Method() {
           A música da semana é o estudo <b>intensivo</b>. Krashen também pede volume: horas de escuta <b>extensiva</b>,
           sem pausar nem traduzir. Registre os minutos na tela Início.
         </p>
-        <div dangerouslySetInnerHTML={{ __html: course.meta.imm }} />
+        <div dangerouslySetInnerHTML={{ __html: furiHtml(course.meta.imm) }} />
         <p style={{ marginBottom: 0 }}>
           <b>Truque:</b> filmes que vocês já conhecem de cor em português, assistidos no idioma novo. Como vocês já sabem a
           história, quase tudo vira input compreensível.

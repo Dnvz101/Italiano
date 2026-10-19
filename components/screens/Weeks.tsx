@@ -1,4 +1,5 @@
 'use client';
+import { banner } from '@/lib/langs';
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
@@ -59,7 +60,7 @@ export default function Weeks() {
     <>
       <div className="page-banner" style={{ aspectRatio: '1207/389' }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/media/banner-trilha.webp" alt="" />
+        <img src={banner(lang, 'trilha')} alt="" />
         <div className="pb-text">
           <h2>Trilha</h2>
           <p>Uma música por semana, da mais lenta à mais rápida.</p>

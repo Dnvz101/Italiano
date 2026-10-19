@@ -1,18 +1,20 @@
 'use client';
 import { useRef, useState } from 'react';
 import { useCourse } from '@/lib/nav';
-import { compare, norm, useShadowRec, words, type WordHit } from '@/lib/shadow';
+import { norm, scoreLine, useShadowRec, words, type WordHit } from '@/lib/shadow';
 
 /** Nota para uma fala curta. Com `accept`, qualquer forma aceita conta 100% (ex.: "acca" ou "H"). */
-export function scoreSay(heard: string, target: string, accept?: string[]): { score: number; hits: WordHit[] } {
-  const c = compare(target, heard);
+export function scoreSay(heard: string, target: string, accept?: string[], heardKana?: string): { score: number; hits: WordHit[] } {
+  const c = scoreLine(target, heard, heardKana);
   if (accept?.length) {
     const hw = words(heard).map((w) => w.n);
     const joined = hw.join('');
+    const kj = norm(heardKana || '');
     if (
       accept.some((a) => {
         const n = norm(a.replace(/\s+/g, ''));
-        return n && (hw.includes(n) || joined === n);
+        const dl = (x: string) => x.replace(/ー/g, '');
+        return n && (hw.includes(n) || joined === n || kj === n || dl(kj) === n || dl(joined) === n);
       })
     )
       return { score: 100, hits: c.hits.map((h) => ({ ...h, ok: true })) };
@@ -57,7 +59,7 @@ export default function SayIt({
         setRes({ score: null, heard: '', url: t.url });
         return;
       }
-      const { score } = scoreSay(t.heard, text, accept);
+      const { score } = scoreSay(t.heard, text, accept, t.kana);
       setRes({ score, heard: t.heard, url: t.url });
       onScore(score);
     });

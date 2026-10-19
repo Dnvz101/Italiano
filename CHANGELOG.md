@@ -1,5 +1,16 @@
 # Histórico de versões — Ascolto em Família
 
+## v25 — 2026-10-19 · Japonês 🇯🇵
+- **Novo idioma: 日本語.** Trilha de 10 semanas em 2 módulos (Primeiros passos e J-pop): さんぽ, 上を向いて歩こう, 世界に一つだけの花, 涙そうそう, ハナミズキ, 糸, チェリー, Lemon, Pretender e 夜に駆ける. Cada uma com tema, aula e 10 cards do dia a dia (konbini, trabalho, perguntas).
+- **Visual vermelho, preto e branco** só no japonês: botões pretos, destaques em vermelho, bandeira do Japão e ilustrações próprias (onigiri de fone, monte Fuji, torii, disco e sakura) no início, na trilha e na semana.
+- **Furigana e romaji** em cards, aula, revisão, frases, conversa e letras. A voz lê o texto sem os colchetes.
+- **Shadowing e "Repetir" no japonês:** nota por sílaba, comparando pela leitura em hiragana (o servidor transcreve a fala e devolve também em kana).
+- **Kana e sons** (aba Frases): hiragana e katakana com exemplo para cada letra, e os sons que pegam os brasileiros (つ, R, ふ, vogal longa, っ, ん, vogais que somem…).
+- **Câmera** com os 80 objetos em japonês (sem artigo nem gênero) e a leitura em kana.
+- **IA no japonês:** aula, análise de música, tradução (com leitura), conversa (aceita escrever em romaji) e perfil musical com estilos japoneses (J-pop, anime, city pop…).
+- Idiomas centralizados em `lib/langs.ts`: abrir um idioma novo agora é um arquivo de conteúdo + uma linha.
+- O conteúdo embutido entra sozinho quando um idioma ainda não está no banco.
+
 ## v24.1 — 2026-10-19 · Sempre claro
 - O app fica sempre no tema claro, mesmo com o celular no modo escuro (barra do navegador também clara).
 

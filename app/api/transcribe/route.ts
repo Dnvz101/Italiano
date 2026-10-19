@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, checkQuota } from '@/lib/ai';
 
@@ -7,7 +8,7 @@ export const maxDuration = 60;
 
 // Transcrição da gravação do Shadowing pelo Gemini (a API da Anthropic não recebe áudio).
 // Usada no Android, onde o navegador não consegue gravar e reconhecer a voz ao mesmo tempo.
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
 const MAX_B64 = 2_800_000; // ~2 MB de áudio: bem mais que uma linha de música
 const MIMES = ['audio/wav', 'audio/webm', 'audio/ogg', 'audio/mp4', 'audio/m4a', 'audio/aac', 'audio/mpeg'];
 
@@ -97,17 +98,26 @@ export async function POST(req: Request) {
     await checkQuota(sb, user.id, 'stt');
     const { d, model } = await gemini([
       {
-        text: `Transcreva exatamente o que a pessoa fala neste áudio, em ${LANGS[lang]}. É um aluno repetindo um verso de música ou uma palavra: escreva as palavras como ele de fato pronunciou, sem corrigir e sem completar. Responda só com a transcrição, sem aspas. Se não houver fala, responda com uma linha vazia.`,
+        text:
+          lang === 'ja'
+            ? `Transcreva exatamente o que a pessoa fala neste áudio, em japonês. É um aluno brasileiro repetindo um verso de música, uma palavra ou uma sílaba: escreva o que ele de fato pronunciou, sem corrigir e sem completar. Responda em DUAS linhas: na primeira, a transcrição na escrita japonesa normal (kanji e kana); na segunda, a mesma fala só em hiragana, começando com "KANA: ". Sem aspas e sem mais nada. Se não houver fala, responda com uma linha vazia.`
+            : `Transcreva exatamente o que a pessoa fala neste áudio, em ${LANGS[lang]}. É um aluno repetindo um verso de música ou uma palavra: escreva as palavras como ele de fato pronunciou, sem corrigir e sem completar. Responda só com a transcrição, sem aspas. Se não houver fala, responda com uma linha vazia.`,
       },
       { inline_data: { mime_type: mime === 'audio/mp4' ? 'audio/m4a' : mime, data: audio } }, // iPhone grava em mp4 (AAC)
     ]);
-    const text = (d?.candidates?.[0]?.content?.parts || [])
+    const raw = (d?.candidates?.[0]?.content?.parts || [])
       .filter((p: any) => !p?.thought)
       .map((p: any) => p?.text || '')
-      .join(' ')
-      .replace(/^["“”']+|["“”']+$/g, '')
-      .trim()
-      .slice(0, 400);
+      .join('\n');
+    const clean = (x: string) => x.replace(/^["“”'「」]+|["“”'「」]+$/g, '').trim().slice(0, 400);
+    let text = clean(raw.replace(/\s*\n\s*/g, ' '));
+    let kana = '';
+    if (lang === 'ja') {
+      const lines = raw.split('\n').map((l: string) => l.trim()).filter(Boolean);
+      const k = lines.find((l: string) => /^KANA\s*[:：]/i.test(l));
+      kana = k ? clean(k.replace(/^KANA\s*[:：]\s*/i, '')) : '';
+      text = clean(lines.filter((l: string) => l !== k).join(' ')) || kana;
+    }
     const u = d?.usageMetadata || {};
     await sb.from('ai_usage').insert({
       user_id: user.id,
@@ -117,7 +127,7 @@ export async function POST(req: Request) {
       output_tokens: u.candidatesTokenCount || 0,
       cost_usd: null,
     });
-    return NextResponse.json({ text });
+    return NextResponse.json(lang === 'ja' ? { text, kana } : { text });
   } catch (e: any) {
     const status = e instanceof AiError ? e.status : 500;
     const msg = e?.name === 'TimeoutError' ? 'A avaliação demorou demais. Tente de novo.' : e.message;

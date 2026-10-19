@@ -1,20 +1,27 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { plain, reading, toHira } from './kana';
 
 /* ---------- comparação palavra por palavra ---------- */
 
 export const norm = (w: string) =>
-  w
+  toHira(w)
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/ß/g, 'ss')
-    .replace(/[^a-z0-9]/g, '');
+    .normalize('NFC')
+    .replace(/[^a-z0-9\u3040-\u309f\u30fc\u3400-\u9fff\u3005]/g, '');
 
-/** Quebra em palavras mantendo o texto original para exibir ("l'amore" vira "l'" + "amore"). */
+const CJK = /[\u3040-\u30ff\u3400-\u9fff\u3005]/;
+/** Quebra em palavras mantendo o texto original para exibir ("l'amore" vira "l'" + "amore").
+ *  Japonês não tem espaço entre palavras: cada caractere vira uma "palavra" (a nota fica por sílaba). */
 export function words(text: string): { raw: string; n: string }[] {
-  return (text.match(/[^\s'’]+['’]?/g) || []).map((raw) => ({ raw, n: norm(raw) })).filter((w) => w.n);
+  const t = plain(text || '');
+  const re = CJK.test(t) ? /[\u3040-\u30ff\u3400-\u9fff\u3005][ゃゅょぁぃぅぇぉャュョァィゥェォ]?|[^\s'’\u3040-\u30ff\u3400-\u9fff\u3005]+['’]?/g : /[^\s'’]+['’]?/g;
+  return (t.match(re) || []).map((raw) => ({ raw, n: norm(raw) })).filter((w) => w.n);
 }
+export const isCjk = (text: string) => CJK.test(text || '');
 
 export type WordHit = { raw: string; ok: boolean };
 
@@ -45,6 +52,15 @@ export function compare(target: string, heard: string): { hits: WordHit[]; score
   return { hits, score };
 }
 
+/** Nota de uma fala: compara pela escrita e, no japonês, também pela leitura em hiragana; fica com a melhor. */
+export function scoreLine(target: string, heard: string, heardKana?: string, targetKana?: string) {
+  const a = compare(target, heard);
+  if (!isCjk(target)) return a;
+  const r = targetKana || reading(target);
+  const b = compare(r, heardKana || toHira(heard));
+  return b.score > a.score ? b : a;
+}
+
 /** Uma letra de diferença em palavra longa ainda conta (o reconhecedor erra terminações). */
 function near(x: string, y: string) {
   if (Math.abs(x.length - y.length) > 1) return false;
@@ -55,7 +71,7 @@ function near(x: string, y: string) {
 
 /* ---------- gravação + avaliação ---------- */
 
-export type Take = { url: string | null; heard: string; via: 'browser' | 'server' | 'none' };
+export type Take = { url: string | null; heard: string; kana?: string; via: 'browser' | 'server' | 'none' };
 type Mode = 'both' | 'server' | 'sr-only' | 'rec-only' | 'none';
 
 const isAndroid = () => typeof navigator !== 'undefined' && /Android/i.test(navigator.userAgent);
@@ -181,7 +197,9 @@ export function useShadowRec(locale: string, lang: string) {
     serverStt().then((srv) => {
       if (!alive.current) return;
       setServer(srv);
-      if (isAndroid()) setMode(canRec && srv ? 'server' : canSR ? 'sr-only' : canRec ? 'rec-only' : 'none');
+      // japonês: o servidor devolve também a leitura em hiragana, que é como a nota é calculada
+      if (lang === 'ja' && canRec && srv) setMode('server');
+      else if (isAndroid()) setMode(canRec && srv ? 'server' : canSR ? 'sr-only' : canRec ? 'rec-only' : 'none');
       // iPhone: gravar e reconhecer juntos costuma devolver vazio (sobretudo em palavras curtas); o servidor é mais confiável
       else if (isIOS() && canRec && srv) setMode('server');
       else setMode(canRec && canSR ? 'both' : canRec ? (srv ? 'server' : 'rec-only') : canSR ? 'sr-only' : 'none');
@@ -192,7 +210,7 @@ export function useShadowRec(locale: string, lang: string) {
     };
   }, []);
 
-  const transcribe = async (b: Blob): Promise<string> => {
+  const transcribe = async (b: Blob): Promise<{ text: string; kana: string }> => {
     const { b64: audio, mime } = await toWav(b);
     const r = await fetch('/api/transcribe', {
       method: 'POST',
@@ -201,7 +219,7 @@ export function useShadowRec(locale: string, lang: string) {
     });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
-    return String(d.text || '');
+    return { text: String(d.text || ''), kana: String(d.kana || '') };
   };
 
   const done = useCallback(async () => {
@@ -211,11 +229,14 @@ export function useShadowRec(locale: string, lang: string) {
     stream.current?.getTracks().forEach((t) => t.stop());
     stream.current = null;
     let text = heard.current.trim();
+    let kana = '';
     let via: Take['via'] = text ? 'browser' : 'none';
     if (!text && blob.current && server) {
       setState('stt');
       try {
-        text = (await transcribe(blob.current)).trim();
+        const t = await transcribe(blob.current);
+        text = t.text.trim();
+        kana = t.kana.trim();
         via = text ? 'server' : 'none';
       } catch (e: any) {
         setError(e.message);
@@ -225,7 +246,7 @@ export function useShadowRec(locale: string, lang: string) {
     setState('idle');
     const f = finish.current;
     finish.current = null;
-    f?.({ url: url.current, heard: text, via });
+    f?.({ url: url.current, heard: text, kana, via });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [server, lang]);
 

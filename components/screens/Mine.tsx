@@ -1,4 +1,5 @@
 'use client';
+import Jt from '../Jt';
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
@@ -50,7 +51,7 @@ export default function Mine() {
           ✍️ Minhas frases
         </button>
         <button className={tab === 'abc' ? 'on' : ''} onClick={() => pickTab('abc')}>
-          🔤 Alfabeto e sons
+          {lang === 'ja' ? 'あ Kana e sons' : '🔤 Alfabeto e sons'}
         </button>
       </div>
     </>
@@ -94,7 +95,9 @@ export default function Mine() {
             <div key={m.id} className="vc">
               <Spk text={m.text} />
               <div style={{ flex: 1 }}>
-                <div className="it">{m.text}</div>
+                <div className="it">
+                  <Jt text={m.text} ro />
+                </div>
                 <div className="mut">{m.meaning}</div>
                 {m.note && (
                   <div className="mut" style={{ fontSize: 13 }}>

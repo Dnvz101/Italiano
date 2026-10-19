@@ -749,3 +749,59 @@ h2.ih .icb{width:40px!important;height:40px!important}
 .song-head.with-banner .sh-title{max-width:62%}
 
 :root[data-theme="light"]{color-scheme:light}
+
+/* ============ v25 · japonês: vermelho, preto e branco ============ */
+.g-j{--g:#c8102e}
+.ar-tag .ar-yomi,.ar-word .ar-yomi{font-size:.72em;font-weight:700;color:var(--g)}
+.al-grid.kana{grid-template-columns:repeat(5,1fr)}
+.al-grid.kana .al-tile b{font-size:24px;font-weight:700}
+ruby{ruby-position:over}
+rt{font-size:.5em;font-weight:600;color:var(--mut);letter-spacing:0}
+.ro{display:block;font-size:12.5px;font-weight:600;color:var(--mut);letter-spacing:.01em;margin-top:2px;font-style:normal}
+.back-ro{margin-top:4px}
+.ly-ro{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin-top:1px}
+.sh-ro{margin:-4px 0 6px;font-size:13.5px;font-weight:600;color:var(--mut)}
+:root[data-lang="ja"]{
+  --font:"Nunito Variable","Nunito","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  --bg:#fbfaf8;--card:#ffffff;--ink:#16120f;--navy:#16120f;--mut:#6f6762;--line:#ece5e1;
+  --acc:#c8102e;--acc-ink:#ffffff;--acc2:#b45309;--chip:#f8ecec;--side:#f5f1ee;
+  --mint:#fbe9eb;--mint-2:#f4c6cc;--ok:#15803d;
+  --shadow:0 1px 2px rgba(22,18,15,.05),0 6px 22px rgba(22,18,15,.06);
+}
+:root[data-lang="ja"] html,:root[data-lang="ja"] body,:root[data-lang="ja"]{font-family:var(--font)}
+:root[data-lang="ja"] .topbar h1 span{color:var(--acc)}
+:root[data-lang="ja"] .song-head.with-banner{background:linear-gradient(100deg,#fff 0%,#fdf3f1 55%,#fbe9e6 100%);border-color:#f1d4d4}
+:root[data-lang="ja"] .lvl-pill{background:#fbe3e6;color:#a50e26}
+:root[data-lang="ja"] .lvl-pill.l2{background:#ece9e6;color:#3b3430}
+:root[data-lang="ja"] .lvl-pill.l3{background:#fdf0d6;color:#a16207}
+:root[data-lang="ja"] .lvl-pill.l4{background:#1d1a18;color:#fff}
+:root[data-lang="ja"] .stabs .icb .ic2,:root[data-lang="ja"] .tabbar .icb .ic2,:root[data-lang="ja"] .side-nav .icb .ic2{--ic-s:#8a817c;--ic-f:#efeae7}
+:root[data-lang="ja"] .stabs button.on .icb .ic2,:root[data-lang="ja"] .tabbar button.on .icb .ic2,:root[data-lang="ja"] .side-nav button.on .icb .ic2{--ic-s:var(--acc);--ic-f:var(--mint-2)}
+:root[data-lang="ja"] .tabbar button{color:#8a817c}
+:root[data-lang="ja"] .tabbar button.on{color:var(--acc)}
+:root[data-lang="ja"] .stat b{color:var(--ink)}
+:root[data-lang="ja"] .btn{background:var(--ink)}
+:root[data-lang="ja"] .btn.ghost{background:var(--card);color:var(--acc)}
+:root[data-lang="ja"] .btn.now-btn,:root[data-lang="ja"] .btn.sh-go{background:var(--acc)}
+:root[data-lang="ja"] .card.lesson b{color:var(--ink)}
+:root[data-lang="ja"] .brand-home .ic2{--ic-s:var(--ink)}
+:root[data-lang="ja"] .hero-static,:root[data-lang="ja"] .page-banner{box-shadow:var(--shadow)}
+:root[data-lang="ja"] .sh-t,:root[data-lang="ja"] .lyt span{line-height:1.9}
+:root[data-lang="ja"] .st-green{background:#fdeeee}:root[data-lang="ja"] .st-green .st-ic{color:#c8102e;background:#fad9dd}
+:root[data-lang="ja"] .st-blue{background:#f4f1ef}:root[data-lang="ja"] .st-blue .st-ic{color:#16120f;background:#e7e1dd}
+:root[data-lang="ja"] .st-purple{background:#fbf4e6}:root[data-lang="ja"] .st-purple .st-ic{color:#a16207;background:#f5e4c0}
+:root[data-lang="ja"] .page-banner{background:#fdf1ee}
+:root[data-lang="ja"] .pb-text h2{color:#16120f}
+:root[data-lang="ja"] .pb-text p{color:#4a423d}
+.hero-static .hero-bubble.ja{color:#16120f;text-shadow:none;gap:2px}
+.hero-static .hero-bubble.ja span{color:#c8102e;font-weight:800;opacity:1;font-size:3.3cqw}
+.hero-static .hero-bubble.ja b{font-size:3.9cqw;font-weight:900}
+.hero-static .hero-bubble.ja.long b{font-size:3cqw}
+:root[data-lang="ja"] .now-prog i{background:linear-gradient(90deg,#c8102e,#f05a6e)}
+:root[data-lang="ja"] .card.lesson i,:root[data-lang="ja"] .vc i,:root[data-lang="ja"] .exp i,:root[data-lang="ja"] .flash .ex,:root[data-lang="ja"] .sh-t{font-style:normal}
+:root[data-lang="ja"] .card.lesson i{color:#8c1b2b;font-weight:600}
+:root[data-lang="ja"] .ar-cta-img,:root[data-lang="ja"] .invite-img,:root[data-lang="ja"] .chat-empty .illus{filter:hue-rotate(205deg) saturate(.85) drop-shadow(0 2px 4px rgba(22,18,15,.12))}
+:root[data-lang="ja"] .lvl.l1:not(.lvl-pill){color:#c8102e}
+:root[data-lang="ja"] .lvl.l2:not(.lvl-pill){color:#3b3430}
+:root[data-lang="ja"] .lvl.l3:not(.lvl-pill){color:#a16207}
+:root[data-lang="ja"] .lvl.l4:not(.lvl-pill){color:#16120f}

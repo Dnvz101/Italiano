@@ -1,0 +1,819 @@
+{
+ "lang": "ja",
+ "sort": 3,
+ "meta": {
+  "name": "日本語",
+  "flag": "🇯🇵",
+  "lang": "ja",
+  "locale": "ja-JP",
+  "hello": "こんにちは",
+  "lyr": "歌詞",
+  "test": "こんにちは！ 元気ですか？ 今日は 一緒に 日本語を 勉強しましょう。",
+  "day6": "コーヒーを ください → お水[みず]を ください",
+  "imm": "<p><b>Para começar:</b> <a href=\"https://www.youtube.com/results?search_query=comprehensible+japanese\" target=\"_blank\" rel=\"noopener\">Comprehensible Japanese</a> (vídeos com desenhos, do zero absoluto, só em japonês fácil) e <a href=\"https://www3.nhk.or.jp/news/easy/\" target=\"_blank\" rel=\"noopener\">NHK News Web Easy</a> (notícias em japonês simples, com furigana).</p>\n <p><b>Para o carro:</b> <a href=\"https://www.youtube.com/results?search_query=nihongo+con+teppei+podcast\" target=\"_blank\" rel=\"noopener\">Nihongo con Teppei</a> (episódios de 5 minutos, falados devagar).</p>\n <p><b>Séries e anime:</b> o que vocês já gostam, com áudio em japonês e legenda em japonês (字幕[じまく], jimaku). Começar por Ghibli é ótimo: frases claras e muita gente fala devagar.</p>\n <p><b>Morando no Japão?</b> A rua é imersão de graça: avisos do trem, cardápio da konbini, as músicas do supermercado. Escolha uma placa por dia e descubra o que ela diz.</p>"
+ },
+ "weeks": [
+  {
+   "n": 1,
+   "section": "Módulo 1 · Primeiros passos",
+   "title": "さんぽ",
+   "artist": "井上あずみ",
+   "year": 1988,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "わたし は げんき: a partícula は e o “vamos!” com 〜こう",
+   "about": "A música de abertura de Meu Amigo Totoro, do Studio Ghibli: uma marchinha alegre de criança passeando pelo campo, subindo ladeira e atravessando túnel.",
+   "why": "Feita para crianças cantarem: palavras simples, muita repetição e pronúncia limpíssima. É a porta de entrada perfeita para o ouvido japonês.",
+   "hunt": [
+    "あるこう",
+    "わたし",
+    "げんき",
+    "トンネル"
+   ],
+   "lesson": "<p><b>わたしは げんき</b> = eu estou bem, cheio de energia. A partícula <b>は</b> marca o assunto da frase e, como partícula, se lê <b>wa</b> (não “ha”).</p><p><b>歩[ある]く</b> (aruku) = andar. Trocando o final por <b>〜こう</b> vira convite: <b>歩[ある]こう</b> (arukō) = vamos andar! O mesmo com <i>行[い]く → 行[い]こう</i> (vamos!).</p><p>Japonês não tem artigo, nem gênero, nem plural obrigatório, e o verbo vai sempre no final. Respira: tem muita coisa mais fácil que no italiano!</p>",
+   "cards": [
+    [
+     "私[わたし]",
+     "eu",
+     "私[わたし]は レオです。",
+     "Eu sou o Léo."
+    ],
+    [
+     "元気[げんき]",
+     "energia / bem-disposto",
+     "お元気[げんき]ですか？",
+     "Como vai? (você está bem?)"
+    ],
+    [
+     "元気[げんき]です",
+     "estou bem",
+     "はい、元気[げんき]です。",
+     "Sim, estou bem."
+    ],
+    [
+     "歩[ある]く",
+     "andar / caminhar",
+     "毎日[まいにち] 駅[えき]まで 歩[ある]きます。",
+     "Todo dia ando até a estação."
+    ],
+    [
+     "歩[ある]こう",
+     "vamos andar!",
+     "いっしょに 歩[ある]こう！",
+     "Vamos andar juntos!"
+    ],
+    [
+     "行[い]こう",
+     "vamos (ir)!",
+     "公園[こうえん]に 行[い]こう！",
+     "Vamos ao parque!"
+    ],
+    [
+     "坂道[さかみち]",
+     "ladeira",
+     "この 坂道[さかみち]は きついね。",
+     "Essa ladeira é puxada, né."
+    ],
+    [
+     "トンネル",
+     "túnel",
+     "トンネルを 通[とお]ります。",
+     "Vamos passar pelo túnel."
+    ],
+    [
+     "友[とも]だち",
+     "amigo(a)",
+     "友[とも]だちと 遊[あそ]びます。",
+     "Brinco com os amigos."
+    ],
+    [
+     "いっしょに",
+     "juntos",
+     "いっしょに 歌[うた]おう！",
+     "Vamos cantar juntos!"
+    ]
+   ]
+  },
+  {
+   "n": 2,
+   "title": "上を向いて歩こう",
+   "artist": "坂本九",
+   "year": 1961,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "A forma em -te para ligar ações, e 一人[ひとり] (sozinho)",
+   "about": "Um rapaz caminha à noite olhando para o céu para as lágrimas não caírem, lembrando dias de primavera e de verão. Triste por dentro, assobiável por fora.",
+   "why": "A música japonesa mais famosa do mundo (lá fora virou “Sukiyaki” e chegou ao 1º lugar nos EUA em 1963). Lenta, com frases curtas que se repetem.",
+   "hunt": [
+    "上[うえ]",
+    "涙[なみだ]",
+    "一人[ひとり]ぼっち",
+    "夜[よる]"
+   ],
+   "lesson": "<p><b>上[うえ]を 向[む]いて 歩[ある]こう</b> = vamos andar olhando para cima. <b>向[む]いて</b> é a forma em <b>-te</b> de <i>向[む]く</i> (virar-se para): ela liga uma ação na outra, como o nosso “olhando… e andando”.</p><p><b>を</b> marca o objeto da ação e se lê <b>o</b>. <b>涙[なみだ]が こぼれない ように</b> = para que as lágrimas não caiam.</p><p><b>一人[ひとり]</b> = uma pessoa / sozinho. <b>一人[ひとり]ぼっち</b> = sozinho, solitário (com um tom de tristeza).</p>",
+   "cards": [
+    [
+     "上[うえ]",
+     "em cima / para cima",
+     "かばんは 机[つくえ]の 上[うえ]です。",
+     "A bolsa está em cima da mesa."
+    ],
+    [
+     "下[した]",
+     "embaixo",
+     "猫[ねこ]は いすの 下[した]に います。",
+     "O gato está embaixo da cadeira."
+    ],
+    [
+     "涙[なみだ]",
+     "lágrima",
+     "うれしくて 涙[なみだ]が 出[で]た。",
+     "Fiquei tão feliz que chorei."
+    ],
+    [
+     "一人[ひとり]",
+     "uma pessoa / sozinho",
+     "一人[ひとり]で 住[す]んで います。",
+     "Moro sozinho."
+    ],
+    [
+     "夜[よる]",
+     "noite",
+     "夜[よる]は 静[しず]かです。",
+     "A noite é tranquila."
+    ],
+    [
+     "春[はる]",
+     "primavera",
+     "春[はる]は 桜[さくら]が きれいです。",
+     "Na primavera as cerejeiras ficam lindas."
+    ],
+    [
+     "夏[なつ]",
+     "verão",
+     "日本[にほん]の 夏[なつ]は 暑[あつ]い！",
+     "O verão do Japão é quente!"
+    ],
+    [
+     "思[おも]い出[だ]す",
+     "lembrar-se",
+     "子[こ]どもの ころを 思[おも]い出[だ]す。",
+     "Lembro de quando era criança."
+    ],
+    [
+     "〜て、〜",
+     "liga ações (e…, e…)",
+     "朝[あさ] 起[お]きて、コーヒーを 飲[の]む。",
+     "Acordo de manhã e tomo café."
+    ],
+    [
+     "星[ほし]",
+     "estrela",
+     "今夜[こんや]は 星[ほし]が 見[み]える。",
+     "Hoje à noite dá para ver as estrelas."
+    ]
+   ]
+  },
+  {
+   "n": 3,
+   "title": "世界に一つだけの花",
+   "artist": "SMAP",
+   "year": 2003,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "Contar coisas: 一[ひと]つ, 二[ふた]つ… e o の (de)",
+   "about": "Uma floricultura cheia de flores diferentes, e nenhuma briga para ser a número um: cada pessoa já é especial do jeito que é.",
+   "why": "Uma das músicas mais vendidas da história do Japão, cantada em escola e em casamento. Vocabulário simples e uma mensagem que todo japonês conhece.",
+   "hunt": [
+    "花[はな]",
+    "一[ひと]つ",
+    "世界[せかい]",
+    "特別[とくべつ]"
+   ],
+   "lesson": "<p><b>世界[せかい]に 一[ひと]つ だけの 花[はな]</b> = a única flor do mundo. <b>だけ</b> = só, apenas.</p><p>Para contar coisas, o japonês tem um jeito próprio: <b>一[ひと]つ, 二[ふた]つ, 三[みっ]つ, 四[よっ]つ, 五[いつ]つ</b>. Serve para quase tudo: na konbini, <i>これを 一[ひと]つ ください</i> (um destes, por favor) resolve!</p><p><b>の</b> liga duas palavras como o nosso “de”, mas na ordem contrária: <i>私[わたし]の 花[はな]</i> = a minha flor; <i>日本[にほん]の 歌[うた]</i> = música do Japão.</p>",
+   "cards": [
+    [
+     "花[はな]",
+     "flor",
+     "きれいな 花[はな]ですね。",
+     "Que flor bonita, né."
+    ],
+    [
+     "一[ひと]つ",
+     "um (contando coisas)",
+     "りんごを 一[ひと]つ ください。",
+     "Uma maçã, por favor."
+    ],
+    [
+     "二[ふた]つ",
+     "dois (coisas)",
+     "コーヒーを 二[ふた]つ お願[ねが]いします。",
+     "Dois cafés, por favor."
+    ],
+    [
+     "三[みっ]つ",
+     "três (coisas)",
+     "おにぎりを 三[みっ]つ 買[か]った。",
+     "Comprei três onigiris."
+    ],
+    [
+     "だけ",
+     "só / apenas",
+     "日曜日[にちようび]だけ 休[やす]みです。",
+     "Só folgo no domingo."
+    ],
+    [
+     "世界[せかい]",
+     "mundo",
+     "世界[せかい]は 広[ひろ]い。",
+     "O mundo é grande."
+    ],
+    [
+     "特別[とくべつ]",
+     "especial",
+     "今日[きょう]は 特別[とくべつ]な 日[ひ]です。",
+     "Hoje é um dia especial."
+    ],
+    [
+     "一人一人[ひとりひとり]",
+     "cada pessoa",
+     "一人一人[ひとりひとり] 違[ちが]う。",
+     "Cada um é diferente."
+    ],
+    [
+     "違[ちが]う",
+     "ser diferente / estar errado",
+     "それは 違[ちが]います。",
+     "Não é isso, não."
+    ],
+    [
+     "〜の",
+     "de (posse)",
+     "これは 私[わたし]の 傘[かさ]です。",
+     "Este é o meu guarda-chuva."
+    ]
+   ]
+  },
+  {
+   "n": 4,
+   "title": "涙そうそう",
+   "artist": "夏川りみ",
+   "year": 2001,
+   "level": "Básico",
+   "lv": 2,
+   "theme": "〜たい: “quero…”, e ありがとう",
+   "about": "Uma despedida de alguém querido que se foi: folheando um álbum antigo, a pessoa agradece baixinho e lembra do sorriso de quem ama, em dia de sol e em dia de chuva.",
+   "why": "Voz suave e muito clara, ritmo lento, e um jeito de Okinawa que dá saudade. Ótima para o shadowing devagar.",
+   "hunt": [
+    "アルバム",
+    "ありがとう",
+    "雨[あめ]",
+    "会[あ]いたくて"
+   ],
+   "lesson": "<p><b>会[あ]いたい</b> = quero ver (alguém), tenho saudade. Para dizer que você <b>quer fazer</b> algo, troca o final do verbo por <b>〜たい</b>: <i>食[た]べる → 食[た]べたい</i> (quero comer), <i>行[い]く → 行[い]きたい</i> (quero ir). Na música vem <b>会[あ]いたくて</b> = “de tanta vontade de ver”.</p><p><b>ありがとう</b> (arigatō) = obrigado. Com gente mais velha ou no trabalho: <b>ありがとうございます</b>.</p><p><i>Nada sōsō</i> é do dialeto de Okinawa: lágrimas que escorrem sem parar.</p>",
+   "cards": [
+    [
+     "会[あ]う",
+     "encontrar (alguém)",
+     "駅[えき]で 友[とも]だちに 会[あ]う。",
+     "Encontro um amigo na estação."
+    ],
+    [
+     "会[あ]いたい",
+     "quero te ver / tenho saudade",
+     "家族[かぞく]に 会[あ]いたい。",
+     "Tenho saudade da família."
+    ],
+    [
+     "食[た]べたい",
+     "quero comer",
+     "ラーメンが 食[た]べたい！",
+     "Quero comer lámen!"
+    ],
+    [
+     "行[い]きたい",
+     "quero ir",
+     "いつか 沖縄[おきなわ]に 行[い]きたい。",
+     "Um dia quero ir a Okinawa."
+    ],
+    [
+     "ありがとう",
+     "obrigado",
+     "手伝[てつだ]って くれて ありがとう。",
+     "Obrigado por me ajudar."
+    ],
+    [
+     "ありがとうございます",
+     "muito obrigado (educado)",
+     "いつも ありがとうございます。",
+     "Obrigado por tudo, sempre."
+    ],
+    [
+     "雨[あめ]",
+     "chuva",
+     "今日[きょう]は 雨[あめ]ですね。",
+     "Hoje está chovendo, né."
+    ],
+    [
+     "晴[は]れ",
+     "tempo bom / sol",
+     "明日[あした]は 晴[は]れです。",
+     "Amanhã vai fazer sol."
+    ],
+    [
+     "古[ふる]い",
+     "velho / antigo",
+     "古[ふる]い 写真[しゃしん]を 見[み]た。",
+     "Vi umas fotos antigas."
+    ],
+    [
+     "笑顔[えがお]",
+     "sorriso",
+     "あなたの 笑顔[えがお]が 好[す]き。",
+     "Gosto do seu sorriso."
+    ]
+   ]
+  },
+  {
+   "n": 5,
+   "title": "ハナミズキ",
+   "artist": "一青窈",
+   "year": 2004,
+   "level": "Básico",
+   "lv": 2,
+   "theme": "〜ますように: “tomara que…”, e números grandes",
+   "about": "Um amor generoso: o desejo de que a pessoa amada seja feliz por cem anos com quem ela ama, mesmo que não seja você. A hanamizuki é a árvore que os EUA mandaram ao Japão em agradecimento pelas cerejeiras de Washington.",
+   "why": "Melodia lenta e um refrão que se repete. O “〜ますように” do refrão é o mesmo pedido que se escreve nas plaquinhas dos templos.",
+   "hunt": [
+    "空[そら]",
+    "君[きみ]",
+    "百年[ひゃくねん]",
+    "夏[なつ]"
+   ],
+   "lesson": "<p><b>〜ますように</b> = tomara que… / que…! É o pedido das plaquinhas de templo e do Tanabata: <i>合格[ごうかく]できますように</i> (que eu passe na prova).</p><p><b>君[きみ]</b> (kimi) = você, íntimo, muito usado em música. No dia a dia, prefira o nome da pessoa + <b>さん</b>.</p><p><b>百年[ひゃくねん]</b> = cem anos. Números grandes: <i>百[ひゃく]</i> 100, <i>千[せん]</i> 1.000, <i>万[まん]</i> 10.000. O iene conta em 万: 30.000 ienes = <i>三万円[さんまんえん]</i>.</p>",
+   "cards": [
+    [
+     "〜ますように",
+     "tomara que… / que…!",
+     "元気[げんき]で いられますように。",
+     "Que você continue bem."
+    ],
+    [
+     "君[きみ]",
+     "você (íntimo)",
+     "君[きみ]の 声[こえ]が 好[す]きだ。",
+     "Gosto da sua voz."
+    ],
+    [
+     "空[そら]",
+     "céu",
+     "今日[きょう]の 空[そら]は 青[あお]い。",
+     "O céu hoje está azul."
+    ],
+    [
+     "百[ひゃく]",
+     "cem",
+     "百円[ひゃくえん]ショップに 行[い]こう。",
+     "Vamos à loja de 100 ienes."
+    ],
+    [
+     "千[せん]",
+     "mil",
+     "千円[せんえん]で 足[た]ります。",
+     "Mil ienes dá."
+    ],
+    [
+     "万[まん]",
+     "dez mil",
+     "一万円[いちまんえん] 払[はら]いました。",
+     "Paguei dez mil ienes."
+    ],
+    [
+     "好[す]きな 人[ひと]",
+     "a pessoa amada",
+     "好[す]きな 人[ひと]が います。",
+     "Tem uma pessoa de quem eu gosto."
+    ],
+    [
+     "続[つづ]く",
+     "continuar / durar",
+     "雨[あめ]が 続[つづ]いて います。",
+     "A chuva continua."
+    ],
+    [
+     "待[ま]って",
+     "espere",
+     "ちょっと 待[ま]って ください。",
+     "Espere um pouco, por favor."
+    ],
+    [
+     "暑[あつ]すぎる",
+     "quente demais",
+     "今日[きょう]は 暑[あつ]すぎる！",
+     "Hoje está quente demais!"
+    ]
+   ]
+  },
+  {
+   "n": 6,
+   "title": "糸",
+   "artist": "中島みゆき",
+   "year": 1992,
+   "level": "Básico",
+   "lv": 2,
+   "theme": "Palavras de pergunta: なぜ, いつ, どこ, だれ",
+   "about": "Duas vidas são como fios: o fio vertical é você, o horizontal sou eu, e juntos viram um tecido que pode aquecer alguém. Uma das músicas mais cantadas em casamentos no Japão.",
+   "why": "Andamento calmo, palavras do cotidiano e uma imagem fácil de lembrar. Tem versões de muitos cantores, todas boas para comparar.",
+   "hunt": [
+    "糸[いと]",
+    "縦[たて]",
+    "横[よこ]",
+    "なぜ"
+   ],
+   "lesson": "<p>A música começa com <b>なぜ</b> (por quê) e <b>いつ</b> (quando). Outras palavras de pergunta: <b>どこ</b> (onde), <b>だれ</b> (quem), <b>なに / なん</b> (o quê). Para perguntar, basta pôr <b>か</b> no final: <i>どこですか？</i> = onde é?</p><p><b>縦[たて]の 糸[いと]は あなた</b> = o fio vertical é você. Repare no <b>の</b> (de) e no <b>は</b> (assunto) de novo.</p><p><b>知[し]らない</b> = não sei. A forma negativa simples termina em <b>〜ない</b>: <i>わからない</i> (não entendo).</p>",
+   "cards": [
+    [
+     "なぜ",
+     "por quê",
+     "なぜ 日本語[にほんご]を 勉強[べんきょう]しますか？",
+     "Por que você estuda japonês?"
+    ],
+    [
+     "どこ",
+     "onde",
+     "トイレは どこですか？",
+     "Onde fica o banheiro?"
+    ],
+    [
+     "いつ",
+     "quando",
+     "誕生日[たんじょうび]は いつですか？",
+     "Quando é o seu aniversário?"
+    ],
+    [
+     "だれ",
+     "quem",
+     "あの 人[ひと]は だれですか？",
+     "Quem é aquela pessoa?"
+    ],
+    [
+     "なに / なん",
+     "o quê",
+     "これは 何[なん]ですか？",
+     "O que é isto?"
+    ],
+    [
+     "糸[いと]",
+     "fio / linha",
+     "糸[いと]と 針[はり]を 貸[か]して。",
+     "Me empresta linha e agulha."
+    ],
+    [
+     "あなた",
+     "você",
+     "あなたの 名前[なまえ]は？",
+     "Qual é o seu nome?"
+    ],
+    [
+     "知[し]らない",
+     "não sei / não conheço",
+     "その 店[みせ]は 知[し]らない。",
+     "Não conheço essa loja."
+    ],
+    [
+     "わかりません",
+     "não entendo",
+     "すみません、わかりません。",
+     "Desculpe, não entendo."
+    ],
+    [
+     "幸[しあわ]せ",
+     "felicidade / feliz",
+     "今[いま]、すごく 幸[しあわ]せです。",
+     "Agora estou muito feliz."
+    ]
+   ]
+  },
+  {
+   "n": 7,
+   "section": "Módulo 2 · J-pop",
+   "title": "チェリー",
+   "artist": "スピッツ",
+   "year": 1996,
+   "level": "Intermediário",
+   "lv": 3,
+   "theme": "Fala do dia a dia: 〜てる, 〜よ e 〜ね",
+   "about": "Um rapaz se despede de um amor e segue em frente, guardando o “eu te amo” que nunca disse direito. Leve, nostálgica, com cara de primavera.",
+   "why": "Clássico absoluto de karaokê: se alguém cantar Cherry num karaokê no Japão, a sala inteira canta junto. Ritmo médio e voz clara.",
+   "hunt": [
+    "君[きみ]",
+    "愛[あい]してる",
+    "未来[みらい]",
+    "僕[ぼく]"
+   ],
+   "lesson": "<p>Na conversa, <b>〜ている</b> (estar fazendo) encolhe para <b>〜てる</b>: <i>待[ま]っている → 待[ま]ってる</i>, <i>愛[あい]している → 愛[あい]してる</i> (eu te amo).</p><p><b>僕[ぼく]</b> (boku) = eu, jeito masculino e informal. Mulheres costumam usar <b>私[わたし]</b>.</p><p>O fim da frase dá o tom: <b>〜よ</b> = estou te contando (“viu?”), <b>〜ね</b> = buscando concordância (“né?”). <i>おいしいね！</i> = que gostoso, né?</p>",
+   "cards": [
+    [
+     "愛[あい]してる",
+     "eu te amo",
+     "ずっと 愛[あい]してるよ。",
+     "Te amo pra sempre, viu."
+    ],
+    [
+     "待[ま]ってる",
+     "estou esperando",
+     "駅[えき]で 待[ま]ってるね。",
+     "Te espero na estação, tá?"
+    ],
+    [
+     "僕[ぼく]",
+     "eu (masculino, informal)",
+     "僕[ぼく]は 学生[がくせい]です。",
+     "Eu sou estudante."
+    ],
+    [
+     "未来[みらい]",
+     "futuro",
+     "未来[みらい]は わからない。",
+     "Ninguém sabe o futuro."
+    ],
+    [
+     "きっと",
+     "com certeza",
+     "きっと 大丈夫[だいじょうぶ]だよ。",
+     "Com certeza vai dar tudo certo."
+    ],
+    [
+     "大丈夫[だいじょうぶ]",
+     "tudo bem / sem problema",
+     "大丈夫[だいじょうぶ]ですか？",
+     "Você está bem?"
+    ],
+    [
+     "〜ね",
+     "né? (concordância)",
+     "今日[きょう]は 寒[さむ]いね。",
+     "Hoje está frio, né?"
+    ],
+    [
+     "〜よ",
+     "viu? (informação nova)",
+     "この ケーキ、おいしいよ。",
+     "Esse bolo é gostoso, viu."
+    ],
+    [
+     "強[つよ]い",
+     "forte",
+     "彼女[かのじょ]は 強[つよ]い 人[ひと]だ。",
+     "Ela é uma pessoa forte."
+    ],
+    [
+     "気[き]が する",
+     "ter a impressão de que…",
+     "雨[あめ]が 降[ふ]る 気[き]が する。",
+     "Tenho a impressão de que vai chover."
+    ]
+   ]
+  },
+  {
+   "n": 8,
+   "title": "Lemon",
+   "artist": "米津玄師",
+   "year": 2018,
+   "level": "Intermediário",
+   "lv": 3,
+   "theme": "Adjetivos com い: 苦[にが]い, 痛[いた]い e o passado 〜かった",
+   "about": "Uma música sobre o luto: quem se foi continua sendo a luz da vida de quem ficou, com o gosto amargo e ácido de um limão. Foi tema do dorama Unnatural.",
+   "why": "Recordista de visualizações no YouTube japonês. A pronúncia é bem articulada e as frases são cheias de adjetivos que ensinam muito.",
+   "hunt": [
+    "夢[ゆめ]",
+    "胸[むね]",
+    "苦[にが]い",
+    "光[ひかり]"
+   ],
+   "lesson": "<p>Adjetivos que terminam em <b>い</b> mudam sozinhos: <i>苦[にが]い</i> (amargo) → passado <b>苦[にが]かった</b> (estava amargo) → negativo <b>苦[にが]くない</b> (não é amargo).</p><p>A música abre com <b>よかった</b> = foi bom / que bom, passado de <i>いい</i> (bom). Use muito: <i>よかったね！</i> = que bom!</p><p><b>今[いま]でも</b> = até hoje, ainda agora.</p>",
+   "cards": [
+    [
+     "夢[ゆめ]",
+     "sonho",
+     "昨日[きのう] 変[へん]な 夢[ゆめ]を 見[み]た。",
+     "Ontem tive um sonho estranho."
+    ],
+    [
+     "苦[にが]い",
+     "amargo",
+     "この コーヒーは 苦[にが]い。",
+     "Este café é amargo."
+    ],
+    [
+     "痛[いた]い",
+     "dolorido / dói",
+     "頭[あたま]が 痛[いた]い。",
+     "Estou com dor de cabeça."
+    ],
+    [
+     "よかった",
+     "que bom / foi bom",
+     "間[ま]に 合[あ]って よかった！",
+     "Que bom que deu tempo!"
+    ],
+    [
+     "おいしかった",
+     "estava gostoso",
+     "ごちそうさま、おいしかった！",
+     "Obrigado pela comida, estava ótima!"
+    ],
+    [
+     "〜くない",
+     "não é (adjetivo)",
+     "今日[きょう]は 寒[さむ]くない。",
+     "Hoje não está frio."
+    ],
+    [
+     "胸[むね]",
+     "peito / coração",
+     "胸[むね]が いっぱいです。",
+     "Estou com o coração cheio."
+    ],
+    [
+     "光[ひかり]",
+     "luz",
+     "朝[あさ]の 光[ひかり]が きれい。",
+     "A luz da manhã é linda."
+    ],
+    [
+     "今[いま]でも",
+     "até hoje",
+     "今[いま]でも 覚[おぼ]えて いる。",
+     "Lembro até hoje."
+    ],
+    [
+     "忘[わす]れる",
+     "esquecer",
+     "傘[かさ]を 忘[わす]れた！",
+     "Esqueci o guarda-chuva!"
+    ]
+   ]
+  },
+  {
+   "n": 9,
+   "title": "Pretender",
+   "artist": "Official髭男dism",
+   "year": 2019,
+   "level": "Avançado",
+   "lv": 4,
+   "theme": "“Se…”: 〜たら e 〜ば, e as palavras em katakana",
+   "about": "Um namoro sem futuro: ele queria ter conhecido a pessoa em outra vida, com outro roteiro, e se despede com um “good bye” elegante. Tema do filme Confidence Man JP.",
+   "why": "Uma das músicas mais tocadas do Japão nos últimos anos. Rápida e cheia de palavras emprestadas do inglês em katakana: ótimo treino de ouvido.",
+   "hunt": [
+    "君[きみ]",
+    "運命[うんめい]",
+    "綺麗[きれい]",
+    "グッバイ"
+   ],
+   "lesson": "<p><b>〜たら</b> = se / quando. Pega o passado e põe <b>ら</b>: <i>選[えら]べた → 選[えら]べたら</i> (se eu pudesse escolher). <i>時間[じかん]が あったら</i> = se eu tiver tempo.</p><p><b>〜ば</b> também é “se”, mais para regras e conselhos: <i>行[い]けば わかる</i> = se você for, vai entender.</p><p>Repare no katakana: <b>グッバイ</b> (good bye). O japonês adora palavra estrangeira, e várias vieram do português: <i>パン</i> (pão), <i>ボタン</i> (botão), <i>カステラ</i> (pão de Castela).</p>",
+   "cards": [
+    [
+     "〜たら",
+     "se… / quando…",
+     "時間[じかん]が あったら、遊[あそ]ぼう。",
+     "Se tiver tempo, vamos sair."
+    ],
+    [
+     "〜ば",
+     "se… (regra / conselho)",
+     "練習[れんしゅう]すれば できる。",
+     "Se treinar, você consegue."
+    ],
+    [
+     "運命[うんめい]",
+     "destino",
+     "これは 運命[うんめい]だ。",
+     "Isso é o destino."
+    ],
+    [
+     "綺麗[きれい]",
+     "bonito / limpo",
+     "部屋[へや]が 綺麗[きれい]です。",
+     "O quarto está limpo."
+    ],
+    [
+     "出会[であ]う",
+     "conhecer (alguém pela 1ª vez)",
+     "大学[だいがく]で 妻[つま]と 出会[であ]った。",
+     "Conheci minha esposa na faculdade."
+    ],
+    [
+     "選[えら]ぶ",
+     "escolher",
+     "好[す]きな 色[いろ]を 選[えら]んで。",
+     "Escolha a cor que você gosta."
+    ],
+    [
+     "違[ちが]う",
+     "diferente",
+     "もっと 違[ちが]う 道[みち]も ある。",
+     "Existe outro caminho também."
+    ],
+    [
+     "関係[かんけい]",
+     "relação",
+     "二人[ふたり]は どんな 関係[かんけい]？",
+     "Qual é a relação dos dois?"
+    ],
+    [
+     "グッバイ",
+     "tchau (do inglês)",
+     "グッバイ、また いつか。",
+     "Tchau, até um dia."
+    ],
+    [
+     "パン",
+     "pão (veio do português!)",
+     "朝[あさ]は パンを 食[た]べます。",
+     "De manhã eu como pão."
+    ]
+   ]
+  },
+  {
+   "n": 10,
+   "title": "夜に駆ける",
+   "artist": "YOASOBI",
+   "year": 2019,
+   "level": "Avançado",
+   "lv": 4,
+   "theme": "Velocidade de verdade: に (horário e destino) e verbos de movimento",
+   "about": "Baseada num conto publicado na internet: duas pessoas correndo noite adentro, numa história bem mais sombria do que a melodia animada faz parecer.",
+   "why": "O desafio final: rapidíssima, no ritmo de quem fala depressa. Se você acompanhar o refrão, seu ouvido chegou lá.",
+   "hunt": [
+    "夜[よる]",
+    "二人[ふたり]",
+    "空[そら]",
+    "明日[あした]"
+   ],
+   "lesson": "<p><b>夜[よる]に 駆[か]ける</b> = correr pela noite. <b>に</b> marca o momento ou o destino: <i>七時[しちじ]に 起[お]きる</i> (acordo às 7), <i>東京[とうきょう]に 行[い]く</i> (vou a Tóquio).</p><p>Verbos de movimento: <b>行[い]く</b> (ir), <b>来[く]る</b> (vir), <b>帰[かえ]る</b> (voltar para casa), <b>走[はし]る</b> (correr). No trabalho, quem sai antes diz <b>お先[さき]に 失礼[しつれい]します</b>, e quem fica responde <b>お疲[つか]れ様[さま]です</b>.</p><p>Não tente pegar tudo: treine o refrão com 🐢, depois na velocidade normal.</p>",
+   "cards": [
+    [
+     "走[はし]る",
+     "correr",
+     "毎朝[まいあさ] 公園[こうえん]を 走[はし]る。",
+     "Corro no parque toda manhã."
+    ],
+    [
+     "帰[かえ]る",
+     "voltar para casa",
+     "もう 家[いえ]に 帰[かえ]ります。",
+     "Já vou voltar para casa."
+    ],
+    [
+     "来[く]る",
+     "vir",
+     "友[とも]だちが 家[いえ]に 来[く]る。",
+     "Um amigo vem aqui em casa."
+    ],
+    [
+     "〜に",
+     "às… (horário) / para… (destino)",
+     "七時[しちじ]に 起[お]きます。",
+     "Acordo às 7."
+    ],
+    [
+     "明日[あした]",
+     "amanhã",
+     "明日[あした] また 会[あ]おう。",
+     "Até amanhã."
+    ],
+    [
+     "二人[ふたり]",
+     "duas pessoas / nós dois",
+     "二人[ふたり]で 旅行[りょこう]した。",
+     "Viajamos nós dois."
+    ],
+    [
+     "お疲[つか]れ様[さま]です",
+     "bom trabalho (cumprimento no trabalho)",
+     "今日[きょう]も お疲[つか]れ様[さま]でした。",
+     "Bom trabalho hoje também."
+    ],
+    [
+     "お先[さき]に 失礼[しつれい]します",
+     "com licença, já vou indo",
+     "すみません、お先[さき]に 失礼[しつれい]します。",
+     "Com licença, já vou indo."
+    ],
+    [
+     "笑[わら]う",
+     "rir / sorrir",
+     "みんなで 笑[わら]った。",
+     "Todo mundo riu junto."
+    ],
+    [
+     "急[いそ]ぐ",
+     "ter pressa",
+     "急[いそ]いで ください！",
+     "Rápido, por favor!"
+    ]
+   ]
+  }
+ ]
+}

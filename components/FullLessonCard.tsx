@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import Spk from './Spk';
+import Jt from './Jt';
 import AiProgress from './AiProgress';
 import Icon from './Icon';
 import { requestLesson } from '@/lib/lesson';
@@ -73,7 +74,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
             <div className="exc-line">
               <Spk text={e.line} />
               <Spk text={e.line} slow />
-              <b>{e.line}</b>
+              <b>
+                <Jt text={e.line} ro />
+              </b>
             </div>
             <div className="exc-tr mut">{e.translation}</div>
             <dl className="ame">
@@ -87,7 +90,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
                   <div key={j} className="exp">
                     <Spk text={it} />
                     <span>
-                      <i>{it}</i>
+                      <i>
+                        <Jt text={it} ro />
+                      </i>
                       <br />
                       <span className="mut">{pt}</span>
                     </span>
@@ -113,7 +118,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
               <div className="snd-ex">
                 {x.examples.map((w) => (
                   <span key={w} className="chip snd-chip">
-                    {w} <Spk text={w} slow />
+                    <Jt text={w} /> <Spk text={w} slow />
                   </span>
                 ))}
               </div>

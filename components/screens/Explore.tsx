@@ -5,6 +5,25 @@ import { useCourse } from '@/lib/nav';
 import { OBJECTS, say, type Noun } from '@/lib/objects';
 import SayIt from '../SayIt';
 import { langPt } from '@/lib/level';
+import { romaji, toHira } from '@/lib/kana';
+
+/** Etiqueta: "il gatto" com o artigo colorido; no japonês, 猫 + leitura ねこ. */
+function Name({ n }: { n: Noun }) {
+  if (n[2] === 'j')
+    return (
+      <>
+        <b>{n[1]}</b>
+        {toHira(n[1]) !== toHira(n[0]) && <i className="ar-yomi"> {n[0]}</i>}
+      </>
+    );
+  return (
+    <>
+      <i>{n[0]}</i>
+      {n[0].endsWith("'") ? '' : ' '}
+      {n[1]}
+    </>
+  );
+}
 
 type Pred = { bbox: [number, number, number, number]; class: string; score: number };
 
@@ -169,7 +188,7 @@ export default function Explore() {
       const n = noun(p.class);
       const b = box(p.bbox);
       if (!n || !b) continue;
-      const w = (n[0].length + n[1].length + 1) * 9.5 + 28;
+      const w = n[2] === 'j' ? (n[1].length + (toHira(n[1]) !== toHira(n[0]) ? n[0].length * 0.75 : 0)) * 17 + 30 : (n[0].length + n[1].length + 1) * 9.5 + 28;
       const lx = Math.min(Math.max(b.left + b.width / 2, w / 2 + 6), b.cw - w / 2 - 6);
       let ly = Math.min(Math.max(b.top + 8, 8), b.ch - 96);
       for (let k = 0; k < 6; k++) {
@@ -213,9 +232,7 @@ export default function Explore() {
                   style={{ left: lx, top: ly }}
                   onClick={() => pick(p.class)}
                 >
-                  <i>{n[0]}</i>
-                  {n[0].endsWith("'") ? '' : ' '}
-                  {n[1]}
+                  <Name n={n} />
                 </button>
               </div>
             );
@@ -261,7 +278,11 @@ export default function Explore() {
       </div>
 
       <div className="ar-legend mut">
-        {lang === 'de' ? (
+        {lang === 'ja' ? (
+          <>
+            Japonês não tem artigo nem gênero 🎉 · a palavra e, ao lado, <span className="g-j">a leitura em kana</span>
+          </>
+        ) : lang === 'de' ? (
           <>
             <span className="g-m">der</span> masculino · <span className="g-f">die</span> feminino ·{' '}
             <span className="g-n">das</span> neutro
@@ -277,15 +298,25 @@ export default function Explore() {
       {selN && sel && (
         <div className="card ar-sel pop" key={sel}>
           <div className="ar-word">
-            <span className={`g-${selN[2]}`}>{selN[0]}</span>
-            {selN[0].endsWith("'") ? '' : ' '}
-            {selN[1]}
+            {selN[2] === 'j' ? (
+              <Name n={selN} />
+            ) : (
+              <>
+                <span className={`g-${selN[2]}`}>{selN[0]}</span>
+                {selN[0].endsWith("'") ? '' : ' '}
+                {selN[1]}
+              </>
+            )}
           </div>
-          <div className="mut">{OBJECTS[sel].pt}</div>
+          <div className="mut">
+            {selN[2] === 'j' && <b>{romaji(selN[0])} · </b>}
+            {OBJECTS[sel].pt}
+          </div>
           <SayIt
             key={sel + lang}
-            text={say(selN)}
-            accept={[selN[1], say(selN)]}
+            text={selN[2] === 'j' ? selN[0] : say(selN)}
+            speakText={say(selN)}
+            accept={[selN[1], say(selN), selN[0]]}
             onScore={() => {}}
           />
           <button
@@ -316,9 +347,7 @@ export default function Explore() {
                 const n = noun(c)!;
                 return (
                   <button key={c} className={`ar-chip g-${n[2]}`} onClick={() => pick(c)}>
-                    <i>{n[0]}</i>
-                    {n[0].endsWith("'") ? '' : ' '}
-                    {n[1]}
+                    {n[2] === 'j' ? n[1] : <Name n={n} />}
                   </button>
                 );
               })}

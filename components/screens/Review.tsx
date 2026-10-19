@@ -4,6 +4,8 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IV, addDays, getCard, gradeLabel, makeQueue, nextBox, today } from '@/lib/course';
 import Spk from '../Spk';
+import Jt from '../Jt';
+import { ro } from '@/lib/kana';
 
 export default function Review() {
   const s = useStore();
@@ -102,16 +104,19 @@ export default function Review() {
         aria-label={session.shown ? undefined : 'Mostrar resposta'}
       >
         <div className="front" style={au ? { fontSize: 20 } : undefined}>
-          {front}
+          <Jt text={front} />
         </div>
         {dir !== 'pt' && <Spk text={card.it} />}
         {session.shown ? (
           <>
-            <div className="back">{back}</div>
+            <div className="back">
+              {dir === 'pt' ? <Jt text={card.it} ro /> : au ? <><Jt text={card.it} ro /> — {card.pt}</> : back}
+            </div>
+            {dir === 'it' && ro(card.it) && <div className="ro back-ro">{ro(card.it)}</div>}
             {dir === 'pt' && <Spk text={card.it} />}
             {card.ex && (
               <div className="ex">
-                {card.ex} {card.w && <Spk text={card.ex} />}
+                <Jt text={card.ex} ro /> {card.w && <Spk text={card.ex} />}
               </div>
             )}
             {card.exPt && <div className="mut">{card.exPt}</div>}

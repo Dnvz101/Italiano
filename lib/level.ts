@@ -72,4 +72,4 @@ export function parseDuration(s: string): number | null {
 }
 
 /** Nome do idioma em português, para frases como "músicas em alemão" */
-export const langPt = (code: string) => ({ it: 'italiano', de: 'alemão' } as Record<string, string>)[code] || code;
+export { langPt } from './langs';

@@ -1,4 +1,7 @@
 'use client';
+import { banner, langPt } from '@/lib/langs';
+import { furiHtml } from '@/lib/kana';
+import Jt from '../Jt';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { currentWeek, roteiro } from '@/lib/course';
@@ -75,7 +78,7 @@ export default function WeekView() {
 
       <div className="card song-head with-banner">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="sh-banner" src="/media/banner-semana.webp" alt="" />
+        <img className="sh-banner" src={banner(lang, 'semana')} alt="" />
         <div className="sh-meta">
           <span className={`lvl lvl-pill l${w.lv}`}>
             <Ic name="bars" size={14} />
@@ -95,7 +98,7 @@ export default function WeekView() {
             <Ic name="spotify" size={20} /> Spotify
           </a>
           <a
-            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${course.meta.lang === 'de' ? 'alemão' : 'italiano'} com música ${w.title} ${w.artist}`)}`}
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${langPt(course.meta.lang)} com música ${w.title} ${w.artist}`)}`}
             target="_blank"
             rel="noopener"
           >
@@ -174,7 +177,7 @@ export default function WeekView() {
               </p>
               {w.hunt.map((h) => (
                 <span key={h} className="chip">
-                  {h}
+                  <Jt text={h} />
                 </span>
               ))}
               <p className="mut" style={{ marginBottom: 0 }}>
@@ -198,9 +201,9 @@ export default function WeekView() {
           <>
             <div className="card lesson">
               <h3 className="ih">
-                <Icon name="metodo" size={28} /> {w.theme}
+                <Icon name="metodo" size={28} /> <Jt text={w.theme} />
               </h3>
-              <div dangerouslySetInnerHTML={{ __html: w.lesson }} />
+              <div dangerouslySetInnerHTML={{ __html: furiHtml(w.lesson) }} />
             </div>
             <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />
           </>

@@ -1,4 +1,7 @@
 'use client';
+import { banner, langPt } from '@/lib/langs';
+import { furiHtml } from '@/lib/kana';
+import Jt from '../Jt';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { roteiro } from '@/lib/course';
@@ -59,7 +62,7 @@ export default function SongView() {
 
       <div className="card song-head with-banner">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="sh-banner" src="/media/banner-semana.webp" alt="" />
+        <img className="sh-banner" src={banner(lang, 'semana')} alt="" />
         <div className="sh-meta">
           <span className={`lvl lvl-pill l${song.level}`}>
             <Ic name="bars" size={14} />
@@ -79,7 +82,7 @@ export default function SongView() {
             <Ic name="spotify" size={20} /> Spotify
           </a>
           <a
-            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${lang === 'de' ? 'alemão' : 'italiano'} com música ${song.title} ${song.artist}`)}`}
+            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${langPt(lang)} com música ${song.title} ${song.artist}`)}`}
             target="_blank"
             rel="noopener"
           >
@@ -185,7 +188,7 @@ export default function SongView() {
                 <h3 className="ih"><Icon name="cacapalavras" size={28} /> Caça-palavras</h3>
                 {a.hunt.map((h) => (
                   <span key={h} className="chip">
-                    {h}
+                    <Jt text={h} />
                   </span>
                 ))}
               </div>
@@ -252,9 +255,9 @@ export default function SongView() {
             {a.lesson && (
               <div className="card lesson">
                 <h3 className="ih">
-                  <Icon name="metodo" size={28} /> {a.theme}
+                  <Icon name="metodo" size={28} /> <Jt text={a.theme} />
                 </h3>
-                <div dangerouslySetInnerHTML={{ __html: a.lesson }} />
+                <div dangerouslySetInnerHTML={{ __html: furiHtml(a.lesson) }} />
               </div>
             )}
             <FullLessonCard key={'fl-' + song.id} songKey={'song:' + song.id} title={song.title} artist={song.artist} />

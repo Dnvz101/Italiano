@@ -1,4 +1,4 @@
-# Ascolto em Família · v24.1
+# Ascolto em Família · v25
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -62,6 +62,16 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 ## Atualizando da v9 para a v10
 1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
 2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
+
+## Japonês (v25)
+Terceiro idioma, com visual próprio (vermelho, preto e branco) que entra sozinho quando o idioma é 日本語.
+- **Trilha:** 10 semanas, de さんぽ (Totoro) a 夜に駆ける (YOASOBI), com aula, roteiro e cards. Funciona mesmo sem rodar o seed (o conteúdo vem embutido em `content/ja.json`); rodar `supabase/seed.sql` de novo só serve para editar pelo banco.
+- **Furigana:** no conteúdo e nas respostas da IA, a leitura vai entre colchetes depois do kanji (`今日[きょう]`). O app desenha a leitura em cima do kanji, a voz lê só o texto e o romaji aparece embaixo (`lib/kana.ts`, `components/Jt.tsx`).
+- **Letras:** a tradução da IA traz também a leitura em hiragana de cada linha; a letra mostra o romaji embaixo.
+- **Pronúncia:** a nota é por sílaba e compara pela leitura em hiragana (o Gemini devolve a fala escrita e em kana). Precisa da chave do Gemini, como no Android.
+- **Kana e sons:** hiragana e katakana completos (46 + 46), com exemplo, e 10 sons difíceis para brasileiros.
+- **Câmera:** os 80 objetos com nome japonês e leitura.
+- **Desenhos:** `public/media/ja-*.webp`, gerados por `scripts/ja-art.py` (SVG próprio, sem IA de imagem).
 
 ## Minha música (v10)
 - Aba **🎤 Músicas** → cole a letra de uma música que você ama (e, se quiser, a duração, para medir palavras por minuto).

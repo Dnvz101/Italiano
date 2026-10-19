@@ -5,6 +5,7 @@ import { blankProgress, today } from '@/lib/course';
 import { setVoicePref } from '@/lib/voice';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
+import bundledJa from '@/content/ja.json';
 import type { Course, FullLesson, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
 
 export const OLD_KEY = 'ascolto-familia-v1';
@@ -31,7 +32,7 @@ type Store = Data & {
   addPhrase: (lang: string, text: string, meaning: string, note: string) => Promise<void>;
   deletePhrase: (id: string) => Promise<void>;
   saveLyrics: (lang: string, key: string, texts: string[]) => Promise<Lyric | null>;
-  setLyricAi: (lyricId: string, ais: string[]) => Promise<void>;
+  setLyricAi: (lyricId: string, ais: string[], kanas?: string[]) => Promise<void>;
   setLyricLesson: (lyricId: string, lesson: FullLesson) => Promise<void>;
   setAnswer: (lyricId: string, line: string, value: string) => void;
   setName: (name: string) => Promise<void>;
@@ -152,9 +153,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           cs[c.lang] = { lang: c.lang, sort: c.sort, meta: c.meta, weeks: [] };
         });
         weeks.data?.forEach((w: any) => cs[w.lang]?.weeks.push(w.data));
-      } else {
-        [bundledIt, bundledDe].forEach((c: any) => (cs[c.lang] = c as Course));
       }
+      // idioma novo que ainda não está no banco (seed não rodado): usa o conteúdo embutido no app
+      [bundledIt, bundledDe, bundledJa].forEach((c: any) => {
+        if (!cs[c.lang] || !cs[c.lang].weeks.length) cs[c.lang] = c as Course;
+      });
 
       const progress: Record<string, Progress> = {};
       Object.keys(cs).forEach((l) => (progress[l] = blankProgress()));
@@ -290,7 +293,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         }
         return null;
       }
-      const lines: LyricLine[] = texts.map((t) => ({ t, ai: old?.lines.find((o) => o.t === t && o.ai)?.ai || '' }));
+      const lines: LyricLine[] = texts.map((t) => {
+        const o = old?.lines.find((x) => x.t === t && x.ai);
+        return o?.kana ? { t, ai: o.ai, kana: o.kana } : { t, ai: o?.ai || '' };
+      });
       if (!d.profile.household_id) {
         setSaveError('Sem família configurada.');
         return null;
@@ -311,12 +317,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
 
   const setLyricAi = useCallback(
-    async (lyricId: string, ais: string[]) => {
+    async (lyricId: string, ais: string[], kanas?: string[]) => {
       const d = latest.current!;
       const entry = Object.entries(d.lyrics).find(([, l]) => l.id === lyricId);
       if (!entry) return;
       const [k, l] = entry;
-      const lines = l.lines.map((ln, i) => ({ ...ln, ai: ais[i] ?? ln.ai }));
+      const lines = l.lines.map((ln, i) => ({ ...ln, ai: ais[i] ?? ln.ai, ...(kanas?.[i] ? { kana: kanas[i] } : {}) }));
       commit((x) => ({ ...x, lyrics: { ...x.lyrics, [k]: { ...l, lines } } }));
       const { error } = await sb.from('lyrics').update({ lines, updated_at: new Date().toISOString() }).eq('id', lyricId);
       report(error);

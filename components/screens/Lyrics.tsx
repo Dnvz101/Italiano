@@ -9,6 +9,8 @@ import Shadow from '../Shadow';
 import AiProgress from '../AiProgress';
 import Icon from '../Icon';
 import { requestLesson, requestTranslation } from '@/lib/lesson';
+import { hasJa, ro } from '@/lib/kana';
+import Jt from '../Jt';
 
 export default function Lyrics({
   songKey,
@@ -56,7 +58,7 @@ export default function Lyrics({
     setEditing(false);
     if (!saved || !prepare || !lines.some(Boolean)) return;
     const texts = saved.lines.map((l) => l.t);
-    const filled = saved.lines.filter((l) => l.t && l.ai).length;
+    const filled = saved.lines.filter((l) => l.t && l.ai && (lang !== 'ja' || l.kana)).length;
     const needTr = filled < saved.lines.filter((l) => l.t).length * 0.8;
     const needLesson = !saved.lesson || changed;
     if (!needTr && !needLesson) return;
@@ -66,7 +68,7 @@ export default function Lyrics({
     await Promise.all([
       needTr &&
         requestTranslation(lang, texts)
-          .then((t) => s.setLyricAi(saved.id, t))
+          .then((t) => s.setLyricAi(saved.id, t.translations, t.readings))
           .catch((e) => errs.push('tradução: ' + e.message)),
       needLesson &&
         requestLesson(lang, title, artist, texts)
@@ -117,7 +119,7 @@ export default function Lyrics({
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
-      await s.setLyricAi(row.id, d.translations);
+      await s.setLyricAi(row.id, d.translations, d.readings);
     } catch (e: any) {
       alert(e.message);
     }
@@ -164,6 +166,7 @@ export default function Lyrics({
   const total = row.lines.filter((l) => l.t).length;
   const mine = row.lines.filter((l) => l.t && answers[l.t]).length;
   const hasAi = row.lines.some((l) => l.ai);
+  const ja = lang === 'ja';
 
   return (
     <div className="card">
@@ -234,7 +237,10 @@ export default function Lyrics({
           <div key={i} className="lyl">
             <div className="lyt">
               <Spk text={l.t} />
-              <span>{l.t}</span>
+              <span>
+                <Jt text={l.t} />
+                {ja && (l.kana || hasJa(l.t)) && <small className="ly-ro">{ro(l.kana || l.t) || l.kana}</small>}
+              </span>
               {!readMode && (
                 <button className="spk" onClick={() => toggle(i)} aria-label="Ver tradução da IA">
                   {open ? '🙈' : '👁️'}

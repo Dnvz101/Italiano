@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
 const SOUND_HINTS: Record<string, string> = {
   it: 'gli, gn, consoantes dobradas (nonno × nono), c/ch, g/gh, sc/sci, z, o "r" vibrante, vogais abertas e fechadas',
   de: 'ch (ich × ach), ü, ö, ä, ei × ie, o "r" alemão, sch, z, w, consoante final que ensurdece (Tag)',
+  ja: 'つ (tsu), o R japonês (ら・り・る), ふ (fu soprado), vogal longa (おばさん × おばあさん), っ pequeno (きて × きって), ん, vogais que quase somem (です = "dess"), きゃ/しゃ/ちょ',
 };
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);
 const str = { type: 'string' };
@@ -101,7 +103,9 @@ Regras:
 - "excerpts": 4 a 6 versos que ensinem algo útil, na ordem em que aparecem. Só versos que existem na letra.
 - "expand": 2 ou 3 frases por verso, ORIGINAIS, nunca outros versos da música.
 - "sounds": 3 ou 4 sons difíceis para brasileiros que aparecem nesta letra (por exemplo: ${SOUND_HINTS[lang]}). Os exemplos devem ser palavras desta letra.
-- "trivia": 2 a 4 fatos que você tem CERTEZA que são verdadeiros (ano, contexto, do que fala, regravações conhecidas). Não invente datas, prêmios, números nem histórias. Se não tiver certeza sobre esta música, devolva menos itens ou [].`;
+- "trivia": 2 a 4 fatos que você tem CERTEZA que são verdadeiros (ano, contexto, do que fala, regravações conhecidas). Não invente datas, prêmios, números nem histórias. Se não tiver certeza sobre esta música, devolva menos itens ou [].${lang === 'ja' ? `
+- Em "line", copie o verso EXATAMENTE como está na letra (sem colchetes). Nas frases de "expand" e nos "examples" de "sounds", use a notação de leitura.
+${JA_WRITING}` : ''}`;
 
   try {
     await checkQuota(sb, user.id);

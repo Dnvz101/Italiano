@@ -1,6 +1,7 @@
 'use client';
 import type { Card } from '@/lib/types';
 import Spk from './Spk';
+import Jt from './Jt';
 
 export default function CardList({ title, cards }: { title: string; cards: Card[] }) {
   return (
@@ -10,11 +11,16 @@ export default function CardList({ title, cards }: { title: string; cards: Card[
         <div key={i} className="vc">
           <Spk text={c[0]} />
           <div>
-            <div className="it">{c[0]}</div>
+            <div className="it">
+              <Jt text={c[0]} ro />
+            </div>
             <div className="mut">{c[1]}</div>
             {c[2] && (
               <div style={{ fontSize: 14, marginTop: 4 }}>
-                <i>{c[2]}</i> <Spk text={c[2]} />
+                <i>
+                  <Jt text={c[2]} ro />
+                </i>{' '}
+                <Spk text={c[2]} />
                 <br />
                 <span className="mut">{c[3]}</span>
               </div>

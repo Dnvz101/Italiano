@@ -42,7 +42,7 @@ export type Progress = {
 
 export type Phrase = { id: string; lang: string; text: string; meaning: string; note: string };
 
-export type LyricLine = { t: string; ai: string };
+export type LyricLine = { t: string; ai: string; kana?: string }; // kana: leitura em hiragana (só japonês)
 export type FullLesson = {
   excerpts: { line: string; translation: string; association: string; memorize: string; expand: [string, string][] }[];
   sounds: { sound: string; how: string; examples: string[] }[];

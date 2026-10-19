@@ -3,7 +3,7 @@
 // accept: o que o reconhecimento de voz pode devolver e ainda conta como certo.
 // pt: dica de pronúncia escrita "do jeito brasileiro".
 
-export type Letter = { l: string; say: string; accept: string[]; pt: string; ex: [string, string] };
+export type Letter = { l: string; say: string; accept: string[]; pt: string; ex: [string, string]; ro?: string };
 export type Sound = { id: string; title: string; pt: string; ex: [string, string][] };
 
 const IT_LETTERS: Letter[] = [
@@ -104,7 +104,138 @@ const DE_SOUNDS: Sound[] = [
   { id: 'tsch', title: 'tsch · qu', pt: 'tsch = "tch"; qu = "kv": bequem = "bekvém".', ex: [['Deutsch', 'alemão'], ['tschüss', 'tchau'], ['bequem', 'confortável']] },
 ];
 
-export const ALPHABET: Record<string, { letters: Letter[]; sounds: Sound[] }> = {
+
+// ---------- japonês: hiragana, katakana e sons ----------
+// [kana, romaji, dica, exemplo, significado]
+type K = [string, string, string, string, string];
+const HIRA: K[] = [
+  ['あ', 'a', '"á", curto e aberto', 'あめ', 'chuva (ame)'],
+  ['い', 'i', '"í"', 'いぬ', 'cachorro (inu)'],
+  ['う', 'u', '"u" com os lábios relaxados, quase sem bico', 'うみ', 'mar (umi)'],
+  ['え', 'e', '"ê"', 'えき', 'estação (eki)'],
+  ['お', 'o', '"ô"', 'おちゃ', 'chá (ocha)'],
+  ['か', 'ka', '"cá"', 'かさ', 'guarda-chuva (kasa)'],
+  ['き', 'ki', '"qui"', 'きいろ', 'amarelo (kiiro)'],
+  ['く', 'ku', '"cu", com o u bem fraquinho', 'くるま', 'carro (kuruma)'],
+  ['け', 'ke', '"quê"', 'けしごむ', 'borracha (keshigomu)'],
+  ['こ', 'ko', '"cô"', 'こども', 'criança (kodomo)'],
+  ['さ', 'sa', '"sá"', 'さかな', 'peixe (sakana)'],
+  ['し', 'shi', '"xi", como em "xícara"', 'しお', 'sal (shio)'],
+  ['す', 'su', '"su", o u quase some: すし soa "sshi"', 'すし', 'sushi'],
+  ['せ', 'se', '"sê"', 'せんせい', 'professor (sensei)'],
+  ['そ', 'so', '"sô"', 'そら', 'céu (sora)'],
+  ['た', 'ta', '"tá"', 'たまご', 'ovo (tamago)'],
+  ['ち', 'chi', '"tchi", como "tchau"', 'ちず', 'mapa (chizu)'],
+  ['つ', 'tsu', '"tsu", o T e o S juntinhos, como em "tsunami"', 'つくえ', 'escrivaninha (tsukue)'],
+  ['て', 'te', '"tê" (sem virar "tchê")', 'てがみ', 'carta (tegami)'],
+  ['と', 'to', '"tô"', 'とけい', 'relógio (tokei)'],
+  ['な', 'na', '"ná"', 'なつ', 'verão (natsu)'],
+  ['に', 'ni', '"ni"', 'にく', 'carne (niku)'],
+  ['ぬ', 'nu', '"nu"', 'ぬいぐるみ', 'bicho de pelúcia (nuigurumi)'],
+  ['ね', 'ne', '"nê"', 'ねこ', 'gato (neko)'],
+  ['の', 'no', '"nô"', 'のみもの', 'bebida (nomimono)'],
+  ['は', 'ha', '"rá" com o R suave de "rato" (como o H do inglês). Como partícula, se lê "wa"', 'はな', 'flor (hana)'],
+  ['ひ', 'hi', '"rí" bem soprado, quase um chiado', 'ひと', 'pessoa (hito)'],
+  ['ふ', 'fu', 'entre "fu" e "ru": sopre com os lábios, sem encostar os dentes', 'ふゆ', 'inverno (fuyu)'],
+  ['へ', 'he', '"rê" suave. Como partícula ("para"), se lê "e"', 'へや', 'quarto (heya)'],
+  ['ほ', 'ho', '"rô" suave', 'ほし', 'estrela (hoshi)'],
+  ['ま', 'ma', '"má"', 'まど', 'janela (mado)'],
+  ['み', 'mi', '"mi"', 'みず', 'água (mizu)'],
+  ['む', 'mu', '"mu"', 'むし', 'inseto (mushi)'],
+  ['め', 'me', '"mê"', 'めがね', 'óculos (megane)'],
+  ['も', 'mo', '"mô"', 'もも', 'pêssego (momo)'],
+  ['や', 'ya', '"iá"', 'やま', 'montanha (yama)'],
+  ['ゆ', 'yu', '"iú"', 'ゆき', 'neve (yuki)'],
+  ['よ', 'yo', '"iô"', 'よる', 'noite (yoru)'],
+  ['ら', 'ra', 'o R de "caro", uma batidinha da língua (nunca o R de "rato")', 'らいねん', 'ano que vem (rainen)'],
+  ['り', 'ri', '"ri" com a batidinha de "cari"', 'りんご', 'maçã (ringo)'],
+  ['る', 'ru', '"ru" com batidinha', 'るす', 'fora de casa (rusu)'],
+  ['れ', 're', '"rê" com batidinha', 'れきし', 'história (rekishi)'],
+  ['ろ', 'ro', '"rô" com batidinha', 'ろうそく', 'vela (rōsoku)'],
+  ['わ', 'wa', '"uá"', 'わたし', 'eu (watashi)'],
+  ['を', 'wo', '"ô". Só aparece como partícula (marca o objeto)', 'ほんを よむ', 'ler um livro (hon o yomu)'],
+  ['ん', 'n', 'o único som sem vogal: um "n" nasal, como o fim de "pão"', 'でんしゃ', 'trem (densha)'],
+];
+const KATA: K[] = [
+  ['ア', 'a', 'a mesma "a" do hiragana. Katakana é para palavras estrangeiras', 'アイス', 'sorvete (aisu)'],
+  ['イ', 'i', '"í"', 'イギリス', 'Inglaterra (Igirisu)'],
+  ['ウ', 'u', '"u"', 'ウール', 'lã (ūru)'],
+  ['エ', 'e', '"ê"', 'エアコン', 'ar-condicionado (eakon)'],
+  ['オ', 'o', '"ô"', 'オレンジ', 'laranja (orenji)'],
+  ['カ', 'ka', '"cá"', 'カメラ', 'câmera (kamera)'],
+  ['キ', 'ki', '"qui"', 'キロ', 'quilo (kiro)'],
+  ['ク', 'ku', '"cu" fraquinho', 'クラス', 'turma (kurasu)'],
+  ['ケ', 'ke', '"quê"', 'ケーキ', 'bolo (kēki)'],
+  ['コ', 'ko', '"cô"', 'コーヒー', 'café (kōhī)'],
+  ['サ', 'sa', '"sá"', 'サッカー', 'futebol (sakkā)'],
+  ['シ', 'shi', '"xi". Cuidado: シ (shi) e ツ (tsu) parecem iguais!', 'シャツ', 'camisa (shatsu)'],
+  ['ス', 'su', '"su" quase mudo', 'スマホ', 'celular (sumaho)'],
+  ['セ', 'se', '"sê"', 'セーター', 'suéter (sētā)'],
+  ['ソ', 'so', '"sô". Parece a ン (n): a ソ tem o traço mais em pé', 'ソファ', 'sofá (sofa)'],
+  ['タ', 'ta', '"tá"', 'タクシー', 'táxi (takushī)'],
+  ['チ', 'chi', '"tchi"', 'チーズ', 'queijo (chīzu)'],
+  ['ツ', 'tsu', '"tsu". Os tracinhos de cima ficam em pé (na シ, deitados)', 'ツアー', 'excursão (tsuā)'],
+  ['テ', 'te', '"tê"', 'テレビ', 'televisão (terebi)'],
+  ['ト', 'to', '"tô"', 'トマト', 'tomate (tomato)'],
+  ['ナ', 'na', '"ná"', 'ナイフ', 'faca (naifu)'],
+  ['ニ', 'ni', '"ni"', 'ニュース', 'notícias (nyūsu)'],
+  ['ヌ', 'nu', '"nu"', 'ヌードル', 'macarrão instantâneo (nūdoru)'],
+  ['ネ', 'ne', '"nê"', 'ネクタイ', 'gravata (nekutai)'],
+  ['ノ', 'no', '"nô"', 'ノート', 'caderno (nōto)'],
+  ['ハ', 'ha', '"rá" suave', 'ハンバーガー', 'hambúrguer (hanbāgā)'],
+  ['ヒ', 'hi', '"rí" soprado', 'ヒーター', 'aquecedor (hītā)'],
+  ['フ', 'fu', 'sopro com os lábios', 'フォーク', 'garfo (fōku)'],
+  ['ヘ', 'he', '"rê" suave', 'ヘリコプター', 'helicóptero (herikoputā)'],
+  ['ホ', 'ho', '"rô" suave', 'ホテル', 'hotel (hoteru)'],
+  ['マ', 'ma', '"má"', 'マスク', 'máscara (masuku)'],
+  ['ミ', 'mi', '"mi"', 'ミルク', 'leite (miruku)'],
+  ['ム', 'mu', '"mu"', 'ムービー', 'filme (mūbī)'],
+  ['メ', 'me', '"mê"', 'メール', 'e-mail (mēru)'],
+  ['モ', 'mo', '"mô"', 'モデル', 'modelo (moderu)'],
+  ['ヤ', 'ya', '"iá"', 'タイヤ', 'pneu (taiya)'],
+  ['ユ', 'yu', '"iú"', 'ユニフォーム', 'uniforme (yunifōmu)'],
+  ['ヨ', 'yo', '"iô"', 'ヨーグルト', 'iogurte (yōguruto)'],
+  ['ラ', 'ra', 'R de "caro"', 'ラーメン', 'lámen (rāmen)'],
+  ['リ', 'ri', 'R de "caro"', 'リモコン', 'controle remoto (rimokon)'],
+  ['ル', 'ru', 'R de "caro"', 'ルール', 'regra (rūru)'],
+  ['レ', 're', 'R de "caro"', 'レストラン', 'restaurante (resutoran)'],
+  ['ロ', 'ro', 'R de "caro"', 'ロボット', 'robô (robotto)'],
+  ['ワ', 'wa', '"uá"', 'ワイン', 'vinho (wain)'],
+  ['ヲ', 'wo', 'quase nunca usada: a partícula を se escreve em hiragana', 'ヲ', 'wo'],
+  ['ン', 'n', '"n" nasal. Olha uma palavra que veio do português:', 'パン', 'pão (pan)'],
+];
+const toLetter = ([l, r, pt, ex, exPt]: K): Letter => ({
+  l,
+  say: l,
+  ro: r,
+  accept: [l, r === 'wo' ? 'お' : l, r],
+  pt: `${r} · ${pt}`,
+  ex: [ex, exPt],
+});
+
+const JA_SOUNDS: Sound[] = [
+  { id: 'tsu', title: 'つ (tsu)', pt: 'T e S colados, como em "tsunami". Não é "tchu" nem "su".', ex: [['つき', 'lua (tsuki)'], ['なつ', 'verão (natsu)'], ['つなみ', 'tsunami']] },
+  { id: 'r', title: 'R japonês (ら り る れ ろ)', pt: 'Sempre a batidinha de "caro", nunca o R de "rato" ou "carro". Às vezes soa quase como L.', ex: [['ありがとう', 'obrigado (arigatō)'], ['りんご', 'maçã (ringo)'], ['くるま', 'carro (kuruma)']] },
+  { id: 'fu', title: 'ふ (fu)', pt: 'Sopre como quem apaga uma vela, com os lábios. Os dentes não encostam no lábio.', ex: [['ふじさん', 'monte Fuji (Fujisan)'], ['ふゆ', 'inverno (fuyu)'], ['とうふ', 'tofu (tōfu)']] },
+  { id: 'long', title: 'Vogal longa', pt: 'Segurar a vogal o dobro do tempo muda a palavra! おばさん é tia; おばあさん é avó.', ex: [['おばさん', 'tia (obasan)'], ['おばあさん', 'avó (obāsan)'], ['ビール', 'cerveja (bīru)'], ['ビル', 'prédio (biru)']] },
+  { id: 'small-tsu', title: 'っ pequeno (pausa)', pt: 'O っ pequeno é uma pausa curtinha antes da consoante, como um soluço. きて (venha) ≠ きって (selo).', ex: [['きって', 'selo (kitte)'], ['ちょっと', 'um pouco (chotto)'], ['まって', 'espere (matte)']] },
+  { id: 'n', title: 'ん (n)', pt: 'Conta como uma sílaba inteira: こ-ん-に-ち-は tem 5 tempos, não 4.', ex: [['こんにちは', 'olá (konnichiwa)'], ['せんせい', 'professor (sensei)'], ['ほん', 'livro (hon)']] },
+  { id: 'mute', title: 'Vogais que quase somem', pt: 'O u de す e o i de し quase desaparecem no fim e entre consoantes: です = "dess", すき = "ski".', ex: [['です', 'é / sou (desu)'], ['すき', 'gostar (suki)'], ['ました', 'fiz (mashita)']] },
+  { id: 'yoon', title: 'きゃ しゃ ちょ (sons juntos)', pt: 'Um ゃゅょ pequeno junta com a sílaba de antes num som só: き+ょ = "kyo", uma batida só.', ex: [['きょう', 'hoje (kyō)'], ['しゃしん', 'foto (shashin)'], ['ちょうちょ', 'borboleta (chōcho)']] },
+  { id: 'h', title: 'H soprado (は ひ へ ほ)', pt: 'Um "r" de "rato" bem fraquinho, só o ar. Nada de R arranhado.', ex: [['はい', 'sim (hai)'], ['ひと', 'pessoa (hito)'], ['ほん', 'livro (hon)']] },
+  { id: 'pitch', title: 'Melodia (sobe e desce)', pt: 'O japonês não tem sílaba forte: a voz sobe ou desce. Ouça e imite a melodia, devagar.', ex: [['あめ', 'chuva / doce (ame)'], ['はし', 'pauzinhos / ponte (hashi)'], ['にほんご', 'japonês (nihongo)']] },
+];
+
+export type AlphaSet = { label: string; short: string; letters: Letter[] };
+export const ALPHABET: Record<string, { letters: Letter[]; sounds: Sound[]; sets?: AlphaSet[] }> = {
   it: { letters: IT_LETTERS, sounds: IT_SOUNDS },
   de: { letters: DE_LETTERS, sounds: DE_SOUNDS },
+  ja: {
+    letters: HIRA.map(toLetter),
+    sounds: JA_SOUNDS,
+    sets: [
+      { label: 'あ Hiragana', short: 'Hiragana', letters: HIRA.map(toLetter) },
+      { label: 'ア Katakana', short: 'Katakana', letters: KATA.map(toLetter) },
+    ],
+  },
 };

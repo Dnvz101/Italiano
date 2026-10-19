@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { plain } from './kana';
 
 // A voz é uma preferência do APARELHO (cada celular tem vozes diferentes), por isso fica no localStorage.
 const KEY = 'ascolto-voice';
@@ -25,7 +26,7 @@ function score(v: SpeechSynthesisVoice) {
   if (/natural|neural|online/.test(n)) s += 50;
   if (/premium|enhanced|aprimorad|migliorat|erweitert/.test(n)) s += 40;
   if (/google/.test(n)) s += 30;
-  if (/alice|federica|luca|elsa|isabella|diego|paola|emma|giuseppe|anna|petra|markus|yannick|helena|katja|conrad|amala|seraphina|florian/.test(n)) s += 10;
+  if (/alice|federica|luca|elsa|isabella|diego|paola|emma|giuseppe|anna|petra|markus|yannick|helena|katja|conrad|amala|seraphina|florian|kyoko|otoya|nanami|keita|aoi|daichi|mayu|naoki|shiori|o-ren|hattori/.test(n)) s += 10;
   if (!v.localService) s += 5;
   if (/espeak|compact|robot/.test(n)) s -= 60;
   return s;
@@ -55,6 +56,7 @@ export function say(text: string, lang: string, locale: string, rate = 0.88, onE
     return;
   }
   speechSynthesis.cancel();
+  text = plain(text);
   const u = new SpeechSynthesisUtterance(text);
   const v = currentVoice(lang);
   u.lang = v ? v.lang : locale;

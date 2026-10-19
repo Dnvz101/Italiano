@@ -13,4 +13,7 @@ export const requestLesson = (lang: string, title: string, artist: string, lines
   post('/api/full-lesson', { lang, title, artist, lines }).then((d) => d.lesson);
 
 export const requestTranslation = (lang: string, lines: string[]) =>
-  post('/api/translate', { from: lang, lines }).then((d) => d.translations as string[]);
+  post('/api/translate', { from: lang, lines }).then((d) => ({
+    translations: d.translations as string[],
+    readings: (d.readings as string[] | undefined) || undefined,
+  }));

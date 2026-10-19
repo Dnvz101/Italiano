@@ -2,9 +2,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
-import { compare, loadBest, saveBest, useShadowRec, words, type WordHit } from '@/lib/shadow';
+import { isCjk, loadBest, saveBest, scoreLine, useShadowRec, words, type WordHit } from '@/lib/shadow';
+import { ro } from '@/lib/kana';
+import Jt from './Jt';
 
-type Line = { t: string; ai?: string };
+type Line = { t: string; ai?: string; kana?: string };
 
 const verdict = (n: number) =>
   n >= 90 ? 'Perfeito! 🎉' : n >= 70 ? 'Muito bom!' : n >= 40 ? 'Quase lá, repita mais uma.' : 'Ouça de novo, devagar 🐢, e repita.';
@@ -50,6 +52,8 @@ export default function Shadow({
   const idx = order[Math.min(pos, order.length - 1)];
   const line = lines[idx];
   const rate = slow ? 0.6 : undefined;
+  const cjk = isCjk(line?.t || '');
+  const readLine = cjk ? ro(line?.kana || line?.t || '') : '';
   const maxMs = useMemo(() => Math.min(20000, 3500 + words(line?.t || '').length * (slow ? 900 : 650)), [line, slow]);
 
   // trocou de linha: limpa a tentativa anterior
@@ -66,7 +70,7 @@ export default function Shadow({
   const record = () => {
     setPhase('rec');
     rec.start(maxMs, (t) => {
-      const c = t.heard ? compare(line.t, t.heard) : null;
+      const c = t.heard ? scoreLine(line.t, t.heard, t.kana, line.kana) : null;
       setTake({ url: t.url, heard: t.heard, hits: c?.hits || [], score: c ? c.score : null });
       setPhase('done');
       if (c && c.score > (best[line.t] || 0)) {
@@ -134,11 +138,13 @@ export default function Shadow({
           {take && take.score != null
             ? take.hits.map((h, k) => (
                 <span key={k} className={h.ok ? 'w-ok' : 'w-miss'}>
-                  {h.raw}{' '}
+                  {h.raw}
+                  {cjk ? '' : ' '}
                 </span>
               ))
-            : line.t}
+            : <Jt text={line.t} />}
         </p>
+        {cjk && readLine && <p className="sh-ro">{readLine}</p>}
         {line.ai &&
           (showTr ? (
             <p className="sh-tr">{line.ai}</p>

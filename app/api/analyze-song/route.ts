@@ -1,14 +1,16 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
+import bundledJa from '@/content/ja.json';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
-const COURSES: Record<string, any> = { it: bundledIt, de: bundledDe };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
+const COURSES: Record<string, any> = { it: bundledIt, de: bundledDe, ja: bundledJa };
 const LEVEL_NAMES = ['', 'Iniciante', 'Básico', 'Intermediário', 'Avançado'];
 
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);
@@ -81,7 +83,11 @@ export async function POST(req: Request) {
   if (lines.length > 200 || lines.join('\n').length > 15000)
     return NextResponse.json({ error: 'Letra grande demais.' }, { status: 413 });
 
-  const words = filled.join(' ').split(/\s+/).filter(Boolean).length;
+  // japonês não separa palavras: conta sílabas (caracteres) por minuto
+  const ja = lang === 'ja';
+  const words = ja
+    ? filled.join('').replace(/[\s\p{P}]/gu, '').length
+    : filled.join(' ').split(/\s+/).filter(Boolean).length;
   const wpm = duration ? Math.round(words / (duration / 60)) : null;
   const target = LEVEL_NAMES[userLevel];
 
@@ -96,7 +102,7 @@ Escala de níveis (calibre pelas músicas de referência do nosso curso):
 Referências:
 ${anchors(lang)}
 
-Dados objetivos: ${words} palavras${wpm ? `, cerca de ${wpm} palavras por minuto (duração informada pelo aluno)` : ''}.
+Dados objetivos: ${words} ${ja ? 'caracteres' : 'palavras'}${wpm ? `, cerca de ${wpm} ${ja ? 'caracteres (sílabas)' : 'palavras'} por minuto (duração informada pelo aluno)` : ''}.
 
 Música: "${title}" — ${artist}
 Letra:
@@ -118,7 +124,9 @@ Entregue a análise chamando a ferramenta salvar_analise, com estes campos:
 Regras:
 - "cards": 8 a 10 itens, priorizando expressões que o aluno vai usar na vida real.
 - Nunca reproduza versos inteiros fora do campo "hunt" e da expressão curta dos cards.
-- "suggestions": até 3 músicas REAIS e conhecidas do mesmo artista (${artist}), de preferência do nível ${userLevel}. Só sugira músicas que você tem certeza que existem; se não tiver certeza, devolva [].`;
+- "suggestions": até 3 músicas REAIS e conhecidas do mesmo artista (${artist}), de preferência do nível ${userLevel}. Só sugira músicas que você tem certeza que existem; se não tiver certeza, devolva [].${ja ? `
+- Em "hunt", copie as palavras como estão na letra (sem colchetes). Nos cards (expressão e exemplo) e na "lesson", use a notação de leitura.
+${JA_WRITING}` : ''}`;
 
   try {
     await checkQuota(sb, user.id);

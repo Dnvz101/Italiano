@@ -13,7 +13,7 @@ export default function Alphabet() {
   const s = useStore();
   const { lang } = useCourse();
   const data = ALPHABET[lang];
-  const [view, setView] = useState<'letters' | 'sounds'>('letters');
+  const [view, setView] = useState<number | 'sounds'>(0);
   const [sel, setSel] = useState(0);
   const [best, setBest] = useState<Record<string, number>>({});
   const detail = useRef<HTMLDivElement>(null);
@@ -42,8 +42,10 @@ export default function Alphabet() {
     }
   };
 
-  const L = data.letters[sel];
-  const done = data.letters.filter((x) => best['L:' + x.l] != null).length;
+  const sets = data.sets || [{ label: '🔤 Letras', short: 'Letras', letters: data.letters }];
+  const letters = sets[view === 'sounds' ? 0 : Math.min(view, sets.length - 1)].letters;
+  const L = letters[Math.min(sel, letters.length - 1)];
+  const doneOf = (ls: typeof letters) => ls.filter((x) => best['L:' + x.l] != null).length;
   const doneS = data.sounds.filter((x) => x.ex.every(([w]) => best['W:' + w] != null)).length;
 
   const pick = (i: number) => {
@@ -58,28 +60,45 @@ export default function Alphabet() {
   return (
     <div className="alpha">
       <div className="seg">
-        <button className={view === 'letters' ? 'on' : ''} onClick={() => setView('letters')}>
-          🔤 Letras{' '}
-          <span className="mut">
-            {done}/{data.letters.length}
-          </span>
-        </button>
+        {sets.map((st, i) => (
+          <button
+            key={st.label}
+            className={view === i ? 'on' : ''}
+            onClick={() => {
+              setView(i);
+              setSel(0);
+            }}
+          >
+            {st.label}{' '}
+            <span className="mut">
+              {doneOf(st.letters)}/{st.letters.length}
+            </span>
+          </button>
+        ))}
         <button className={view === 'sounds' ? 'on' : ''} onClick={() => setView('sounds')}>
-          👄 Sons difíceis{' '}
+          {data.sets ? '👄 Sons' : '👄 Sons difíceis'}{' '}
           <span className="mut">
             {doneS}/{data.sounds.length}
           </span>
         </button>
       </div>
 
-      {view === 'letters' ? (
+      {view !== 'sounds' ? (
         <>
           <div className="card al-detail" ref={detail} style={{ scrollMarginTop: 120 }}>
             <div className="al-head">
               <span className="al-big">{L.l}</span>
               <div>
                 <div className="al-name">
-                  se diz <b>{L.say}</b>
+                  {L.ro ? (
+                    <>
+                      se lê <b>{L.ro}</b>
+                    </>
+                  ) : (
+                    <>
+                      se diz <b>{L.say}</b>
+                    </>
+                  )}
                 </div>
                 <div className="mut">{L.pt}</div>
               </div>
@@ -105,28 +124,28 @@ export default function Alphabet() {
             </div>
             <div className="row al-nav">
               <button className="btn ghost sm" onClick={() => pick(Math.max(0, sel - 1))} disabled={sel === 0}>
-                ← {sel > 0 ? data.letters[sel - 1].l : ''}
+                ← {sel > 0 ? letters[sel - 1].l : ''}
               </button>
               <button
                 className="btn sm"
-                onClick={() => pick(Math.min(data.letters.length - 1, sel + 1))}
-                disabled={sel === data.letters.length - 1}
+                onClick={() => pick(Math.min(letters.length - 1, sel + 1))}
+                disabled={sel === letters.length - 1}
               >
-                {sel < data.letters.length - 1 ? data.letters[sel + 1].l : ''} →
+                {sel < letters.length - 1 ? letters[sel + 1].l : ''} →
               </button>
             </div>
           </div>
 
-          <div className="al-grid" role="group" aria-label="Letras">
-            {data.letters.map((x, i) => (
+          <div className={`al-grid ${L.ro ? 'kana' : ''}`} role="group" aria-label="Letras">
+            {letters.map((x, i) => (
               <button
                 key={x.l}
                 className={`al-tile ${i === sel ? 'on' : ''} ${tone(best['L:' + x.l])}`}
                 onClick={() => pick(i)}
-                aria-label={`${x.l}, se diz ${x.say}${best['L:' + x.l] != null ? `, melhor ${best['L:' + x.l]}%` : ''}`}
+                aria-label={`${x.l}, se diz ${x.ro || x.say}${best['L:' + x.l] != null ? `, melhor ${best['L:' + x.l]}%` : ''}`}
               >
                 <b>{x.l}</b>
-                <small>{x.say}</small>
+                <small>{x.ro || x.say}</small>
               </button>
             ))}
           </div>

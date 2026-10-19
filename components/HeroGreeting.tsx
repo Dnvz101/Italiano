@@ -11,6 +11,8 @@ const HERO: Record<string, Hero> = {
   // pizza de chef, Vespa e cafeteira moka
   // banner estático: pizza de chef, Vespa e moka diante do Coliseu
   it: { kind: 'image', image: '/media/banner-it.webp', ratio: '949/317', bubble: { left: 73.7, top: 2, w: 17.3, h: 32.8 } },
+  // onigiri de fone, disco, monte Fuji e torii (desenho próprio, scripts/ja-art.py)
+  ja: { kind: 'image', image: '/media/ja-hero.webp', ratio: '1200/400', bubble: { left: 73.3, top: 4.5, w: 23.3, h: 33 } },
   // pretzel, caneca de chopp e salsicha
   de: {
     kind: 'video',
@@ -73,7 +75,7 @@ export default function HeroGreeting({ lang, hello, name }: { lang: string; hell
   const long = first.length > 7;
   const bubble = (
     <h2
-      className={`hero-bubble ${long ? 'long' : ''}`}
+      className={`hero-bubble ${long ? 'long' : ''} ${lang === 'ja' ? 'ja' : ''}`}
       aria-hidden="true"
       style={{
         left: `${hero.bubble.left}%`,

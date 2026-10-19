@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage, MODEL } from '@/lib/ai';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
-const LANGS: Record<string, string> = { it: 'italiano', de: 'alemão' };
+const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANGS).map(([k, v]) => [k, v.pt]));
 const STYLE: Record<number, string> = {
   1: 'Frases MUITO curtas (até 8 palavras), só presente, vocabulário básico. Uma pergunta simples por vez.',
   2: 'Frases curtas (até 12 palavras), presente e passado simples, vocabulário do dia a dia.',
@@ -76,7 +77,10 @@ Regras:
 - Nunca corrija de forma explícita nem diga "está errado". Se a última mensagem do aluno tiver erro ou soar estranha, retome a ideia certa de forma natural na sua resposta e coloque a versão natural no campo "recast".
 - Se o aluno escrever em português (porque não sabe dizer), coloque em "recast" como se diz aquilo em ${L} e continue a conversa.
 - "tip": no máximo 1 frase curta em português, só quando o recast ensinar algo útil.
-- Tom leve e encorajador: o aluno deve sentir vontade de continuar.
+- Tom leve e encorajador: o aluno deve sentir vontade de continuar.${lang === 'ja' ? `
+- Japonês: frases curtas, em linguagem educada simples (です/ます) no nível 1 e 2. O aluno pode escrever em romaji (ex.: "watashi wa genki desu"): entenda normalmente e mostre em "recast" como se escreve em japonês.
+- Em "translation", comece com o romaji da sua fala entre parênteses e depois a tradução.
+${JA_WRITING}` : ''}
 
 Conversa até agora:
 ${transcript}

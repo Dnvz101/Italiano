@@ -55,6 +55,13 @@ export default function App() {
   const songs = useMemo(() => s.songs.filter((x) => x.lang === lang), [s.songs, lang]);
   const dir = s.profile.settings.dir || 'it';
 
+  // cada idioma pode ter sua paleta (o japonês é vermelho, preto e branco)
+  useEffect(() => {
+    document.documentElement.dataset.lang = lang || '';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', lang === 'ja' ? '#fbfaf8' : '#f7faf9');
+  }, [lang]);
+
   const go = useCallback((v: View, p: any = null) => {
     setView(v);
     setParam(p);

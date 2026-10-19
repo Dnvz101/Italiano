@@ -7,6 +7,7 @@ import { isComplete, modules } from '@/lib/modules';
 import { Eq } from '../Disc';
 import Icon from '../Icon';
 import HeroGreeting from '../HeroGreeting';
+import Line from '../Line';
 
 export default function Home() {
   const s = useStore();
@@ -45,7 +46,9 @@ export default function Home() {
       <HeroGreeting lang={lang} hello={course.meta.hello} name={s.profile.name} />
       {!mp?.sugg && !mp?.skipped && (
         <div className="card invite pop">
-          <h3 className="ih"><Icon name="perfil-musical" size={34} /> Que tipo de música você curte?</h3>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="invite-img" src="/illustrations/vinil.webp" alt="" width={72} height={72} />
+          <h3>Que tipo de música você curte?</h3>
           <p style={{ marginTop: 0 }}>
             Conte seus estilos e artistas favoritos (podem ser brasileiros) e o app acha músicas em{' '}
             {langPt(lang)} com a mesma vibe, no seu nível.
@@ -65,28 +68,36 @@ export default function Home() {
       )}
 
       <button className="card ar-cta" onClick={() => go('explore')}>
-        <span className="ar-cta-ic" aria-hidden="true">
-          📷
-        </span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="ar-cta-img" src="/illustrations/camera.webp" alt="" width={64} height={62} />
         <span className="ar-cta-t">
           <b>Explorar com a câmera</b>
           <span className="mut">Aponte para as coisas da casa e veja o nome em {langPt(lang)}</span>
         </span>
         <span className="ar-cta-go" aria-hidden="true">
-          →
+          <Line name="arrow" size={22} stroke={2.4} />
         </span>
       </button>
 
       <div className="stats">
-        <div className="stat">
+        <div className="stat st-green">
+          <span className="st-ic">
+            <Line name="calendar" />
+          </span>
           <b>{streak(s.days)}</b>
           <span>{streak(s.days) === 1 ? 'dia seguido' : 'dias seguidos'}</span>
         </div>
-        <div className="stat">
+        <button className="stat st-blue" onClick={() => startReview(!n)}>
+          <span className="st-ic">
+            <Line name="cards" />
+          </span>
           <b>{n}</b>
           <span>cards hoje</span>
-        </div>
-        <div className="stat">
+        </button>
+        <div className="stat st-purple">
+          <span className="st-ic">
+            <Line name="brain" />
+          </span>
           <b>{learnedCount(p)}</b>
           <span>firmes na memória</span>
         </div>
@@ -96,22 +107,28 @@ export default function Home() {
         <div className="mut now-label">
           <Eq /> Tocando agora: semana {cur}, {w.level.toLowerCase()}
         </div>
-        <h3 style={{ marginTop: 4 }}>
-          🎵 {w.title} <span className="mut">— {w.artist}</span>
+        <h3 className="now-t">
+          <Line name="note" size={22} /> <span>{w.title}</span> <small>— {w.artist}</small>
         </h3>
-        <div className="prog">
-          <i style={{ transform: `scaleX(${done / 7})` }} />
+        <div className="prog now-prog">
+          <i style={{ transform: `scaleX(${Math.max(done / 7, 0.02)})` }} />
         </div>
         <div className="mut" style={{ marginBottom: 12 }}>
           Roteiro: {done}/7 dias
         </div>
-        <button className="btn" onClick={() => go('week', cur)}>
-          Continuar semana {cur}
+        <button className="btn now-btn" onClick={() => go('week', cur)}>
+          <Line name="play" size={18} />
+          <span>Continuar semana {cur}</span>
+          <Line name="arrow" size={20} stroke={2.4} />
         </button>
       </div>
 
       <div className="card shelf">
-        <h3>Sua estante</h3>
+        <button className="shelf-head" onClick={() => go('weeks')}>
+          <Line name="book" size={24} />
+          <b>Sua estante</b>
+          <Line name="chevron" size={20} />
+        </button>
         {modules(course).map((m, i, all) => {
           const done = m.weeks.filter((w) => isComplete(p, w.n)).length;
           return (

@@ -1,5 +1,26 @@
 # Histórico de versões — Ascolto em Família
 
+## v24.1 — 2026-10-19 · Sempre claro
+- O app fica sempre no tema claro, mesmo com o celular no modo escuro (barra do navegador também clara).
+
+## v24 — 2026-10-19 · Redesign fiel às referências
+- **Tipografia:** Nunito (hospedada no próprio app, sem Google Fonts) com escala fixa: página 22, card 17, texto 15, metadado 12,5–13,5, botão 15,5; pesos 900/800/600/500.
+- **Tokens globais:** fundo quase branco, menta/verde-água, texto azul-escuro, cinza-azulado, raios 12/18/24, sombras bem leves no lugar de contornos pesados. Vale para todas as telas.
+- **Biblioteca de ícones nova** (`components/icons`): SVGs individuais duotone (traço + menta) para Início, Trilha, Conversa, Cards, Frases, Método, Câmera, Calendário, Memorização, Música, Play, Seta, Aula, Documento, Lupa, Fones, Vinil, Configurações, Microfone, YouTube, Spotify, nível e bandeiras 🇮🇹/🇩🇪 em SVG. Barra de baixo, menu lateral, abas da aula e títulos usam essa biblioteca.
+- **Ilustrações 3D** recortadas da folha de referência como arquivos separados (`public/illustrations`): câmera (Explorar), balão (Conversa vazia), vinil (convite do perfil musical).
+- **Tela da aula** como na referência: cabeçalho com o banner do disco e da flor à direita, nível em pílula, botões YouTube/Spotify/Aulas brancos; abas Roteiro/Letra/Aula/Cards num cartão único com divisórias e aba ativa em menta; cards da aula com ícone em círculo menta.
+- **Trilha** com o banner do disco de fone.
+- Sem mudança de lógica, dados ou banco.
+
+## v23 — 2026-10-19 · Novo visual do Início
+- Visual do Início refeito a partir do protótipo: topo com casinha + "Ascolto Italiano" grande, bandeira em pílula e engrenagem em círculo.
+- Banner **estático** do italiano (pizza, Vespa e moka diante do Coliseu), com o "Ciao, {nome}!" no balão. O alemão continua com o vídeo.
+- "Explorar com a câmera" com ícone em bloco e seta em círculo.
+- Números do dia em três cartões coloridos (verde, azul, lilás) com ícones; tocar em "cards hoje" abre a revisão.
+- "Tocando agora" com nota musical, barra de progresso em degradê e botão em pílula (▶ Continuar semana →).
+- "Sua estante" com ícone de livro e atalho para a Trilha; barra de baixo com sublinhado na aba ativa.
+- Tudo funciona no tema escuro. Sem mudança de banco.
+
 ## v22.2 — 2026-10-18 · Desfazer semana começada sem querer
 - No Roteiro de uma semana já começada aparece **"↩︎ Comecei esta semana sem querer: desfazer"**: tira a semana da lista e a semana atual volta a ser a anterior (o Início volta a mostrar a certa).
 - Começar uma semana pulando outras agora pede confirmação ("Você está na semana 1. Quer mesmo começar a semana 4?").

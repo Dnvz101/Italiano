@@ -179,6 +179,8 @@ export default function Chat() {
       <div className="chat" aria-live="polite">
         {!msgs.length && !busy && (
           <div className="chat-empty">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="illus" src="/illustrations/conversa.webp" alt="" width={112} height={108} />
             <p className="mut">A conversa começa sobre {topic.title ? `"${topic.title}"` : topic.free?.toLowerCase()}.</p>
             <button className="btn" onClick={() => ask([])}>
               Começar conversa

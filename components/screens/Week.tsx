@@ -8,6 +8,7 @@ import Lyrics from './Lyrics';
 import FullLessonCard from '../FullLessonCard';
 import SectionTabs, { useSection } from '../SectionTabs';
 import Icon from '../Icon';
+import Ic from '../icons';
 
 export default function WeekView() {
   const s = useStore();
@@ -72,9 +73,14 @@ export default function WeekView() {
         <span aria-current="page">Semana {w.n}</span>
       </nav>
 
-      <div className="card song-head">
+      <div className="card song-head with-banner">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="sh-banner" src="/media/banner-semana.webp" alt="" />
         <div className="sh-meta">
-          <span className={`lvl l${w.lv}`}>{w.level}</span>
+          <span className={`lvl lvl-pill l${w.lv}`}>
+            <Ic name="bars" size={14} />
+            {w.level}
+          </span>
           <span className="mut">Semana {w.n}</span>
         </div>
         <h2 className="sh-title">{w.title}</h2>
@@ -83,17 +89,17 @@ export default function WeekView() {
         </div>
         <div className="links compact">
           <a href={`https://www.youtube.com/results?search_query=${q}`} target="_blank" rel="noopener">
-            ▶️ YouTube
+            <Ic name="yt" size={20} /> YouTube
           </a>
           <a href={`https://open.spotify.com/search/${q}`} target="_blank" rel="noopener">
-            🎧 Spotify
+            <Ic name="spotify" size={20} /> Spotify
           </a>
           <a
             href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${course.meta.lang === 'de' ? 'alemão' : 'italiano'} com música ${w.title} ${w.artist}`)}`}
             target="_blank"
             rel="noopener"
           >
-            🎓 Aulas
+            <Ic name="aula" size={20} /> Aulas
           </a>
         </div>
       </div>
@@ -191,7 +197,9 @@ export default function WeekView() {
         {tab === 'lesson' && (
           <>
             <div className="card lesson">
-              <h3>💡 {w.theme}</h3>
+              <h3 className="ih">
+                <Icon name="metodo" size={28} /> {w.theme}
+              </h3>
               <div dangerouslySetInnerHTML={{ __html: w.lesson }} />
             </div>
             <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />

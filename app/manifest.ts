@@ -6,8 +6,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: 'Ascolto',
     start_url: '/',
     display: 'standalone',
-    background_color: '#eef1ee',
-    theme_color: '#eef1ee',
+    background_color: '#f7faf9',
+    theme_color: '#f7faf9',
     icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' }],
   };
 }

@@ -3,17 +3,17 @@ import { useEffect, useRef, useState } from 'react';
 
 // Vídeos de boas-vindas por idioma (public/media). Quem não tem vídeo mostra só o título.
 // bubble: onde fica o balão de fala no vídeo (em % do cartão), para o "Ciao/Hallo" cair dentro dele.
-type Hero = { video: string; poster: string; end: string; bubble: { left: number; top: number; w: number; h: number } };
+type Bubble = { left: number; top: number; w: number; h: number };
+type Hero =
+  | { kind: 'image'; image: string; ratio: string; bubble: Bubble }
+  | { kind: 'video'; video: string; poster: string; end: string; bubble: Bubble };
 const HERO: Record<string, Hero> = {
   // pizza de chef, Vespa e cafeteira moka
-  it: {
-    video: '/media/hero-it.mp4',
-    poster: '/media/hero-it.webp',
-    end: '/media/hero-it-end.webp',
-    bubble: { left: 76.2, top: 5.5, w: 20.6, h: 33 },
-  },
+  // banner estático: pizza de chef, Vespa e moka diante do Coliseu
+  it: { kind: 'image', image: '/media/banner-it.webp', ratio: '949/317', bubble: { left: 73.7, top: 2, w: 17.3, h: 32.8 } },
   // pretzel, caneca de chopp e salsicha
   de: {
+    kind: 'video',
     video: '/media/hero-de.mp4',
     poster: '/media/hero-de.webp',
     end: '/media/hero-de-end.webp',
@@ -33,7 +33,7 @@ export default function HeroGreeting({ lang, hello, name }: { lang: string; hell
   const [mode, setMode] = useState<'play' | 'still'>('still');
 
   useEffect(() => {
-    if (!hero) return;
+    if (!hero || hero.kind !== 'video') return;
     let seen = false;
     try {
       seen = sessionStorage.getItem(SEEN + lang) === '1';
@@ -70,7 +70,30 @@ export default function HeroGreeting({ lang, hello, name }: { lang: string; hell
       </h2>
     );
 
-  const long = first.length > 8;
+  const long = first.length > 7;
+  const bubble = (
+    <h2
+      className={`hero-bubble ${long ? 'long' : ''}`}
+      aria-hidden="true"
+      style={{
+        left: `${hero.bubble.left}%`,
+        top: `${hero.bubble.top}%`,
+        width: `${hero.bubble.w}%`,
+        height: `${hero.bubble.h}%`,
+      }}
+    >
+      <span>{hello},</span>
+      <b>{first}!</b>
+    </h2>
+  );
+  if (hero.kind === 'image')
+    return (
+      <div className="hero hero-static" style={{ aspectRatio: hero.ratio }} role="img" aria-label={`${hello}, ${first}!`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={hero.image} alt="" className="hero-media" />
+        {bubble}
+      </div>
+    );
   return (
     <div
       className="hero"

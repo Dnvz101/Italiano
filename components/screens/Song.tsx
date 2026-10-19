@@ -8,6 +8,7 @@ import Lyrics from './Lyrics';
 import FullLessonCard from '../FullLessonCard';
 import SectionTabs, { useSection } from '../SectionTabs';
 import Icon from '../Icon';
+import Ic from '../icons';
 
 export default function SongView() {
   const s = useStore();
@@ -56,9 +57,14 @@ export default function SongView() {
         <button onClick={() => go('weeks', { open: 'fav' })}>Minhas favoritas</button>
       </nav>
 
-      <div className="card song-head">
+      <div className="card song-head with-banner">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="sh-banner" src="/media/banner-semana.webp" alt="" />
         <div className="sh-meta">
-          <span className={`lvl l${song.level}`}>{LEVELS[song.level]}</span>
+          <span className={`lvl lvl-pill l${song.level}`}>
+            <Ic name="bars" size={14} />
+            {LEVELS[song.level]}
+          </span>
           <span className="mut">
             {fit.emoji} {fit.title}
           </span>
@@ -67,17 +73,17 @@ export default function SongView() {
         <div className="mut">{song.artist}</div>
         <div className="links compact">
           <a href={`https://www.youtube.com/results?search_query=${q}`} target="_blank" rel="noopener">
-            ▶️ YouTube
+            <Ic name="yt" size={20} /> YouTube
           </a>
           <a href={`https://open.spotify.com/search/${q}`} target="_blank" rel="noopener">
-            🎧 Spotify
+            <Ic name="spotify" size={20} /> Spotify
           </a>
           <a
             href={`https://www.youtube.com/results?search_query=${encodeURIComponent(`aprender ${lang === 'de' ? 'alemão' : 'italiano'} com música ${song.title} ${song.artist}`)}`}
             target="_blank"
             rel="noopener"
           >
-            🎓 Aulas
+            <Ic name="aula" size={20} /> Aulas
           </a>
         </div>
       </div>
@@ -245,7 +251,9 @@ export default function SongView() {
           <>
             {a.lesson && (
               <div className="card lesson">
-                <h3>💡 {a.theme}</h3>
+                <h3 className="ih">
+                  <Icon name="metodo" size={28} /> {a.theme}
+                </h3>
                 <div dangerouslySetInnerHTML={{ __html: a.lesson }} />
               </div>
             )}

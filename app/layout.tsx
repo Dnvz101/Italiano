@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import '@fontsource-variable/nunito';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,15 +15,12 @@ export const viewport: Viewport = {
   interactiveWidget: 'resizes-content',
   colorScheme: 'light dark',
   // cor da barra de status = cor do cabeçalho (não a cor da marca)
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#eef1ee' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1513' },
-  ],
+  themeColor: '#f7faf9',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" data-theme="light">
       <body>{children}</body>
     </html>
   );

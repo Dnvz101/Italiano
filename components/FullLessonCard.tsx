@@ -62,7 +62,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
   return (
     <>
       <div className="card">
-        <h3>🔍 Trechos comentados</h3>
+        <h3 className="ih">
+          <Icon name="cacapalavras" size={28} /> Trechos comentados
+        </h3>
         <p className="mut" style={{ marginTop: 0 }}>
           <b>A</b>ssociação com o português, <b>M</b>emorização do que importa e <b>E</b>xpansão com frases novas.
         </p>
@@ -99,7 +101,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
 
       {lesson.sounds.length > 0 && (
         <div className="card">
-          <h3>🗣️ Sons desta música</h3>
+          <h3 className="ih">
+            <Icon name="shadowing" size={28} /> Sons desta música
+          </h3>
           {lesson.sounds.map((x, i) => (
             <div key={i} className="snd">
               <div className="snd-h">
@@ -120,7 +124,9 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
 
       {lesson.trivia.length > 0 && (
         <div className="card">
-          <h3>💡 Curiosidades</h3>
+          <h3 className="ih">
+            <Icon name="metodo" size={28} /> Curiosidades
+          </h3>
           <ul className="trivia">
             {lesson.trivia.map((t, i) => (
               <li key={i}>{t}</li>

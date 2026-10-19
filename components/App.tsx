@@ -20,6 +20,8 @@ import ImportLocal from './screens/ImportLocal';
 import Taste from './screens/Taste';
 import Explore from './screens/Explore';
 import Icon, { type IconName } from './Icon';
+import Line from './Line';
+import { Flag } from './icons';
 
 const TABS: [View, IconName, string][] = [
   ['home', 'home', 'Início'],
@@ -170,13 +172,16 @@ export default function App() {
         <div className="content">
           <header className="topbar">
             <h1>
+              <button className="brand-home" onClick={() => go('home')} aria-label="Início">
+                <Line name="home" size={30} stroke={2.6} />
+              </button>
               Ascolto <span>{course ? course.meta.name : 'em Família'}</span>
             </h1>
-            <button className="spk" onClick={() => go('lang')} aria-label="Trocar idioma">
-              {course ? course.meta.flag : '🌍'}
+            <button className="top-pill" onClick={() => go('lang')} aria-label="Trocar idioma">
+              {course ? <Flag lang={course.meta.lang} /> : '🌍'}
             </button>
-            <button className="spk ic-btn" onClick={() => go('settings')} aria-label="Configurações">
-              <Icon name="ajustes" size={22} />
+            <button className="top-round" onClick={() => go('settings')} aria-label="Configurações">
+              <Line name="gear" size={22} stroke={2.2} />
             </button>
           </header>
           {s.saveError && <div className="banner">{s.saveError}</div>}

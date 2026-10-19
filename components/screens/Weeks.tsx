@@ -57,10 +57,15 @@ export default function Weeks() {
 
   return (
     <>
-      <h2>Trilha</h2>
-      <p className="mut lead">
-        Uma música por semana, da mais lenta à mais rápida. Suas favoritas ficam num álbum à parte.
-      </p>
+      <div className="page-banner" style={{ aspectRatio: '1207/389' }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/media/banner-trilha.webp" alt="" />
+        <div className="pb-text">
+          <h2>Trilha</h2>
+          <p>Uma música por semana, da mais lenta à mais rápida.</p>
+        </div>
+      </div>
+      <p className="mut lead">Suas favoritas ficam num álbum à parte, no fim da lista.</p>
 
       {mods.map((m, mi) => {
         const done = m.weeks.filter((w) => isComplete(p, w.n)).length;

@@ -1,4 +1,5 @@
 'use client';
+import { PLAN_NAMES, planActive } from '@/lib/plan';
 import { useEffect, useState } from 'react';
 import { useStore, OLD_KEY, importedKey } from '@/lib/store';
 import { useApp } from '@/lib/nav';
@@ -51,6 +52,35 @@ export default function Settings() {
         ← Voltar
       </button>
       <h2 style={{ marginTop: 12 }}>Configurações</h2>
+
+      {s.isAdmin && (
+        <button className="card admin-entry" onClick={() => go('admin')}>
+          <b>🛠️ Painel administrativo</b>
+          <span className="mut">Usuários, gastos com IA, planos e limites</span>
+        </button>
+      )}
+      {s.limits.enabled && !s.isAdmin && (
+        <div className="card">
+          <h3>Seu plano: {PLAN_NAMES[planActive(s.plan) ? s.plan!.plan : 'free']}</h3>
+          {planActive(s.plan) ? (
+            <p className="mut" style={{ marginBottom: 0 }}>
+              Tudo liberado{s.plan?.until ? ` até ${s.plan.until.split('-').reverse().join('/')}` : ''}. Obrigado pelo apoio! ☕
+            </p>
+          ) : (
+            <>
+              <p className="mut">
+                Grátis: {s.limits.free_weeks} semanas por idioma, {s.limits.chat_per_day} mensagens de conversa por dia e{' '}
+                {s.limits.own_songs} músicas suas. {s.limits.support_text}
+              </p>
+              {s.limits.support_url && (
+                <a className="btn" href={s.limits.support_url} target="_blank" rel="noopener">
+                  ☕ Apoiar{s.limits.price_jpy ? ` (¥${s.limits.price_jpy})` : ''}
+                </a>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       <div className="card">
         <h3>Seu perfil</h3>

@@ -1,4 +1,5 @@
 'use client';
+import Paywall, { useAccess } from '../Paywall';
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
@@ -19,6 +20,8 @@ export default function Songs() {
   const [duration, setDuration] = useState('');
   const [lyrics, setLyrics] = useState('');
   const [busy, setBusy] = useState(false);
+  const [full, setFull] = useState(false);
+  const acc = useAccess();
 
   // vindo de uma sugestão: abre o formulário já preenchido
   useEffect(() => {
@@ -39,6 +42,10 @@ export default function Songs() {
     if (lines.filter(Boolean).length < 4) return alert('Cole a letra (pelo menos 4 linhas).');
     const dur = duration.trim() ? parseDuration(duration) : null;
     if (duration.trim() && !dur) return alert('Duração no formato 3:45 (ou deixe em branco).');
+    if (acc.songsFull(s.songs.filter((x) => x.user_id === s.userId).length)) {
+      setFull(true);
+      return;
+    }
     setBusy(true);
     try {
       const r = await fetch('/api/analyze-song', {
@@ -47,7 +54,14 @@ export default function Songs() {
         body: JSON.stringify({ lang, title: title.trim(), artist: artist.trim(), lines, userLevel: level, duration_sec: dur }),
       });
       const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
+      if (!r.ok) {
+        if (d.code === 'limit') {
+          setFull(true);
+          setBusy(false);
+          return;
+        }
+        throw new Error(d.error || 'Erro ' + r.status);
+      }
       const id = await s.addSong(
         lang,
         { title: title.trim(), artist: artist.trim(), duration_sec: dur, level: d.level, analysis: d.analysis },
@@ -144,6 +158,12 @@ export default function Songs() {
               Cancelar
             </button>
           </div>
+          {full && (
+            <Paywall
+              title="Você chegou ao limite de músicas do plano grátis"
+              text={`No plano grátis cabem ${s.limits.own_songs} músicas suas. Apague uma que já estudou ou apoie para liberar mais.`}
+            />
+          )}
           {busy && (
             <AiProgress
               expectedMs={22000}

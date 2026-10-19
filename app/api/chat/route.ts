@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { serverAccess } from '@/lib/plan-server';
 import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage, MODEL } from '@/lib/ai';
@@ -89,6 +90,17 @@ Entregue a próxima fala chamando a ferramenta responder.`;
 
   try {
     await checkQuota(sb, user.id, 'chat');
+    // plano grátis: limite de mensagens por dia (antes de gastar com a IA)
+    const acc = await serverAccess(sb, user.id);
+    if (acc.free) {
+      const since = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+      const { count } = await sb.from('ai_usage').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('kind', 'chat').gte('created_at', since);
+      if ((count || 0) >= acc.limits.chat_per_day)
+        return NextResponse.json(
+          { error: `No plano grátis são ${acc.limits.chat_per_day} mensagens de conversa por dia. ${acc.limits.support_text}`, code: 'limit', support_url: acc.limits.support_url },
+          { status: 402 }
+        );
+    }
     const model = process.env.AI_MODEL_CHAT || MODEL();
     const { data, usage } = await callClaudeJSON<any>(prompt, TOOL, 1500, model);
     await logUsage(sb, user.id, 'chat', model, usage);

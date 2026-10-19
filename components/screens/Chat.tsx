@@ -29,7 +29,8 @@ export default function Chat() {
   const level = userLevel(course, p, s.profile.settings.level?.[lang]);
 
   const topics: Topic[] = useMemo(() => {
-    const w = course.weeks.find((x) => x.n === currentWeek(p)) || course.weeks[0];
+    const w =
+      course.weeks.find((x) => x.n === currentWeek(p) && x.kind !== 'kana') || course.weeks.find((x) => x.kind !== 'kana') || course.weeks[0];
     const list: Topic[] = [
       { id: 'w' + w.n, label: `🎵 ${w.title}`, title: w.title, artist: w.artist, theme: w.theme, vocab: w.cards.map((c) => c[0]) },
     ];
@@ -63,6 +64,7 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [limitUrl, setLimitUrl] = useState('');
   const [autoVoice, setAutoVoice] = useState(true);
   const [showTr, setShowTr] = useState<Set<number>>(new Set());
   const endRef = useRef<HTMLDivElement>(null);
@@ -110,7 +112,10 @@ export default function Chat() {
         }),
       });
       const d = await r.json().catch(() => ({}));
-      if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
+      if (!r.ok) {
+        setLimitUrl(d.code === 'limit' ? d.support_url || '#' : '');
+        throw new Error(d.error || 'Erro ' + r.status);
+      }
       const next = [...history];
       const last = next[next.length - 1];
       if (last?.role === 'me' && (d.recast || d.tip)) next[next.length - 1] = { ...last, recast: d.recast, tip: d.tip };
@@ -231,6 +236,11 @@ export default function Chat() {
         {err && (
           <p className="err" role="alert">
             {err}{' '}
+            {limitUrl && limitUrl !== '#' && (
+              <a href={limitUrl} target="_blank" rel="noopener">
+                ☕ Apoiar
+              </a>
+            )}{' '}
             <button className="link" onClick={() => ask(msgs)}>
               Tentar de novo
             </button>

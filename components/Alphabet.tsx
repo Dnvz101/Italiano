@@ -9,11 +9,11 @@ const KEY = (uid: string, lang: string) => `ascolto-alpha:${uid}:${lang}`;
 const tone = (n?: number) => (n == null ? '' : n >= 90 ? 'ok' : n >= 60 ? 'mid' : 'low');
 
 /** Alfabeto e sons difíceis: ouvir, repetir e ganhar nota, letra por letra. */
-export default function Alphabet() {
+export default function Alphabet({ only }: { only?: number } = {}) {
   const s = useStore();
   const { lang } = useCourse();
   const data = ALPHABET[lang];
-  const [view, setView] = useState<number | 'sounds'>(0);
+  const [view, setView] = useState<number | 'sounds'>(only ?? 0);
   const [sel, setSel] = useState(0);
   const [best, setBest] = useState<Record<string, number>>({});
   const detail = useRef<HTMLDivElement>(null);
@@ -59,6 +59,7 @@ export default function Alphabet() {
 
   return (
     <div className="alpha">
+      {only == null && (
       <div className="seg">
         {sets.map((st, i) => (
           <button
@@ -82,6 +83,7 @@ export default function Alphabet() {
           </span>
         </button>
       </div>
+      )}
 
       {view !== 'sounds' ? (
         <>

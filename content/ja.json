@@ -15,6 +15,99 @@
  "weeks": [
   {
    "n": 1,
+   "section": "Módulo 0 · Kana",
+   "kind": "kana",
+   "deck": "kh",
+   "title": "ひらがな · Hiragana",
+   "artist": "46 letras básicas",
+   "year": null,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "O alfabeto principal do japonês",
+   "about": "Antes das músicas, a base: o hiragana tem 46 letras, e cada uma é uma sílaba (か = ka). Com ele você já consegue ler qualquer palavra japonesa, mesmo sem saber kanji.",
+   "why": "As letras das músicas, os cards e a leitura em cima dos kanji são escritos em hiragana. Uma semana de treino todo dia e você passa a ler sozinho.",
+   "hunt": [],
+   "cards": [],
+   "days": [
+    [
+     "あ い う え お · か き く け こ",
+     "Faça o treino do dia na aba Praticar (10 letras novas por dia). Fale cada letra em voz alta. Na aba Letras, toque, ouça e repita."
+    ],
+    [
+     "さ し す せ そ · た ち つ て と",
+     "Treino do dia. Repare em し (shi), ち (chi) e つ (tsu): fogem do padrão."
+    ],
+    [
+     "な に ぬ ね の · は ひ ふ へ ほ",
+     "Treino do dia. ふ é um “fu” soprado, sem encostar os dentes no lábio."
+    ],
+    [
+     "ま み む め も · や ゆ よ · ら り る れ ろ",
+     "Treino do dia. O R japonês é sempre a batidinha de “caro”."
+    ],
+    [
+     "わ を ん · e as revisões",
+     "Termine as últimas letras e revise tudo o que aparecer. Escreva num papel: あめ, ねこ, すし, さくら."
+    ],
+    [
+     "Os tracinhos: が ざ だ ば ぱ",
+     "Leia a aba Aula: dois tracinhos (゛) e a bolinha (゜) mudam o som. Faça o treino do dia."
+    ],
+    [
+     "Leitura de verdade",
+     "Treino do dia e um teste: abra a letra de さんぽ (semana 3) e leia o hiragana em voz alta. Pronto para o katakana!"
+    ]
+   ],
+   "lesson": "<p><b>Como funciona:</b> cada letra é uma sílaba. As 5 vogais são <b>あ い う え お</b> (a, i, u, e, o) e as outras linhas juntam uma consoante com elas: <b>か き く け こ</b> = ka, ki, ku, ke, ko. Aprender por linhas fica bem mais fácil.</p><p><b>As que fogem do padrão:</b> し = shi, ち = chi, つ = tsu, ふ = fu. E duas partículas têm leitura especial: は vira <b>wa</b> e へ vira <b>e</b> quando são partícula.</p><p><b>Tracinhos que mudam o som:</b> dois tracinhos (゛) deixam o som mais “pesado”: か→<b>が</b> (ga), さ→<b>ざ</b> (za), た→<b>だ</b> (da), は→<b>ば</b> (ba). A bolinha (゜) faz は→<b>ぱ</b> (pa).</p><p><b>Letras pequenas:</b> ゃ ゅ ょ pequenos juntam com a letra de antes num som só: き+ゃ = <b>きゃ</b> (kya). E o っ pequeno é uma pausa curtinha antes da consoante: きって (kitte).</p><p><b>Dica:</b> não se preocupe em escrever à mão agora. O objetivo é <b>reconhecer</b> rápido. Invente uma imagem para cada letra (く parece um bico: “ku, ku”) e treine um pouquinho todo dia nos Cards.</p>"
+  },
+  {
+   "n": 2,
+   "kind": "kana",
+   "deck": "kk",
+   "title": "カタカナ · Katakana",
+   "artist": "46 letras para palavras estrangeiras",
+   "year": null,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "As letras das palavras que vieram de fora",
+   "about": "O katakana tem os mesmos sons do hiragana, com outro desenho, mais reto. É usado nas palavras que vieram de outras línguas: コーヒー (café), テレビ (TV), パン (pão, que veio do português!), e nos nomes estrangeiros, como o seu.",
+   "why": "Cardápio, embalagem, placa e quase toda música pop têm katakana. E é com ele que se escreve o seu nome em japonês.",
+   "hunt": [],
+   "cards": [],
+   "days": [
+    [
+     "ア イ ウ エ オ · カ キ ク ケ コ",
+     "Faça o treino do dia na aba Praticar (10 letras novas por dia). Compare com o hiragana: か e カ são quase iguais."
+    ],
+    [
+     "サ シ ス セ ソ · タ チ ツ テ ト",
+     "Treino do dia. Cuidado com as gêmeas シ (shi) × ツ (tsu): na シ os tracinhos ficam deitados, na ツ em pé."
+    ],
+    [
+     "ナ ニ ヌ ネ ノ · ハ ヒ フ ヘ ホ",
+     "Treino do dia. ヘ é igualzinho ao へ do hiragana."
+    ],
+    [
+     "マ ミ ム メ モ · ヤ ユ ヨ · ラ リ ル レ ロ",
+     "Treino do dia e revisão do que você ainda erra. Cuidado com ソ (so) × ン (n)."
+    ],
+    [
+     "ワ ン · o traço ー",
+     "O traço ー estica a vogal: コーヒー = kō-hī. Ache 5 palavras em katakana em casa (as embalagens estão cheias delas!)."
+    ],
+    [
+     "Seu nome em katakana",
+     "Escreva seu nome em katakana (ex.: Ana = アナ, Lucas = ルーカス) e mande na aba Conversa para a IA conferir."
+    ],
+    [
+     "Leitura de verdade",
+     "Treino do dia e leia o katakana de um cardápio, da konbini ou de uma embalagem. Agora sim: as músicas começam!"
+    ]
+   ],
+   "lesson": "<p><b>Mesmos sons, outro desenho:</b> ア イ ウ エ オ = a, i, u, e, o; カ キ ク ケ コ = ka, ki, ku, ke, ko. Se você já sabe o hiragana, é só aprender o novo traço.</p><p><b>Quando se usa:</b> palavras estrangeiras (テレビ, terebi = TV), nomes de pessoas e países de fora (ブラジル, Burajiru = Brasil), sons e ênfase. Algumas vieram do português no século 16: <b>パン</b> (pão), <b>ボタン</b> (botão), <b>カステラ</b> (pão de Castela), <b>タバコ</b> (tabaco).</p><p><b>O traço ー</b> estica a vogal de antes: <i>ケーキ</i> (kēki, bolo), <i>コーヒー</i> (kōhī, café).</p><p><b>As gêmeas:</b> シ (shi) × ツ (tsu) e ソ (so) × ン (n). Os tracinhos da シ e da ン ficam mais deitados; os da ツ e da ソ, mais em pé.</p><p><b>Sons novos:</b> para imitar sons que não existem em japonês, juntam letras pequenas: ファ (fa), ティ (ti), ウィ (wi).</p>"
+  },
+  {
+   "n": 3,
    "section": "Módulo 1 · Primeiros passos",
    "title": "さんぽ",
    "artist": "井上あずみ",
@@ -95,7 +188,7 @@
    ]
   },
   {
-   "n": 2,
+   "n": 4,
    "title": "上を向いて歩こう",
    "artist": "坂本九",
    "year": 1961,
@@ -175,7 +268,7 @@
    ]
   },
   {
-   "n": 3,
+   "n": 5,
    "title": "世界に一つだけの花",
    "artist": "SMAP",
    "year": 2003,
@@ -255,7 +348,7 @@
    ]
   },
   {
-   "n": 4,
+   "n": 6,
    "title": "涙そうそう",
    "artist": "夏川りみ",
    "year": 2001,
@@ -335,7 +428,7 @@
    ]
   },
   {
-   "n": 5,
+   "n": 7,
    "title": "ハナミズキ",
    "artist": "一青窈",
    "year": 2004,
@@ -415,7 +508,7 @@
    ]
   },
   {
-   "n": 6,
+   "n": 8,
    "title": "糸",
    "artist": "中島みゆき",
    "year": 1992,
@@ -495,7 +588,7 @@
    ]
   },
   {
-   "n": 7,
+   "n": 9,
    "section": "Módulo 2 · J-pop",
    "title": "チェリー",
    "artist": "スピッツ",
@@ -576,7 +669,7 @@
    ]
   },
   {
-   "n": 8,
+   "n": 10,
    "title": "Lemon",
    "artist": "米津玄師",
    "year": 2018,
@@ -656,7 +749,7 @@
    ]
   },
   {
-   "n": 9,
+   "n": 11,
    "title": "Pretender",
    "artist": "Official髭男dism",
    "year": 2019,
@@ -736,7 +829,7 @@
    ]
   },
   {
-   "n": 10,
+   "n": 12,
    "title": "夜に駆ける",
    "artist": "YOASOBI",
    "year": 2019,

@@ -5,7 +5,7 @@ export type Week = {
   section?: string;
   title: string;
   artist: string;
-  year: number;
+  year: number | null;
   level: string;
   lv: number;
   theme: string;
@@ -14,6 +14,9 @@ export type Week = {
   hunt: string[];
   lesson: string; // HTML confiável (vem do nosso conteúdo)
   cards: Card[];
+  kind?: 'kana'; // japonês: semanas de hiragana/katakana (sem música)
+  deck?: 'kh' | 'kk'; // baralho treinado na semana
+  days?: [string, string][]; // roteiro próprio da semana
 };
 
 export type CourseMeta = {
@@ -30,7 +33,7 @@ export type CourseMeta = {
 
 export type Course = { lang: string; sort: number; meta: CourseMeta; weeks: Week[] };
 
-export type SrsEntry = { box: number; due: string };
+export type SrsEntry = { box: number; due: string; first?: string }; // first: dia em que o card apareceu pela 1ª vez
 
 export type Progress = {
   started: number[];
@@ -77,9 +80,9 @@ export type MusicProfile = {
 
 export type Household = { id: string; name: string; invite_code: string };
 
-export type StudyCard = { id: string; w?: number; it: string; pt: string; ex: string; exPt: string; label: string };
+export type StudyCard = { id: string; w?: number; it: string; pt: string; ex: string; exPt: string; label: string; info?: string; glyph?: boolean };
 
-export type Session = { queue: string[]; done: number; shown: boolean };
+export type Session = { queue: string[]; done: number; shown: boolean; deck?: string };
 
 export type SongAnalysis = {
   level_reason: string;

@@ -107,8 +107,8 @@ const DE_SOUNDS: Sound[] = [
 
 // ---------- japonês: hiragana, katakana e sons ----------
 // [kana, romaji, dica, exemplo, significado]
-type K = [string, string, string, string, string];
-const HIRA: K[] = [
+export type K = [string, string, string, string, string];
+export const HIRA: K[] = [
   ['あ', 'a', '"á", curto e aberto', 'あめ', 'chuva (ame)'],
   ['い', 'i', '"í"', 'いぬ', 'cachorro (inu)'],
   ['う', 'u', '"u" com os lábios relaxados, quase sem bico', 'うみ', 'mar (umi)'],
@@ -156,7 +156,7 @@ const HIRA: K[] = [
   ['を', 'wo', '"ô". Só aparece como partícula (marca o objeto)', 'ほんを よむ', 'ler um livro (hon o yomu)'],
   ['ん', 'n', 'o único som sem vogal: um "n" nasal, como o fim de "pão"', 'でんしゃ', 'trem (densha)'],
 ];
-const KATA: K[] = [
+export const KATA: K[] = [
   ['ア', 'a', 'a mesma "a" do hiragana. Katakana é para palavras estrangeiras', 'アイス', 'sorvete (aisu)'],
   ['イ', 'i', '"í"', 'イギリス', 'Inglaterra (Igirisu)'],
   ['ウ', 'u', '"u"', 'ウール', 'lã (ūru)'],

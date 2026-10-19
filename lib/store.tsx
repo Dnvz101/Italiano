@@ -6,6 +6,7 @@ import { setVoicePref } from '@/lib/voice';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
 import bundledJa from '@/content/ja.json';
+import { mergeLimits, type Limits, type Plan } from './plan';
 import type { Course, FullLesson, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
 
 export const OLD_KEY = 'ascolto-familia-v1';
@@ -24,6 +25,9 @@ type Data = {
   lyrics: Record<string, Lyric>; // chave `${lang}:${song_key}`
   answers: Record<string, Record<string, string>>; // lyric_id → { texto da linha: tradução }
   songs: Song[]; // minhas músicas (e as da família)
+  plan: Plan | null;
+  limits: Limits;
+  isAdmin: boolean;
 };
 
 type Store = Data & {
@@ -156,8 +160,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       // idioma novo que ainda não está no banco (seed não rodado): usa o conteúdo embutido no app
       [bundledIt, bundledDe, bundledJa].forEach((c: any) => {
-        if (!cs[c.lang] || !cs[c.lang].weeks.length) cs[c.lang] = c as Course;
+        // (ou o banco ficou com uma versão antiga, com menos semanas que a do app)
+        if (!cs[c.lang] || cs[c.lang].weeks.length < c.weeks.length) cs[c.lang] = c as Course;
       });
+
+      // planos e limites (v26): se as tabelas ainda não existem, segue sem limite
+      const safe = async (q: PromiseLike<any>) => {
+        try {
+          const r = await q;
+          return r.error ? null : r.data;
+        } catch {
+          return null;
+        }
+      };
+      const [planRow, limRow, adm] = await Promise.all([
+        safe(sb.from('user_plans').select('plan,until,note').eq('user_id', user.id).maybeSingle()),
+        safe(sb.from('app_config').select('value').eq('key', 'limits').maybeSingle()),
+        safe(sb.rpc('is_admin')),
+      ]);
 
       const progress: Record<string, Progress> = {};
       Object.keys(cs).forEach((l) => (progress[l] = blankProgress()));
@@ -189,6 +209,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         lyrics: ly,
         answers: ans,
         songs: songs.data || [],
+        plan: (planRow as Plan) || null,
+        limits: mergeLimits((limRow as any)?.value),
+        isAdmin: adm === true,
       };
       latest.current = d;
       setData(d);

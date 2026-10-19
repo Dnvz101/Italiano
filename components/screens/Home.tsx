@@ -1,4 +1,5 @@
 'use client';
+import { KanaToday } from '../KanaPractice';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IMM_GOAL, currentWeek, dueList, immDay, immWeek, learnedCount, streak, today } from '@/lib/course';
@@ -103,12 +104,15 @@ export default function Home() {
         </div>
       </div>
 
+      {lang === 'ja' && <KanaToday />}
+
       <div className="card">
         <div className="mut now-label">
           <Eq /> Tocando agora: semana {cur}, {w.level.toLowerCase()}
         </div>
         <h3 className="now-t">
-          <Line name="note" size={22} /> <span>{w.title}</span> <small>— {w.artist}</small>
+          {w.kind === 'kana' ? <span className="now-kana">{w.deck === 'kk' ? 'ア' : 'あ'}</span> : <Line name="note" size={22} />}{' '}
+          <span>{w.title}</span> <small>— {w.artist}</small>
         </h3>
         <div className="prog now-prog">
           <i style={{ transform: `scaleX(${Math.max(done / 7, 0.02)})` }} />

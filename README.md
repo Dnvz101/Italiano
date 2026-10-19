@@ -1,4 +1,4 @@
-# Ascolto em Família · v25
+# Ascolto em Família · v27
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -63,13 +63,25 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
 2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
 
+## Painel administrativo e planos (v26)
+**Instalar (uma vez):** rode `supabase/migrations/0004_admin_planos.sql` no SQL Editor do Supabase. Ele cria as tabelas de planos e configuração, as funções do painel e cadastra **dnvz.jp@gmail.com** como admin. Para trocar ou acrescentar: `insert into public.admins (email) values ('outro@email.com');`.
+- **Acesso:** entre no app com esse e-mail → ⚙️ Configurações → 🛠️ Painel administrativo. Quem não é admin não vê o botão, e o banco recusa as consultas mesmo que alguém tente chamar direto (tudo passa por funções que conferem o e-mail). Nenhuma chave secreta do Supabase é usada.
+- **📊 Geral:** usuários, ativos em 7 e 30 dias, apoiadores, gasto com IA no mês (US$ e ¥), receita estimada e sobra.
+- **👥 Usuários:** cada conta com família, último estudo, semana de cada idioma, músicas, uso de IA, e o plano (Grátis, Apoiador, Família/VIP, com data de validade e anotação).
+- **🤖 Gastos IA:** por dia, por tipo, por modelo e quem mais usa. O custo é estimado pelos tokens × preço de cada modelo; os preços e a cotação são editáveis ali mesmo.
+- **☕ Planos:** liga/desliga os limites do plano grátis (semanas por idioma, mensagens de conversa por dia, músicas próprias), valor do apoio, link do "pague um café" e o texto do convite. Vem **desligado**: nada muda para ninguém até você ligar.
+- **Limites:** semanas acima do limite aparecem com 🔒 e a página mostra o convite por cima de uma prévia apagada; a conversa e a análise de músicas são barradas no servidor antes de chamar a IA (não gasta token); o banco também recusa músicas além do limite.
+- Ainda **não tem cobrança automática**: depois que a pessoa paga, você muda o plano dela no painel.
+
 ## Japonês (v25)
 Terceiro idioma, com visual próprio (vermelho, preto e branco) que entra sozinho quando o idioma é 日本語.
-- **Trilha:** 10 semanas, de さんぽ (Totoro) a 夜に駆ける (YOASOBI), com aula, roteiro e cards. Funciona mesmo sem rodar o seed (o conteúdo vem embutido em `content/ja.json`); rodar `supabase/seed.sql` de novo só serve para editar pelo banco.
+- **Módulo de kana (v27):** as semanas 1 e 2 são あ Hiragana e ア Katakana, antes das músicas. Roteiro de 7 dias por linhas do alfabeto, aba Letras (ouvir e repetir), Aula e Praticar (progresso letra por letra e o treino nos Cards). Terminar o treino do dia marca sozinho o próximo dia do roteiro. Enquanto o kana não estiver firme, o Início mostra o "Treino de kana de hoje" e a aba Cards ganha um pontinho vermelho. Começar uma música antes de terminar o kana pede confirmação. As semanas de kana nunca contam no limite do plano grátis.
+- **Trilha de músicas:** 10 semanas (3 a 12), de さんぽ (Totoro) a 夜に駆ける (YOASOBI), com aula, roteiro e cards. Funciona mesmo sem rodar o seed (o conteúdo vem embutido em `content/ja.json`); rodar `supabase/seed.sql` de novo só serve para editar pelo banco.
 - **Furigana:** no conteúdo e nas respostas da IA, a leitura vai entre colchetes depois do kanji (`今日[きょう]`). O app desenha a leitura em cima do kanji, a voz lê só o texto e o romaji aparece embaixo (`lib/kana.ts`, `components/Jt.tsx`).
 - **Letras:** a tradução da IA traz também a leitura em hiragana de cada linha; a letra mostra o romaji embaixo.
 - **Pronúncia:** a nota é por sílaba e compara pela leitura em hiragana (o Gemini devolve a fala escrita e em kana). Precisa da chave do Gemini, como no Android.
 - **Kana e sons:** hiragana e katakana completos (46 + 46), com exemplo, e 10 sons difíceis para brasileiros.
+- **Cards (v26):** submenu com 🗂️ Músicas, あ Hiragana, ア Katakana e 漢 Kanji (96 kanji básicos em 7 grupos, com leituras on/kun e exemplo). Cada baralho tem a sua revisão espaçada: 10 kana novos por dia, 5 kanji.
 - **Câmera:** os 80 objetos com nome japonês e leitura.
 - **Desenhos:** `public/media/ja-*.webp`, gerados por `scripts/ja-art.py` (SVG próprio, sem IA de imagem).
 

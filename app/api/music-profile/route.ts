@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Escolha pelo menos um estilo ou um artista.' }, { status: 400 });
 
   const L = LANGS[lang];
-  const weeks: any[] = COURSES[lang]?.weeks || [];
+  const weeks: any[] = (COURSES[lang]?.weeks || []).filter((w: any) => w.kind !== 'kana');
   const anchors = [1, 2, 3, 4]
     .map((lv) => {
       const ws = weeks.filter((w) => w.lv === lv).slice(0, 2);

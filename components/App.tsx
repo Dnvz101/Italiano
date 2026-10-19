@@ -19,6 +19,8 @@ import Settings from './screens/Settings';
 import ImportLocal from './screens/ImportLocal';
 import Taste from './screens/Taste';
 import Explore from './screens/Explore';
+import Admin from './screens/Admin';
+import { kanaPending } from './KanaPractice';
 import Icon, { type IconName } from './Icon';
 import Line from './Line';
 import { Flag } from './icons';
@@ -123,7 +125,17 @@ export default function App() {
     closeImport: () => setImportOpen(false),
   };
 
-  const shown: View = importOpen ? 'import' : view === 'settings' ? 'settings' : !lang || view === 'lang' ? 'lang' : view;
+  const shown: View = importOpen
+    ? 'import'
+    : view === 'settings'
+      ? 'settings'
+      : view === 'admin' && s.isAdmin
+        ? 'admin'
+        : !lang || view === 'lang'
+          ? 'lang'
+          : view === 'admin'
+            ? 'home'
+            : view;
   const Screen = {
     lang: LangPicker,
     home: Home,
@@ -139,10 +151,12 @@ export default function App() {
     import: ImportLocal,
     taste: Taste,
     explore: Explore,
+    admin: Admin,
   }[shown];
   const showNav = lang && shown !== 'lang' && shown !== 'import';
 
   const active = tabOf(shown);
+  const kanaDot = kanaPending(course, progress);
   const tabButtons = TABS.map(([k, ic, l]) => (
     <button
       key={k}
@@ -151,6 +165,7 @@ export default function App() {
       onClick={() => (k === 'review' ? startReview() : go(k))}
     >
       <Icon name={ic} size={28} className="nav-ic" />
+      {k === 'review' && kanaDot > 0 && <i className="tab-dot" aria-label="treino de kana pendente" />}
       <span>{l}</span>
     </button>
   ));

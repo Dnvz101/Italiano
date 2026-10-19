@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { serverAccess } from '@/lib/plan-server';
 import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
@@ -52,7 +53,7 @@ const sanitize = (html: string) =>
     .replace(/javascript:/gi, '');
 
 function anchors(lang: string) {
-  const weeks: any[] = COURSES[lang]?.weeks || [];
+  const weeks: any[] = (COURSES[lang]?.weeks || []).filter((w: any) => w.kind !== 'kana');
   return [1, 2, 3, 4]
     .map((lv) => {
       const ws = weeks.filter((w) => w.lv === lv).slice(0, 2);
@@ -129,6 +130,15 @@ Regras:
 ${JA_WRITING}` : ''}`;
 
   try {
+    const acc = await serverAccess(sb, user.id);
+    if (acc.free) {
+      const { count } = await sb.from('user_songs').select('id', { count: 'exact', head: true }).eq('user_id', user.id);
+      if ((count || 0) >= acc.limits.own_songs)
+        return NextResponse.json(
+          { error: `No plano grátis cabem ${acc.limits.own_songs} músicas suas. ${acc.limits.support_text}`, code: 'limit', support_url: acc.limits.support_url },
+          { status: 402 }
+        );
+    }
     await checkQuota(sb, user.id);
     const model = process.env.AI_MODEL_ANALYZE || process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5';
     const { data: a, usage } = await callClaudeJSON<any>(prompt, ANALYSIS_TOOL, 8000, model);

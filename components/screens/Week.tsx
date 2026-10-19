@@ -1,4 +1,5 @@
 'use client';
+import Paywall, { useAccess } from '../Paywall';
 import { banner, langPt } from '@/lib/langs';
 import { furiHtml } from '@/lib/kana';
 import Jt from '../Jt';
@@ -12,6 +13,9 @@ import FullLessonCard from '../FullLessonCard';
 import SectionTabs, { useSection } from '../SectionTabs';
 import Icon from '../Icon';
 import Ic from '../icons';
+import Alphabet from '../Alphabet';
+import { KanaDeckPanel } from '../KanaPractice';
+import { deckIds, type Deck } from '@/lib/jdecks';
 
 export default function WeekView() {
   const s = useStore();
@@ -26,7 +30,11 @@ export default function WeekView() {
   const idx = course.weeks.findIndex((x) => x.n === w.n);
   const prev = course.weeks[idx - 1];
   const next = course.weeks[idx + 1];
-  const [tab, setTab] = useSection(['plan', 'lyrics', 'lesson', 'cards'], 'plan');
+  const kana = w.kind === 'kana';
+  const [tab, setTab] = useSection(kana ? ['plan', 'letters', 'lesson', 'practice'] : ['plan', 'lyrics', 'lesson', 'cards'], 'plan');
+  const locked = useAccess().weekLocked(w.n, course.weeks);
+  // japonês: as músicas começam depois do hiragana e do katakana
+  const kanaLeft = course.weeks.filter((x) => x.kind === 'kana' && x.n < w.n && (p.checks[x.n] || []).filter(Boolean).length < 7);
 
   const cur = currentWeek(p);
   const startWeek = () => {
@@ -34,6 +42,12 @@ export default function WeekView() {
     if (
       w.n > cur + 1 &&
       !confirm(`Você está na semana ${cur}. Quer mesmo começar a semana ${w.n}? Ela passa a ser a sua semana atual.`)
+    )
+      return;
+    if (
+      !kana &&
+      kanaLeft.length &&
+      !confirm(`O ideal é terminar ${kanaLeft.map((x) => x.title.split(' · ')[1] || x.title).join(' e ')} antes das músicas: é ${kanaLeft.length > 1 ? 'com eles' : 'com ele'} que você vai ler as letras. Começar mesmo assim?`)
     )
       return;
     s.updateProgress(lang, (x) => (x.started.includes(w.n) ? x : { ...x, started: [...x.started, w.n] }));
@@ -88,8 +102,10 @@ export default function WeekView() {
         </div>
         <h2 className="sh-title">{w.title}</h2>
         <div className="mut">
-          {w.artist} · {w.year}
+          {w.artist}
+          {w.year ? ` · ${w.year}` : ''}
         </div>
+        {!kana && (
         <div className="links compact">
           <a href={`https://www.youtube.com/results?search_query=${q}`} target="_blank" rel="noopener">
             <Ic name="yt" size={20} /> YouTube
@@ -105,8 +121,21 @@ export default function WeekView() {
             <Ic name="aula" size={20} /> Aulas
           </a>
         </div>
+        )}
       </div>
 
+      {locked ? (
+        <div className="locked-wrap">
+          <div className="locked-preview" aria-hidden="true">
+            <CardList title="🗂️ Expressões da semana" cards={w.cards.slice(0, 4)} />
+          </div>
+          <Paywall
+            title={`A semana ${w.n} faz parte do plano apoiador`}
+            text={`No plano grátis ficam liberadas as ${s.limits.free_weeks} primeiras semanas de cada idioma.`}
+          />
+        </div>
+      ) : (
+      <>
       <SectionTabs
         value={tab}
         onChange={setTab}
@@ -117,9 +146,17 @@ export default function WeekView() {
             label: 'Roteiro',
             badge: st ? `${ch.filter(Boolean).length}/7` : null,
           },
-          { id: 'lyrics', icon: 'letra', label: 'Letra' },
-          { id: 'lesson', icon: 'aula', label: 'Aula' },
-          { id: 'cards', icon: 'cards', label: 'Cards', badge: w.cards.length },
+          ...(kana
+            ? [
+                { id: 'letters', icon: 'letra' as const, label: 'Letras' },
+                { id: 'lesson', icon: 'aula' as const, label: 'Aula' },
+                { id: 'practice', icon: 'cards' as const, label: 'Praticar', badge: deckIds(w.deck as Deck).length },
+              ]
+            : [
+                { id: 'lyrics', icon: 'letra' as const, label: 'Letra' },
+                { id: 'lesson', icon: 'aula' as const, label: 'Aula' },
+                { id: 'cards', icon: 'cards' as const, label: 'Cards', badge: w.cards.length },
+              ]),
         ]}
       />
 
@@ -129,13 +166,13 @@ export default function WeekView() {
             <div className="card">
               <p style={{ marginTop: 0 }}>{w.about}</p>
               <p className="mut" style={{ marginBottom: 0 }}>
-                <b>Por que esta música:</b> {w.why}
+                <b>{kana ? 'Por que antes das músicas:' : 'Por que esta música:'}</b> {w.why}
               </p>
             </div>
             {st ? (
               <div className="card">
                 <h3 className="ih"><Icon name="roteiro" size={28} /> Roteiro da semana</h3>
-                {roteiro(course).map((r, i) => (
+                {(w.days || roteiro(course)).map((r, i) => (
                   <div
                     key={i}
                     className={`day ${ch[i] ? 'done' : ''}`}
@@ -170,6 +207,7 @@ export default function WeekView() {
                 </button>
               </div>
             )}
+            {w.hunt.length > 0 && (
             <div className="card">
               <h3 className="ih"><Icon name="cacapalavras" size={28} /> Caça-palavras</h3>
               <p className="mut" style={{ marginTop: 0 }}>
@@ -184,6 +222,7 @@ export default function WeekView() {
                 Pegou uma frase inteira? Anote na aba <b>Frases</b> com o que entendeu. Ela vira card seu.
               </p>
             </div>
+            )}
           </>
         )}
 
@@ -205,12 +244,20 @@ export default function WeekView() {
               </h3>
               <div dangerouslySetInnerHTML={{ __html: furiHtml(w.lesson) }} />
             </div>
-            <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />
+            {!kana && <FullLessonCard key={`fl-${lang}-${w.n}`} songKey={'w' + w.n} title={w.title} artist={w.artist} />}
           </>
         )}
 
-        {tab === 'cards' && <CardList title="🗂️ Expressões da semana" cards={w.cards} />}
+        {tab === 'cards' && !kana && <CardList title="🗂️ Expressões da semana" cards={w.cards} />}
+        {tab === 'letters' && kana && (
+          <div className="card">
+            <Alphabet only={w.deck === 'kk' ? 1 : 0} />
+          </div>
+        )}
+        {tab === 'practice' && kana && <KanaDeckPanel deck={w.deck as Deck} started={st} />}
       </div>
+      </>
+      )}
 
       <div className="pager">
         {prev ? (

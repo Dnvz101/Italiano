@@ -1,5 +1,19 @@
 # Histórico de versões — Ascolto em Família
 
+## v27 — 2026-10-19 · Japonês começa pelo kana
+- **Módulo de kana antes das músicas:** semana 1 = あ Hiragana, semana 2 = ア Katakana. As músicas passam a ser as semanas 3 a 12.
+- Cada semana de kana tem roteiro próprio de 7 dias (uma linha do alfabeto por dia, os tracinhos ゛゜, o traço ー, escrever o próprio nome), aba **Letras** (ouvir, repetir e ganhar nota), **Aula** e **Praticar** (grade colorida: firme, aprendendo, ainda não viu).
+- **Lembrete diário:** cartão "Treino de kana de hoje" no Início e pontinho vermelho na aba Cards enquanto houver treino pendente. Terminar o treino do dia marca sozinho o próximo dia do roteiro.
+- Agora entram de verdade só 10 letras novas por dia (5 kanji); antes, cada sessão nova trazia mais 10.
+- Começar uma música antes de terminar o kana pede confirmação. Semanas de kana não contam no limite do plano grátis.
+- Se o banco tiver uma versão antiga do curso (com menos semanas), o app usa a versão nova embutida.
+
+## v26 — 2026-10-19 · Painel administrativo, planos e cards de kana/kanji
+- **Painel administrativo** (só para dnvz.jp@gmail.com): visão geral, usuários com plano editável, gastos com IA por dia/tipo/modelo/pessoa (com preços editáveis) e configuração dos planos. Precisa rodar `supabase/migrations/0004_admin_planos.sql`.
+- **Planos Grátis × Apoiador × Família/VIP**, com validade. Limites do grátis configuráveis e **desligados por padrão**: semanas por idioma (🔒 + convite sobre a prévia apagada), mensagens de conversa por dia e músicas próprias. Os bloqueios de IA acontecem no servidor antes de gastar tokens, e o banco recusa músicas acima do limite.
+- Botão "☕ Apoiar" (link configurável: Ko-fi, Buy Me a Coffee, PayPay…) no convite e em Configurações → Seu plano.
+- **Cards do japonês com submenu:** 🗂️ Músicas, あ Hiragana (45), ア Katakana (45) e 漢 Kanji (96 básicos: números, dias, pessoas, natureza, placas da rua, verbos e adjetivos). Cada um com a própria revisão espaçada e um contador do que está para revisar.
+
 ## v25 — 2026-10-19 · Japonês 🇯🇵
 - **Novo idioma: 日本語.** Trilha de 10 semanas em 2 módulos (Primeiros passos e J-pop): さんぽ, 上を向いて歩こう, 世界に一つだけの花, 涙そうそう, ハナミズキ, 糸, チェリー, Lemon, Pretender e 夜に駆ける. Cada uma com tema, aula e 10 cards do dia a dia (konbini, trabalho, perguntas).
 - **Visual vermelho, preto e branco** só no japonês: botões pretos, destaques em vermelho, bandeira do Japão e ilustrações próprias (onigiri de fone, monte Fuji, torii, disco e sakura) no início, na trilha e na semana.

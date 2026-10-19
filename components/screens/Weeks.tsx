@@ -1,4 +1,5 @@
 'use client';
+import { useAccess } from '../Paywall';
 import { banner } from '@/lib/langs';
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
@@ -11,6 +12,7 @@ import Disc, { Eq } from '../Disc';
 export default function Weeks() {
   const s = useStore();
   const { lang, course, progress: p, songs, go, param } = useCourse();
+  const acc = useAccess();
   const mods = modules(course);
   const cur = currentWeek(p);
   const level = userLevel(course, p, s.profile.settings.level?.[lang]);
@@ -87,13 +89,15 @@ export default function Weeks() {
               const d = weekDone(p, w.n);
               const started = p.started.includes(w.n);
               const now = w.n === cur && d < 7;
+              const locked = acc.weekLocked(w.n, course.weeks);
               return (
-                <button key={w.n} className={`track ${now ? 'now' : ''} ${d === 7 ? 'done' : ''}`} onClick={() => go('week', w.n)}>
-                  <span className="track-n">{now ? <Eq /> : d === 7 ? '✓' : w.n}</span>
+                <button key={w.n} className={`track ${now ? 'now' : ''} ${d === 7 ? 'done' : ''} ${locked ? 'locked' : ''}`} onClick={() => go('week', w.n)}>
+                  <span className="track-n">{locked ? '🔒' : now ? <Eq /> : d === 7 ? '✓' : w.n}</span>
                   <span className="track-t">
                     <b>{w.title}</b>
                     <span className="mut">
-                      {w.artist}, {w.year}
+                      {w.artist}
+                      {w.year ? `, ${w.year}` : ''}
                     </span>
                   </span>
                   <span className="track-s">

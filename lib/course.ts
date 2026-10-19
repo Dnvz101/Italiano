@@ -1,4 +1,5 @@
 import type { Course, Phrase, Progress, Song, StudyCard, SrsEntry } from './types';
+import { deckIds, jdeckCard, NEW_PER_DAY, type Deck } from './jdecks';
 
 export const IV = [0, 1, 3, 7, 14, 30, 60, 120];
 export const IMM_GOAL = 30;
@@ -28,6 +29,7 @@ export function roteiro(course: Course): [string, string][] {
 }
 
 export function getCard(course: Course, phrases: Phrase[], id: string, songs: Song[] = []): StudyCard | null {
+  if (/^k[hkj]:/.test(id)) return jdeckCard(id);
   if (id.startsWith('m-')) {
     const m = phrases.find((x) => 'm-' + x.id === id);
     return m ? { id, it: m.text, pt: m.meaning, ex: m.note || '', exPt: '', label: 'Minha frase' } : null;
@@ -113,3 +115,26 @@ export function immWeek(p: Progress) {
 }
 export const learnedCount = (p: Progress) => Object.values(p.srs).filter((s) => s.box >= 3).length;
 export const currentWeek = (p: Progress) => Math.max(...p.started);
+
+/** Fila de um baralho extra (kana/kanji): vencidos + algumas novas por dia. */
+export function deckQueue(p: Progress, deck: Deck, extra = false) {
+  const t = today();
+  const ids = deckIds(deck);
+  const due = ids.filter((id) => p.srs[id] && p.srs[id].due <= t);
+  const fresh = ids.filter((id) => !p.srs[id]);
+  // letras novas por dia: desconta as que já entraram hoje
+  const newToday = ids.filter((id) => p.srs[id]?.first === t).length;
+  let q = [...due, ...fresh.slice(0, Math.max(0, (NEW_PER_DAY[deck] || 10) - newToday))];
+  if (!q.length && extra) q = [...ids].sort(() => Math.random() - 0.5).slice(0, 20);
+  return q;
+}
+export function deckStats(p: Progress, deck: Deck) {
+  const t = today();
+  const ids = deckIds(deck);
+  return {
+    total: ids.length,
+    seen: ids.filter((id) => p.srs[id]).length,
+    firm: ids.filter((id) => (p.srs[id]?.box || 0) >= 3).length,
+    due: ids.filter((id) => p.srs[id] && p.srs[id].due <= t).length,
+  };
+}

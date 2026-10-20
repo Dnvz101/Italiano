@@ -909,3 +909,17 @@ rt{font-size:.5em;font-weight:600;color:var(--mut);letter-spacing:0}
 }
 html .flash .btn.write-btn{width:auto;margin:6px auto 2px;padding:9px 18px;border-radius:999px;font-size:14.5px;background:var(--mint);color:var(--acc);border:1.5px solid var(--mint-2)}
 html .flash .btn.write-btn.ghost{background:var(--card);color:var(--mut);border-color:var(--line)}
+/* v28.5 · Método no topo, aba Jogo reservada */
+.top-round.on{box-shadow:inset 0 0 0 2px var(--acc)}
+.topbar h1{min-width:0}
+.topbar h1>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar .top-round{flex:none}
+.game-soon{text-align:center}
+.gs-art{font-size:40px;letter-spacing:6px;margin:6px 0 10px}
+.gs-tag{background:var(--mint);color:var(--acc);font-weight:800}
+.game-soon h3{margin:8px 0 6px}
+.gs-loot{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}
+.gs-loot span{display:flex;flex-direction:column;padding:10px;border-radius:14px;background:var(--chip)}
+.gs-loot b{font-size:16px}
+.gs-loot small{color:var(--mut);font-size:12.5px}
+@media (max-width:380px){.topbar h1{font-size:19px}.top-pill{padding:7px 10px}}

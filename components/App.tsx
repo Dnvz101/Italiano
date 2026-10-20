@@ -21,6 +21,7 @@ import ImportLocal from './screens/ImportLocal';
 import Taste from './screens/Taste';
 import Explore from './screens/Explore';
 import Admin from './screens/Admin';
+import Game from './screens/Game';
 import { kanaPending } from './KanaPractice';
 import Icon, { type IconName } from './Icon';
 import Line from './Line';
@@ -32,7 +33,7 @@ const TABS: [View, IconName, string][] = [
   ['chat', 'conversa', 'Conversa'],
   ['review', 'cards', 'Cards'],
   ['mine', 'frases', 'Frases'],
-  ['method', 'metodo', 'Método'],
+  ['game', 'game', 'Jogo'],
 ];
 // a aba "Trilha" também cobre semanas, favoritas e músicas
 const tabOf = (v: View): View => (v === 'week' || v === 'songs' || v === 'song' ? 'weeks' : v === 'taste' || v === 'explore' ? 'home' : v);
@@ -159,6 +160,7 @@ export default function App() {
     taste: Taste,
     explore: Explore,
     admin: Admin,
+    game: Game,
   }[shown];
   const showNav = lang && shown !== 'lang' && shown !== 'import';
 
@@ -192,6 +194,9 @@ export default function App() {
                 <b aria-hidden="true">{course?.meta.flag}</b> {course?.meta.name}
                 <span className="mut">trocar</span>
               </button>
+              <button className={`side-set ${shown === 'method' ? 'on' : ''}`} onClick={() => go('method')}>
+                <Icon name="metodo" size={22} /> O método
+              </button>
               <button className={`side-set ${shown === 'settings' ? 'on' : ''}`} onClick={() => go('settings')}>
                 <Icon name="ajustes" size={22} /> Ajustes
               </button>
@@ -209,6 +214,11 @@ export default function App() {
             <button className="top-pill" onClick={() => go('lang')} aria-label="Trocar idioma">
               {course ? <Flag lang={course.meta.lang} /> : '🌍'}
             </button>
+            {course && (
+              <button className={`top-round ${shown === 'method' ? 'on' : ''}`} onClick={() => go('method')} aria-label="O método">
+                <Line name="metodo" size={22} stroke={2.2} />
+              </button>
+            )}
             <button className="top-round" onClick={() => go('settings')} aria-label="Configurações">
               <Line name="gear" size={22} stroke={2.2} />
             </button>

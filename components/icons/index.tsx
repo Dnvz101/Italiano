@@ -46,6 +46,8 @@ const G: Record<string, string> = {
   spotify:
     '<circle cx="12" cy="12" r="10" fill="#1ed760"/><path d="M7 9.5c3.6-1 7.3-.7 10.2.9M7.6 12.6c3-.8 6-.5 8.4.8M8.2 15.5c2.4-.6 4.6-.4 6.6.6" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>',
   bars: '<rect class="solid" x="4" y="13" width="3.6" height="7" rx="1.2"/><rect class="solid" x="10.2" y="9" width="3.6" height="11" rx="1.2"/><rect class="solid" x="16.4" y="4.5" width="3.6" height="15.5" rx="1.2"/>',
+  game:
+    '<path class="f" d="M7 7.5h10a4.5 4.5 0 0 1 4.4 5.4l-.9 4.3a2.4 2.4 0 0 1-4.1 1.1L14.2 16H9.8l-2.2 2.3a2.4 2.4 0 0 1-4.1-1.1l-.9-4.3A4.5 4.5 0 0 1 7 7.5z"/><path class="s" d="M8 10.5v3M6.5 12h3"/><circle class="solid" cx="15.5" cy="11" r="1.1"/><circle class="solid" cx="17.5" cy="13" r="1.1"/>',
   sparkle: '<path class="f" d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path class="s" d="M19 16v4M17 18h4"/>',
 };
 

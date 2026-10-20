@@ -2,7 +2,7 @@
 import { createContext, useContext } from 'react';
 import type { Course, Phrase, Progress, Session, Song } from '@/lib/types';
 
-export type View = 'home' | 'weeks' | 'week' | 'songs' | 'song' | 'chat' | 'review' | 'mine' | 'method' | 'settings' | 'lang' | 'import' | 'taste' | 'explore' | 'admin';
+export type View = 'home' | 'weeks' | 'week' | 'songs' | 'song' | 'chat' | 'review' | 'mine' | 'method' | 'settings' | 'lang' | 'import' | 'taste' | 'explore' | 'admin' | 'game';
 
 export type AppCtx = {
   view: View;

@@ -16,7 +16,8 @@ export type IconName =
   | 'cacapalavras'
   | 'imersao'
   | 'favoritas'
-  | 'ajustes';
+  | 'ajustes'
+  | 'game';
 
 const MAP: Record<IconName, IcName> = {
   home: 'home',
@@ -34,6 +35,7 @@ const MAP: Record<IconName, IcName> = {
   imersao: 'ear',
   favoritas: 'star',
   ajustes: 'gear',
+  game: 'game',
 };
 
 export default function Icon({ name, size = 24, className = '' }: { name: IconName; size?: number; className?: string }) {

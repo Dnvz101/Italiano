@@ -1,5 +1,9 @@
 # Histórico de versões — Ascolto em Família
 
+## v28.5 — 2026-10-20 · Método no topo, aba Jogo reservada
+- "O método" saiu da barra de baixo e virou um botão redondo (💡) no topo, ao lado da bandeira. No computador, fica no rodapé do menu lateral.
+- No lugar dele, a barra de baixo ganhou a aba 🎮 **Jogo**, por enquanto com a vitrine "Em breve" da masmorra (exemplos de loot no idioma).
+
 ## v28.4 — 2026-10-20 · Botão de escrita com cara de botão
 - No verso dos cards de kana e kanji, "✍️ Treinar a escrita" virou um botão de verdade (pílula clara com borda); aberto, vira "✕ Fechar a escrita".
 

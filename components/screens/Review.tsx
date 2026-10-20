@@ -165,8 +165,8 @@ export default function Review() {
             {card.info && <div className="card-info">{card.info}</div>}
             {card.glyph && (
               <div onClick={(e) => e.stopPropagation()}>
-                <button className="link" onClick={() => setWriting((x) => !x)}>
-                  {writing ? 'fechar a escrita' : '✍️ treinar a escrita'}
+                <button className={`btn sm write-btn ${writing ? 'ghost' : ''}`} onClick={() => setWriting((x) => !x)}>
+                  {writing ? '✕ Fechar a escrita' : '✍️ Treinar a escrita'}
                 </button>
                 {writing && <KanaWrite key={card.id} ch={card.it} />}
               </div>

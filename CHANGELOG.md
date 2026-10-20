@@ -1,5 +1,8 @@
 # Histórico de versões — Ascolto em Família
 
+## v28.4 — 2026-10-20 · Botão de escrita com cara de botão
+- No verso dos cards de kana e kanji, "✍️ Treinar a escrita" virou um botão de verdade (pílula clara com borda); aberto, vira "✕ Fechar a escrita".
+
 ## v28.3 — 2026-10-20 · Barra de baixo presa de verdade no iPhone
 - No celular, quem rola agora é só a área de conteúdo; a barra de baixo faz parte do layout em vez de "flutuar" (position:fixed). Some o vão em branco que aparecia embaixo da barra no Safari do iPhone ao rolar até o fim. No computador nada muda.
 - Rolagens do app (trocar de tela, abas da aula, conversa, progresso da IA) passam por `lib/scroll.ts`, que rola o lugar certo nos dois casos.

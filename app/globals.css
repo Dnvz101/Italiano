@@ -907,3 +907,5 @@ rt{font-size:.5em;font-weight:600;color:var(--mut);letter-spacing:0}
   html.app-shell .tabbar{position:relative;flex:none;bottom:auto}
   html.app-shell main{padding-bottom:24px}
 }
+html .flash .btn.write-btn{width:auto;margin:6px auto 2px;padding:9px 18px;border-radius:999px;font-size:14.5px;background:var(--mint);color:var(--acc);border:1.5px solid var(--mint-2)}
+html .flash .btn.write-btn.ghost{background:var(--card);color:var(--mut);border-color:var(--line)}

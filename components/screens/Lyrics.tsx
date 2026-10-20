@@ -131,7 +131,7 @@ export default function Lyrics({
     const pt = answers[l.t] || l.ai;
     if (!pt && !confirm('Esta linha ainda não tem tradução. Criar o card assim mesmo?')) return;
     await s.addPhrase(lang, l.t, pt || '(tradução pendente)', `Letra ${label}`);
-    alert('Virou card na aba Frases!');
+    alert(lang === 'ja' ? 'Virou card! Ele aparece na revisão da aba Cards.' : 'Virou card na aba Frases!');
   };
 
   if (!row || editing)

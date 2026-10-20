@@ -1,4 +1,4 @@
-# Ascolto em Família · v27
+# Ascolto em Família · v28.3
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -82,6 +82,7 @@ Terceiro idioma, com visual próprio (vermelho, preto e branco) que entra sozinh
 - **Pronúncia:** a nota é por sílaba e compara pela leitura em hiragana (o Gemini devolve a fala escrita e em kana). Precisa da chave do Gemini, como no Android.
 - **Kana e sons:** hiragana e katakana completos (46 + 46), com exemplo, e 10 sons difíceis para brasileiros.
 - **Cards (v26):** submenu com 🗂️ Músicas, あ Hiragana, ア Katakana e 漢 Kanji (96 kanji básicos em 7 grupos, com leituras on/kun e exemplo). Cada baralho tem a sua revisão espaçada: 10 kana novos por dia, 5 kanji.
+- **Escrever com o dedo (v28):** em Frases → Kana e sons (botão "✍️ Escrever esta letra" e a aba "✍️ Escrever", que sorteia letras para escrever de memória), na aba Letras das semanas de kana e no verso dos cards de kana e kanji. Mostra a ordem dos traços animada, confere quantidade, ordem e direção de cada traço e dá nota. Os traços vêm do [KanjiVG](https://kanjivg.tagaini.net) (CC BY-SA 3.0, Ulrich Apel), em `public/strokes.json`, gerado por `scripts/fetch-strokes.py`.
 - **Câmera:** os 80 objetos com nome japonês e leitura.
 - **Desenhos:** `public/media/ja-*.webp`, gerados por `scripts/ja-art.py` (SVG próprio, sem IA de imagem).
 

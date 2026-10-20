@@ -1,4 +1,5 @@
 'use client';
+import { scrollToY, scrollTopNow } from '@/lib/scroll';
 import { useEffect, useRef, useState } from 'react';
 import Icon, { type IconName } from './Icon';
 
@@ -66,9 +67,9 @@ export default function SectionTabs({
       if (top <= stuck + 1) {
         const anchor = el.previousElementSibling as HTMLElement | null;
         const y = anchor
-          ? anchor.getBoundingClientRect().bottom + window.scrollY - stuck + 14
-          : window.scrollY + top - stuck;
-        window.scrollTo({ top: y });
+          ? anchor.getBoundingClientRect().bottom + scrollTopNow() - stuck + 14
+          : scrollTopNow() + top - stuck;
+        scrollToY(y);
       }
     });
   };

@@ -1,11 +1,12 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { IV, addDays, deckQueue, deckStats, getCard, gradeLabel, makeQueue, nextBox, today } from '@/lib/course';
 import { JDECKS, type Deck } from '@/lib/jdecks';
 import Spk from '../Spk';
 import Jt from '../Jt';
+import KanaWrite from '../KanaWrite';
 import { ro } from '@/lib/kana';
 
 export default function Review() {
@@ -18,6 +19,8 @@ export default function Review() {
   }, [session]);
 
   const card = session?.queue.length ? getCard(course, phrases, session.queue[0], songs) : null;
+  const [writing, setWriting] = useState(false);
+  useEffect(() => setWriting(false), [card?.id]);
   useEffect(() => {
     // card apagado no meio da sessão: pula
     if (session?.queue.length && !card) setSession({ ...session, queue: session.queue.slice(1) });
@@ -44,6 +47,24 @@ export default function Review() {
       </div>
     ) : null;
   const st = deck !== 'main' ? deckStats(p, deck) : null;
+  // direção dos cards: fica à mão embaixo do card (troca na hora, no card atual)
+  const setDir = (d: 'it' | 'pt' | 'audio') => {
+    s.setSetting('dir', d);
+    if (d === 'audio' && card && !session.shown) setTimeout(() => speak(card.it), 120);
+  };
+  const dirSeg = (
+    <div className="seg dir-seg" role="radiogroup" aria-label="Direção dos cards">
+      <button role="radio" aria-checked={dir === 'it'} className={dir === 'it' ? 'on' : ''} onClick={() => setDir('it')}>
+        {L} → PT
+      </button>
+      <button role="radio" aria-checked={dir === 'pt'} className={dir === 'pt' ? 'on' : ''} onClick={() => setDir('pt')}>
+        PT → {L}
+      </button>
+      <button role="radio" aria-checked={dir === 'audio'} className={dir === 'audio' ? 'on' : ''} onClick={() => setDir('audio')}>
+        🎧 Só áudio
+      </button>
+    </div>
+  );
   // terminou o treino de kana do dia: marca sozinho o próximo dia do roteiro da semana de kana (uma vez por dia)
   const autoCheckKana = (d: Deck) => {
     const w = course.weeks.find((x) => x.kind === 'kana' && x.deck === d);
@@ -79,21 +100,7 @@ export default function Review() {
         </div>
         <div className="card">
           <h3>Direção dos cards</h3>
-          <div className="row">
-            <button className={`btn ${dir === 'it' ? '' : 'ghost'} sm`} onClick={() => s.setSetting('dir', 'it')}>
-              {L} → Português
-            </button>
-            <button className={`btn ${dir === 'pt' ? '' : 'ghost'} sm`} onClick={() => s.setSetting('dir', 'pt')}>
-              Português → {L}
-            </button>
-          </div>
-          <button
-            className={`btn ${dir === 'audio' ? '' : 'ghost'} sm`}
-            style={{ marginTop: 8, width: '100%' }}
-            onClick={() => s.setSetting('dir', 'audio')}
-          >
-            🎧 Só áudio (sem texto na frente)
-          </button>
+          {dirSeg}
         </div>
       </>
     );
@@ -156,6 +163,14 @@ export default function Review() {
             </div>
             {dir === 'it' && !card.glyph && ro(card.it) && <div className="ro back-ro">{ro(card.it)}</div>}
             {card.info && <div className="card-info">{card.info}</div>}
+            {card.glyph && (
+              <div onClick={(e) => e.stopPropagation()}>
+                <button className="link" onClick={() => setWriting((x) => !x)}>
+                  {writing ? 'fechar a escrita' : '✍️ treinar a escrita'}
+                </button>
+                {writing && <KanaWrite key={card.id} ch={card.it} />}
+              </div>
+            )}
             {dir === 'pt' && <Spk text={card.it} />}
             {card.ex && (
               <div className="ex">
@@ -190,6 +205,10 @@ export default function Review() {
           Mostrar resposta
         </button>
       )}
+      <div className="dir-foot">
+        <span className="mut">Direção dos cards</span>
+        {dirSeg}
+      </div>
     </>
   );
 }

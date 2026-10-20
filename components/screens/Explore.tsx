@@ -324,7 +324,7 @@ export default function Explore() {
             style={{ marginTop: 10 }}
             onClick={async () => {
               await s.addPhrase(lang, say(selN), OBJECTS[sel].pt, 'Explorar com a câmera');
-              alert('Virou card na aba Frases!');
+              alert(lang === 'ja' ? 'Virou card! Ele aparece na revisão da aba Cards.' : 'Virou card na aba Frases!');
             }}
           >
             ➕ Virar card

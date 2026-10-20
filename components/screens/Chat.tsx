@@ -1,4 +1,5 @@
 'use client';
+import { scrollToEnd } from '@/lib/scroll';
 import Jt from '../Jt';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
@@ -91,7 +92,7 @@ export default function Chat() {
     } catch {}
   }, [topicId, msgs, autoVoice, s.userId, lang]);
   useEffect(() => {
-    endRef.current?.parentElement && window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    endRef.current?.parentElement && scrollToEnd();
   }, [msgs.length, busy]);
 
   const topic = topics.find((t) => t.id === topicId) || topics[0];

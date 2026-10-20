@@ -1,4 +1,5 @@
 'use client';
+import { scrollToY } from '@/lib/scroll';
 import { useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
@@ -63,7 +64,7 @@ export default function Taste() {
         sugg: { summary: d.summary, artists: d.artists, at: new Date().toISOString(), level },
       });
       setEditing(false);
-      window.scrollTo(0, 0);
+      scrollToY(0);
     } catch (e: any) {
       setErr(e.message);
     }

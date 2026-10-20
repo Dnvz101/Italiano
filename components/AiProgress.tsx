@@ -1,4 +1,5 @@
 'use client';
+import { scrollByY } from '@/lib/scroll';
 import { useEffect, useRef, useState } from 'react';
 
 /**
@@ -26,7 +27,7 @@ export default function AiProgress({
       const r = ref.current?.getBoundingClientRect();
       if (!r) return;
       const over = r.bottom - (window.innerHeight - 96);
-      if (over > 0) window.scrollBy({ top: over, behavior: 'smooth' });
+      if (over > 0) scrollByY(over);
     });
     return () => {
       clearInterval(id);

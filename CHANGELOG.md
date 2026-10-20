@@ -1,5 +1,23 @@
 # Histórico de versões — Ascolto em Família
 
+## v28.3 — 2026-10-20 · Barra de baixo presa de verdade no iPhone
+- No celular, quem rola agora é só a área de conteúdo; a barra de baixo faz parte do layout em vez de "flutuar" (position:fixed). Some o vão em branco que aparecia embaixo da barra no Safari do iPhone ao rolar até o fim. No computador nada muda.
+- Rolagens do app (trocar de tela, abas da aula, conversa, progresso da IA) passam por `lib/scroll.ts`, que rola o lugar certo nos dois casos.
+
+## v28.2 — 2026-10-20 · Direção dos cards à mão
+- A escolha da direção (idioma → PT, PT → idioma, só áudio) fica logo abaixo do card durante a revisão e troca na hora, no card que está na tela. Ao escolher "Só áudio", o card atual já é falado.
+
+## v28.1 — 2026-10-20 · Escrita no lugar de Minhas frases (japonês)
+- No japonês, a aba de baixo vira **Escrita** e a tela "Escrita e pronúncia" tem ✍️ Escrever (treino de escrever kana de memória) e あ Kana e sons. "Minhas frases" sai só do japonês; italiano e alemão continuam iguais.
+- "Virar card" no japonês avisa que o card vai para a revisão da aba Cards.
+
+## v28 — 2026-10-20 · Escrever kana e kanji com o dedo
+- Quadro para escrever com o dedo, com o modelo bem clarinho por baixo ou **de memória** (só o romaji aparece).
+- **▶ Ordem:** anima os traços um por um, numerados, na ordem certa.
+- Confere sozinho quando a quantidade de traços bate: nota de 0 a 100, cada traço pintado de verde, laranja ou vermelho, e dicas ("o traço 3 foi feito ao contrário", "este parece ser o traço 2", "esta letra tem 3 traços; você fez 2"). Tamanho e posição não importam: dá para escrever pequeno ou num canto.
+- Onde: Frases → Kana e sons (em cada letra e na aba nova "✍️ Escrever", que sorteia as letras mais fracas), aba Letras das semanas de kana ("✍️ Escrever de memória") e no verso dos cards de hiragana, katakana e kanji ("✍️ treinar a escrita").
+- Traços de 92 kana e dos 96 kanji do baralho, do projeto KanjiVG (CC BY-SA 3.0).
+
 ## v27 — 2026-10-19 · Japonês começa pelo kana
 - **Módulo de kana antes das músicas:** semana 1 = あ Hiragana, semana 2 = ア Katakana. As músicas passam a ser as semanas 3 a 12.
 - Cada semana de kana tem roteiro próprio de 7 dias (uma linha do alfabeto por dia, os tracinhos ゛゜, o traço ー, escrever o próprio nome), aba **Letras** (ouvir, repetir e ganhar nota), **Aula** e **Praticar** (grade colorida: firme, aprendendo, ainda não viu).

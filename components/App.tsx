@@ -1,4 +1,5 @@
 'use client';
+import { scrollToY } from '@/lib/scroll';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useStore, OLD_KEY, importedKey } from '@/lib/store';
 import { AppContext, type AppCtx, type View } from '@/lib/nav';
@@ -57,6 +58,12 @@ export default function App() {
   const songs = useMemo(() => s.songs.filter((x) => x.lang === lang), [s.songs, lang]);
   const dir = s.profile.settings.dir || 'it';
 
+  // celular: a área de conteúdo rola e a barra de baixo fica parada (ver lib/scroll.ts)
+  useEffect(() => {
+    document.documentElement.classList.add('app-shell');
+    return () => document.documentElement.classList.remove('app-shell');
+  }, []);
+
   // cada idioma pode ter sua paleta (o japonês é vermelho, preto e branco)
   useEffect(() => {
     document.documentElement.dataset.lang = lang || '';
@@ -67,7 +74,7 @@ export default function App() {
   const go = useCallback((v: View, p: any = null) => {
     setView(v);
     setParam(p);
-    window.scrollTo(0, 0);
+    scrollToY(0);
   }, []);
 
   const speak = useCallback(
@@ -166,7 +173,7 @@ export default function App() {
     >
       <Icon name={ic} size={28} className="nav-ic" />
       {k === 'review' && kanaDot > 0 && <i className="tab-dot" aria-label="treino de kana pendente" />}
-      <span>{l}</span>
+      <span>{k === 'mine' && lang === 'ja' ? 'Escrita' : l}</span>
     </button>
   ));
 

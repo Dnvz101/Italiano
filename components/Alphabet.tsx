@@ -4,16 +4,21 @@ import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { ALPHABET } from '@/lib/alphabet';
 import SayIt from './SayIt';
+import KanaWrite from './KanaWrite';
 
 const KEY = (uid: string, lang: string) => `ascolto-alpha:${uid}:${lang}`;
 const tone = (n?: number) => (n == null ? '' : n >= 90 ? 'ok' : n >= 60 ? 'mid' : 'low');
 
 /** Alfabeto e sons difíceis: ouvir, repetir e ganhar nota, letra por letra. */
-export default function Alphabet({ only }: { only?: number } = {}) {
+/** mode="write": só o treino de escrever de memória; noWrite: esconde a aba Escrever (quando ela já está em outro lugar). */
+export default function Alphabet({ only, mode, noWrite }: { only?: number; mode?: 'write'; noWrite?: boolean } = {}) {
   const s = useStore();
   const { lang } = useCourse();
   const data = ALPHABET[lang];
-  const [view, setView] = useState<number | 'sounds'>(only ?? 0);
+  const [view, setView] = useState<number | 'sounds' | 'write'>(mode === 'write' ? 'write' : only ?? 0);
+  const [showWrite, setShowWrite] = useState(false);
+  const [wset, setWset] = useState(only ?? 0);
+  const [wi, setWi] = useState(0);
   const [sel, setSel] = useState(0);
   const [best, setBest] = useState<Record<string, number>>({});
   const detail = useRef<HTMLDivElement>(null);
@@ -43,7 +48,16 @@ export default function Alphabet({ only }: { only?: number } = {}) {
   };
 
   const sets = data.sets || [{ label: '🔤 Letras', short: 'Letras', letters: data.letters }];
-  const letters = sets[view === 'sounds' ? 0 : Math.min(view, sets.length - 1)].letters;
+  const letters = sets[typeof view === 'number' ? Math.min(view, sets.length - 1) : 0].letters;
+  const canWrite = !!data.sets; // japonês: escrever kana com o dedo
+  const wLetters = sets[Math.min(wset, sets.length - 1)].letters.filter((x) => x.l !== 'を' && x.l !== 'ヲ');
+  const W = wLetters[wi % wLetters.length];
+  // próxima letra para escrever: sorteia, dando preferência às que ainda não têm nota boa
+  const nextWrite = () => {
+    const weak = wLetters.map((x, i) => [i, best['D:' + x.l] ?? -1] as const).filter(([i, b]) => b < 85 && i !== wi % wLetters.length);
+    const pool = weak.length ? weak : wLetters.map((_, i) => [i, 0] as const);
+    setWi(pool[Math.floor(Math.random() * pool.length)][0]);
+  };
   const L = letters[Math.min(sel, letters.length - 1)];
   const doneOf = (ls: typeof letters) => ls.filter((x) => best['L:' + x.l] != null).length;
   const doneS = data.sounds.filter((x) => x.ex.every(([w]) => best['W:' + w] != null)).length;
@@ -59,7 +73,7 @@ export default function Alphabet({ only }: { only?: number } = {}) {
 
   return (
     <div className="alpha">
-      {only == null && (
+      {only == null && mode !== 'write' && (
       <div className="seg">
         {sets.map((st, i) => (
           <button
@@ -82,10 +96,52 @@ export default function Alphabet({ only }: { only?: number } = {}) {
             {doneS}/{data.sounds.length}
           </span>
         </button>
+        {canWrite && !noWrite && (
+          <button className={view === 'write' ? 'on' : ''} onClick={() => setView('write')}>
+            ✍️ Escrever
+          </button>
+        )}
       </div>
       )}
+      {only != null && canWrite && (
+        <div className="seg">
+          <button className={view !== 'write' ? 'on' : ''} onClick={() => setView(only)}>
+            👀 Ver e ouvir
+          </button>
+          <button className={view === 'write' ? 'on' : ''} onClick={() => setView('write')}>
+            ✍️ Escrever de memória
+          </button>
+        </div>
+      )}
 
-      {view !== 'sounds' ? (
+      {view === 'write' && W && (
+        <div className="card al-detail">
+          {only == null && (
+            <div className="seg">
+              {sets.map((st, i) => (
+                <button key={st.label} className={wset === i ? 'on' : ''} onClick={() => (setWset(i), setWi(0))}>
+                  {st.label}
+                </button>
+              ))}
+            </div>
+          )}
+          <KanaWrite
+            key={W.l}
+            ch={W.l}
+            hint={W.ro}
+            memory
+            best={best['D:' + W.l]}
+            onScore={(v) => save('D:' + W.l, v)}
+            onNext={nextWrite}
+          />
+          <p className="mut sh-tip" style={{ textAlign: 'center' }}>
+            {wLetters.filter((x) => (best['D:' + x.l] ?? 0) >= 85).length} de {wLetters.length} letras já saem bonitas de memória.
+            Travou? Desligue o &quot;De memória&quot; para ver o modelo.
+          </p>
+        </div>
+      )}
+
+      {view === 'write' ? null : view !== 'sounds' ? (
         <>
           <div className="card al-detail" ref={detail} style={{ scrollMarginTop: 120 }}>
             <div className="al-head">
@@ -112,6 +168,15 @@ export default function Alphabet({ only }: { only?: number } = {}) {
               best={best['L:' + L.l]}
               onScore={(v) => save('L:' + L.l, v)}
             />
+            {canWrite && (
+              <div className="al-write">
+                <button className="btn ghost sm" onClick={() => setShowWrite((x) => !x)}>
+                  {showWrite ? 'Fechar a escrita' : '✍️ Escrever esta letra'}
+                  {best['D:' + L.l] != null ? ` · ${best['D:' + L.l]}%` : ''}
+                </button>
+                {showWrite && <KanaWrite key={'w' + L.l} ch={L.l} hint={L.ro} best={best['D:' + L.l]} onScore={(v) => save('D:' + L.l, v)} />}
+              </div>
+            )}
             <div className="al-ex">
               <div>
                 <span className="mut">Exemplo:</span> <b>{L.ex[0]}</b> <span className="mut">· {L.ex[1]}</span>

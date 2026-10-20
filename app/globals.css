@@ -869,3 +869,41 @@ rt{font-size:.5em;font-weight:600;color:var(--mut);letter-spacing:0}
 .kd-leg i.seen{background:color-mix(in srgb,var(--warn) 40%,var(--card))}.kd-leg i.firm{background:color-mix(in srgb,var(--ok) 40%,var(--card))}
 .tab-dot{position:absolute;top:2px;right:calc(50% - 18px);width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--card)}
 .now-kana{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--acc);color:#fff;font-size:15px;font-weight:800}
+/* v28 · escrever com o dedo */
+.kw{margin-top:8px}
+.kw-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kw-top .switch{margin:0}
+.kw-ask{text-align:center;font-size:17px;margin:4px 0 0}
+.kw-ask b{font-size:24px;color:var(--acc)}
+.kw-pad{width:min(100%,300px);aspect-ratio:1;display:block;margin:8px auto;background:#fff;border:1.5px solid var(--line);border-radius:18px;touch-action:none;-webkit-user-select:none;user-select:none;cursor:crosshair}
+.kw-grid{stroke:#e5ded9;stroke-width:.6;stroke-dasharray:2 2;fill:none}
+.kw-guide path{fill:none;stroke:#ebe6e3;stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round}
+.kw-anim path{fill:none;stroke:var(--acc);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:kw-draw .6s ease forwards}
+.kw-anim text{font-size:7px;font-weight:800;fill:var(--acc);opacity:0;animation:kw-fade .15s forwards}
+@keyframes kw-draw{to{stroke-dashoffset:0}}
+@keyframes kw-fade{to{opacity:1}}
+.kw-ink polyline{fill:none;stroke:var(--ink);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.kw-ink .ok{stroke:#16a34a}.kw-ink .mid{stroke:#d97706}.kw-ink .bad{stroke:#dc2626}
+.kw-tip{text-align:center;margin:2px 0;font-size:13px}
+.kw-res .sh-score{justify-content:center}
+.kw-btns{margin-top:8px}
+@media (prefers-reduced-motion:reduce){.kw-anim path{animation-duration:.01s}}
+.al-write{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+.alpha .seg{overflow-x:auto;flex-wrap:nowrap}
+.alpha .seg button{white-space:nowrap}
+.kw-credit{text-align:center;font-size:10.5px;color:var(--mut);margin:6px 0 0}
+.kw-credit a{color:inherit}
+.dir-foot{margin-top:18px}
+.dir-foot>.mut{display:block;font-size:12.5px;margin:0 0 6px 4px}
+.dir-seg{margin:0}
+.dir-seg button{font-size:13.5px;white-space:nowrap;padding-left:6px;padding-right:6px}
+
+/* v28.3 · celular: só a área de conteúdo rola; a barra de baixo é parte do layout (não usa position:fixed).
+   Evita o vão em branco embaixo da barra no Safari do iPhone. */
+@media (max-width:959px){
+  html.app-shell,html.app-shell body{height:100%;overflow:hidden}
+  html.app-shell .shell{height:100vh;height:100dvh;display:flex;flex-direction:column}
+  html.app-shell .content{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+  html.app-shell .tabbar{position:relative;flex:none;bottom:auto}
+  html.app-shell main{padding-bottom:24px}
+}

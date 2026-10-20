@@ -41,14 +41,16 @@ export default function Mine() {
     setBusy(false);
   };
 
+  // japonês: no lugar de "Minhas frases" fica o treino de escrever kana com o dedo
+  const ja = lang === 'ja';
   const head = (
     <>
       <h2 className="ih">
-        <Icon name="frases" size={34} /> Frases e pronúncia
+        <Icon name="frases" size={34} /> {ja ? 'Escrita e pronúncia' : 'Frases e pronúncia'}
       </h2>
       <div className="seg">
         <button className={tab === 'mine' ? 'on' : ''} onClick={() => pickTab('mine')}>
-          ✍️ Minhas frases
+          {ja ? '✍️ Escrever' : '✍️ Minhas frases'}
         </button>
         <button className={tab === 'abc' ? 'on' : ''} onClick={() => pickTab('abc')}>
           {lang === 'ja' ? 'あ Kana e sons' : '🔤 Alfabeto e sons'}
@@ -61,7 +63,14 @@ export default function Mine() {
     return (
       <>
         {head}
-        <Alphabet />
+        <Alphabet key="abc" noWrite={ja} />
+      </>
+    );
+  if (ja)
+    return (
+      <>
+        {head}
+        <Alphabet key="write" mode="write" />
       </>
     );
 

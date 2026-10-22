@@ -13,24 +13,34 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
   const s = useStore();
   const { lang } = useCourse();
   const row = s.lyrics[`${lang}:${songKey}`];
-  const lesson = row?.lesson;
+  const course = /^w\d+$/.test(songKey); // semana do curso (pode ser compartilhada)
+  const shared = course ? s.shared[`${lang}:${songKey}`]?.lesson : null;
+  const lesson = row?.lesson || shared;
+  const [pub, setPub] = useState<'idle' | 'busy' | 'ok'>('idle');
+  const publish = async (l = row?.lesson) => {
+    if (!l || !course || !s.isAdmin) return;
+    setPub('busy');
+    setPub((await s.publishShared(lang, songKey, { lesson: l, lines: row?.lines })) ? 'ok' : 'idle');
+    // publica a letra + tradução + aula de uma vez
+  };
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
 
   const generate = async () => {
     if (!row || busy) return;
-    if (lesson && !confirm('Gerar a aula de novo? A atual será substituída para toda a família.')) return;
+    if (lesson && !confirm('Gerar a aula de novo? A atual será substituída.')) return;
     setBusy(true);
     setErr('');
     try {
-      await s.setLyricLesson(row.id, await requestLesson(lang, title, artist, row.lines.map((l) => l.t)));
+      const l = await requestLesson(lang, title, artist, row.lines.map((x) => x.t));
+      await s.setLyricLesson(row.id, l);
     } catch (e: any) {
       setErr(e.message);
     }
     setBusy(false);
   };
 
-  if (!row)
+  if (!row && !lesson)
     return (
       <div className="card lesson-cta">
         <h3 className="ih"><Icon name="aula" size={28} /> Aula completa</h3>
@@ -144,9 +154,16 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
       )}
 
       <div className="redo">
-        <button className="btn ghost sm" onClick={generate} disabled={busy}>
-          {busy ? 'Refazendo…' : 'Refazer aula'}
-        </button>
+        {row && (!shared || s.isAdmin) && (
+          <button className="btn ghost sm" onClick={generate} disabled={busy}>
+            {busy ? 'Refazendo…' : 'Refazer aula'}
+          </button>
+        )}
+        {s.isAdmin && course && row?.lesson && (
+          <button className="btn ghost sm" onClick={() => publish()} disabled={pub === 'busy'}>
+            {pub === 'ok' ? '✓ Publicado para todos' : pub === 'busy' ? 'Publicando…' : shared ? '📤 Publicar de novo para todos' : '📤 Publicar para todos'}
+          </button>
+        )}
         {busy && <AiProgress expectedMs={25000} steps={['Lendo a letra…', 'Escolhendo os melhores trechos…', 'Comentando os versos…', 'Separando os sons difíceis…', 'Buscando curiosidades…']} />}
         {err && (
           <span className="err" role="alert">

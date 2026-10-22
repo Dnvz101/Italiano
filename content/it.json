@@ -15,7 +15,87 @@
  "weeks": [
   {
    "n": 1,
-   "section": "Módulo 1 · Clássicos",
+   "section": "Módulo 1 · Para começar",
+   "title": "Baciami ancora",
+   "artist": "Jovanotti",
+   "year": 2010,
+   "level": "Iniciante",
+   "lv": 1,
+   "theme": "Pedir com carinho: baciami, dimmi, guardami",
+   "about": "Uma canção de amor de quem quer recomeçar: pedir mais um beijo é pedir mais uma chance. É a música-tema do filme Baciami ancora, de Gabriele Muccino.",
+   "why": "O refrão repete o título muitas vezes, e ele ensina de uma vez o jeito mais útil de pedir coisas em italiano: o verbo com o pronome grudado no final (baciami = me beija). Jovanotti canta um pouco mais rápido que os clássicos: comece pelo refrão.",
+   "hunt": [
+    "baciami",
+    "ancora",
+    "mi",
+    "ti"
+   ],
+   "lesson": "<p><b>Baciami</b> = me beija. Em italiano, quando você pede algo a alguém que trata por <i>tu</i>, o pronome vai <b>grudado no fim do verbo</b>: <i>bacia + mi = baciami</i>, <i>guarda + mi = guardami</i> (olha pra mim), <i>abbraccia + mi = abbracciami</i> (me abraça). É o contrário do português (“me beija”), mas soa natural depressa.</p><p>Com verbos de uma sílaba só, a consoante dobra: <i>di’ + mi = <b>dimmi</b></i> (me diz), <i>da’ + mi = <b>dammi</b></i> (me dá), <i>fa’ + mi = <b>fammi</b></i> (me deixa / me faz).</p><p><b>Ancora</b> é “de novo” e também “ainda”: <i>baciami ancora</i> = me beija de novo; <i>sei ancora qui?</i> = você ainda está aqui?</p>",
+   "cards": [
+    [
+     "baciami",
+     "me beija",
+     "Baciami prima di partire.",
+     "Me beija antes de ir embora."
+    ],
+    [
+     "ancora",
+     "de novo / ainda",
+     "Dimmelo ancora una volta.",
+     "Me diz isso mais uma vez."
+    ],
+    [
+     "abbracciami",
+     "me abraça",
+     "Abbracciami forte.",
+     "Me abraça forte."
+    ],
+    [
+     "guardami",
+     "olha pra mim",
+     "Guardami negli occhi.",
+     "Olha nos meus olhos."
+    ],
+    [
+     "dimmi",
+     "me diz",
+     "Dimmi la verità.",
+     "Me diz a verdade."
+    ],
+    [
+     "aspettami",
+     "me espera",
+     "Aspettami qui, torno subito.",
+     "Me espera aqui, volto já."
+    ],
+    [
+     "chiamami",
+     "me liga",
+     "Chiamami stasera.",
+     "Me liga hoje à noite."
+    ],
+    [
+     "dammi un bacio",
+     "me dá um beijo",
+     "Dammi un bacio, dai!",
+     "Me dá um beijo, vai!"
+    ],
+    [
+     "ti amo",
+     "eu te amo",
+     "Ti amo più di ieri.",
+     "Te amo mais do que ontem."
+    ],
+    [
+     "per sempre",
+     "para sempre",
+     "Resta con me per sempre.",
+     "Fica comigo para sempre."
+    ]
+   ]
+  },
+  {
+   "n": 2,
    "title": "Ci vuole un fiore",
    "artist": "Sergio Endrigo",
    "year": 1974,
@@ -105,7 +185,7 @@
    ]
   },
   {
-   "n": 2,
+   "n": 3,
    "title": "Azzurro",
    "artist": "Adriano Celentano",
    "year": 1968,
@@ -192,7 +272,7 @@
    ]
   },
   {
-   "n": 3,
+   "n": 4,
    "title": "Il mondo",
    "artist": "Jimmy Fontana",
    "year": 1965,
@@ -272,7 +352,7 @@
    ]
   },
   {
-   "n": 4,
+   "n": 5,
    "title": "La solitudine",
    "artist": "Laura Pausini",
    "year": 1993,
@@ -358,7 +438,7 @@
    ]
   },
   {
-   "n": 5,
+   "n": 6,
    "title": "Parole parole",
    "artist": "Mina e Alberto Lupo",
    "year": 1972,
@@ -443,7 +523,7 @@
    ]
   },
   {
-   "n": 6,
+   "n": 7,
    "title": "Volare (Nel blu dipinto di blu)",
    "artist": "Domenico Modugno",
    "year": 1958,
@@ -526,7 +606,7 @@
    ]
   },
   {
-   "n": 7,
+   "n": 8,
    "title": "Una storia importante",
    "artist": "Eros Ramazzotti",
    "year": 1985,
@@ -610,7 +690,7 @@
    ]
   },
   {
-   "n": 8,
+   "n": 9,
    "title": "Sere nere",
    "artist": "Tiziano Ferro",
    "year": 2003,
@@ -689,7 +769,7 @@
    ]
   },
   {
-   "n": 9,
+   "n": 10,
    "title": "Penso positivo",
    "artist": "Jovanotti",
    "year": 1994,
@@ -768,7 +848,7 @@
    ]
   },
   {
-   "n": 10,
+   "n": 11,
    "title": "Caruso",
    "artist": "Lucio Dalla",
    "year": 1986,
@@ -849,7 +929,7 @@
    ]
   },
   {
-   "n": 11,
+   "n": 12,
    "section": "Módulo 2 · Itália de hoje",
    "title": "A te",
    "artist": "Jovanotti",
@@ -929,7 +1009,7 @@
    ]
   },
   {
-   "n": 12,
+   "n": 13,
    "title": "L'estate addosso",
    "artist": "Jovanotti",
    "year": 2015,
@@ -1007,7 +1087,7 @@
    ]
   },
   {
-   "n": 13,
+   "n": 14,
    "title": "Zitti e buoni",
    "artist": "Måneskin",
    "year": 2021,
@@ -1086,7 +1166,7 @@
    ]
   },
   {
-   "n": 14,
+   "n": 15,
    "title": "Soldi",
    "artist": "Mahmood",
    "year": 2019,
@@ -1164,7 +1244,7 @@
    ]
   },
   {
-   "n": 15,
+   "n": 16,
    "title": "Il più grande spettacolo dopo il Big Bang",
    "artist": "Jovanotti",
    "year": 2011,
@@ -1243,7 +1323,7 @@
    ]
   },
   {
-   "n": 16,
+   "n": 17,
    "title": "Occidentali's Karma",
    "artist": "Francesco Gabbani",
    "year": 2017,
@@ -1322,7 +1402,7 @@
    ]
   },
   {
-   "n": 17,
+   "n": 18,
    "title": "La noia",
    "artist": "Angelina Mango",
    "year": 2024,

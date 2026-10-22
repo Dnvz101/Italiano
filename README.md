@@ -1,4 +1,4 @@
-# Ascolto em Família · v29
+# Ascolto em Família · v30.1
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -62,6 +62,12 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 ## Atualizando da v9 para a v10
 1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
 2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
+
+## Aulas compartilhadas (v30)
+1. Rode `supabase/migrations/0006_aulas_compartilhadas.sql` (depois do 0004 e 0005) e cole o `supabase/seed.sql` novo.
+2. Entre com a conta de admin, abra a semana, busque ou cole a letra e toque em "✨ Salvar e preparar a aula" (gera a tradução e a aula na sua conta).
+3. Na aba Letra, toque em "📤 Publicar para todos (letra, tradução e aula)". Só a conta admin vê esse botão.
+4. Quem abrir a semana depois recebe tudo pronto: a letra traduzida e a aula completa, sem gastar IA.
 
 ## Testar sem cadastro (v29)
 1. Rode `supabase/migrations/0005_conta_teste.sql` no SQL Editor (depois do 0004).

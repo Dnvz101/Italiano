@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { useCourse } from '@/lib/nav';
 import { chorusLines } from '@/lib/level';
@@ -31,6 +31,27 @@ export default function Lyrics({
   const row = s.lyrics[`${lang}:${key}`];
   const answers = (row && s.answers[row.id]) || {};
 
+  const isCourseWeek = /^w\d+$/.test(key);
+  const pubShared = isCourseWeek ? s.shared[`${lang}:${key}`] : undefined;
+  // semana do curso com letra publicada pelo admin: a pessoa já recebe a letra traduzida, sem buscar nem gastar IA
+  const adopting = useRef(false);
+  useEffect(() => {
+    const ls = pubShared?.lines;
+    if (row || adopting.current || !ls?.some((l) => l.t)) return;
+    adopting.current = true;
+    (async () => {
+      const saved = await s.saveLyrics(lang, key, ls.map((l) => l.t));
+      if (saved) await s.setLyricAi(saved.id, ls.map((l) => l.ai || ''), ls.map((l) => l.kana || ''));
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row, pubShared]);
+  const [pub, setPub] = useState<'idle' | 'busy' | 'ok'>('idle');
+  const publishAll = async () => {
+    if (!row) return;
+    if (!confirm('Publicar a letra, a tradução e a aula desta semana para todos os usuários?')) return;
+    setPub('busy');
+    setPub((await s.publishShared(lang, key, { lines: row.lines, lesson: row.lesson || null })) ? 'ok' : 'idle');
+  };
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [mode, setMode] = useState<'ex' | 'read' | 'shadow'>('ex');
@@ -57,22 +78,42 @@ export default function Lyrics({
     const saved = await s.saveLyrics(lang, key, lines);
     setEditing(false);
     if (!saved || !prepare || !lines.some(Boolean)) return;
-    const texts = saved.lines.map((l) => l.t);
-    const filled = saved.lines.filter((l) => l.t && l.ai && (lang !== 'ja' || l.kana)).length;
-    const needTr = filled < saved.lines.filter((l) => l.t).length * 0.8;
-    const needLesson = !saved.lesson || changed;
-    if (!needTr && !needLesson) return;
+    const sh = isCourseWeek ? s.shared[`${lang}:${key}`] : undefined;
+    // tradução já publicada para esta semana: aproveita nas linhas iguais (não gasta IA)
+    let cur = saved;
+    if (sh?.lines?.length) {
+      const m = new Map(sh.lines.map((l) => [l.t, l]));
+      const ais = saved.lines.map((l) => l.ai || m.get(l.t)?.ai || '');
+      const kanas = saved.lines.map((l) => l.kana || m.get(l.t)?.kana || '');
+      if (ais.some((a, i) => a && !saved.lines[i].ai)) {
+        await s.setLyricAi(saved.id, ais, kanas);
+        cur = { ...saved, lines: saved.lines.map((l, i) => ({ ...l, ai: ais[i], ...(kanas[i] ? { kana: kanas[i] } : {}) })) };
+      }
+    }
+    const texts = cur.lines.map((l) => l.t);
+    const filled = cur.lines.filter((l) => l.t && l.ai && (lang !== 'ja' || l.kana)).length;
+    const needTr = filled < cur.lines.filter((l) => l.t).length * 0.8;
+    // aula: se já existe uma publicada para esta semana, todo mundo usa ela
+    const needLesson = (!saved.lesson || changed) && !sh?.lesson;
+    if (!needTr && !needLesson) {
+      if (sh?.lesson || sh?.lines) setPrepMsg({ ok: true, text: '✅ Tradução e aula prontas!' });
+      return;
+    }
     setPrepMsg(null);
     setPrep({ tr: needTr, lesson: needLesson });
     const errs: string[] = [];
     await Promise.all([
       needTr &&
         requestTranslation(lang, texts)
-          .then((t) => s.setLyricAi(saved.id, t.translations, t.readings))
+          .then(async (t) => {
+            await s.setLyricAi(saved.id, t.translations, t.readings);
+          })
           .catch((e) => errs.push('tradução: ' + e.message)),
       needLesson &&
         requestLesson(lang, title, artist, texts)
-          .then((l) => s.setLyricLesson(saved.id, l))
+          .then(async (l) => {
+            await s.setLyricLesson(saved.id, l);
+          })
           .catch((e) => errs.push('aula: ' + e.message)),
     ]);
     setPrep(null);
@@ -120,6 +161,7 @@ export default function Lyrics({
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
       await s.setLyricAi(row.id, d.translations, d.readings);
+
     } catch (e: any) {
       alert(e.message);
     }
@@ -133,6 +175,13 @@ export default function Lyrics({
     await s.addPhrase(lang, l.t, pt || '(tradução pendente)', `Letra ${label}`);
     alert(lang === 'ja' ? 'Virou card! Ele aparece na revisão da aba Cards.' : 'Virou card na aba Frases!');
   };
+
+  if (!row && !editing && pubShared?.lines?.some((l) => l.t))
+    return (
+      <div className="card">
+        <p className="mut" style={{ margin: 0 }}>Carregando a letra…</p>
+      </div>
+    );
 
   if (!row || editing)
     return (
@@ -222,6 +271,17 @@ export default function Lyrics({
           Editar letra
         </button>
       </div>
+      {s.isAdmin && isCourseWeek && (
+        <button className="btn ghost sm pub-all" onClick={publishAll} disabled={pub === 'busy'}>
+          {pub === 'ok'
+            ? '✓ Publicado para todos'
+            : pub === 'busy'
+              ? 'Publicando…'
+              : pubShared?.lines
+                ? '📤 Publicar de novo para todos (letra, tradução e aula)'
+                : '📤 Publicar para todos (letra, tradução e aula)'}
+        </button>
+      )}
       {busy && (
         <AiProgress
           expectedMs={4000 + total * 250}

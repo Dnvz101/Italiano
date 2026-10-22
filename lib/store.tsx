@@ -29,6 +29,8 @@ type Data = {
   limits: Limits;
   isAdmin: boolean;
   isAnon: boolean; // entrou sem cadastro (conta de teste)
+  // aulas e traduções das semanas do curso, publicadas pelo admin para todos (chave `${lang}:${song_key}`)
+  shared: Record<string, { lesson?: FullLesson | null; lines?: LyricLine[] }>;
 };
 
 type Store = Data & {
@@ -39,6 +41,7 @@ type Store = Data & {
   saveLyrics: (lang: string, key: string, texts: string[]) => Promise<Lyric | null>;
   setLyricAi: (lyricId: string, ais: string[], kanas?: string[]) => Promise<void>;
   setLyricLesson: (lyricId: string, lesson: FullLesson) => Promise<void>;
+  publishShared: (lang: string, key: string, part: { lesson?: FullLesson | null; lines?: LyricLine[] }) => Promise<boolean>;
   setAnswer: (lyricId: string, line: string, value: string) => void;
   setName: (name: string) => Promise<void>;
   setSetting: (k: keyof Profile['settings'], v: any) => void;
@@ -174,11 +177,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           return null;
         }
       };
-      const [planRow, limRow, adm] = await Promise.all([
+      const [planRow, limRow, adm, shLessons, shTr] = await Promise.all([
         safe(sb.from('user_plans').select('plan,until,note').eq('user_id', user.id).maybeSingle()),
         safe(sb.from('app_config').select('value').eq('key', 'limits').maybeSingle()),
         safe(sb.rpc('is_admin')),
+        safe(sb.from('shared_lessons').select('lang,song_key,lesson')),
+        safe(sb.from('shared_translations').select('lang,song_key,lines')),
       ]);
+      const shared: Data['shared'] = {};
+      ((shLessons as any[]) || []).forEach((r) => ((shared[`${r.lang}:${r.song_key}`] ||= {}).lesson = r.lesson));
+      ((shTr as any[]) || []).forEach((r) => ((shared[`${r.lang}:${r.song_key}`] ||= {}).lines = r.lines));
 
       const progress: Record<string, Progress> = {};
       Object.keys(cs).forEach((l) => (progress[l] = blankProgress()));
@@ -214,6 +222,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         limits: mergeLimits((limRow as any)?.value),
         isAdmin: adm === true,
         isAnon: !!(user as any).is_anonymous,
+        shared,
       };
       latest.current = d;
       setData(d);
@@ -351,6 +360,39 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       commit((x) => ({ ...x, lyrics: { ...x.lyrics, [k]: { ...l, lines } } }));
       const { error } = await sb.from('lyrics').update({ lines, updated_at: new Date().toISOString() }).eq('id', lyricId);
       report(error);
+    },
+    [sb, commit]
+  );
+
+  // admin: publica a aula e/ou a tradução de uma semana do curso para todo mundo
+  const publishShared = useCallback(
+    async (lang: string, key: string, part: { lesson?: FullLesson | null; lines?: LyricLine[] }) => {
+      const now = new Date().toISOString();
+      const jobs: PromiseLike<any>[] = [];
+      if (part.lesson)
+        jobs.push(sb.from('shared_lessons').upsert({ lang, song_key: key, lesson: part.lesson, updated_at: now }));
+      if (part.lines?.some((l) => l.t))
+        jobs.push(
+          sb.from('shared_translations').upsert({
+            lang,
+            song_key: key,
+            // a letra inteira, na ordem (com as linhas vazias entre as estrofes), com tradução e leitura
+            lines: part.lines.map((l) => (l.kana ? { t: l.t, ai: l.ai || '', kana: l.kana } : { t: l.t, ai: l.ai || '' })),
+            updated_at: now,
+          })
+        );
+      const res = await Promise.all(jobs);
+      const err = res.find((r: any) => r?.error)?.error;
+      if (err) {
+        report(err);
+        return false;
+      }
+      commit((x) => {
+        const k = `${lang}:${key}`;
+        const cur = x.shared[k] || {};
+        return { ...x, shared: { ...x.shared, [k]: { ...cur, ...(part.lesson ? { lesson: part.lesson } : {}), ...(part.lines ? { lines: part.lines } : {}) } } };
+      });
+      return true;
     },
     [sb, commit]
   );
@@ -613,6 +655,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     saveLyrics,
     setLyricAi,
     setLyricLesson,
+    publishShared,
     setAnswer,
     setName,
     setSetting,

@@ -1,5 +1,16 @@
 # Histórico de versões — Ascolto em Família
 
+## v30.1 — 2026-10-22 · Publicar tudo para todos (manual)
+- Nada é publicado sozinho. Na aba Letra de uma semana do curso, só a conta admin vê o botão **"📤 Publicar para todos (letra, tradução e aula)"**, que publica a letra inteira, a tradução linha a linha (com a leitura no japonês) e a aula completa de uma vez. A aba Aula tem o mesmo botão.
+- Quem abrir a semana depois recebe a letra já traduzida na hora (sem buscar e sem gastar IA), com exercício, leitura e shadowing funcionando, e a aula completa pronta.
+- Publicar de novo atualiza para quem ainda não tinha a letra.
+
+## v30 — 2026-10-22 · Baciami ancora na semana 1 + aulas compartilhadas
+- **Italiano: a semana 1 agora é "Baciami ancora" (Jovanotti)**, com tema (pedir com carinho: baciami, dimmi, guardami), aula e 10 cards. As outras semanas andam uma casa (Ci vuole un fiore vira a 2) e o módulo 1 virou "Para começar".
+- O SQL `0006` leva junto o que cada pessoa já tinha no italiano: letras salvas, semanas começadas, dias marcados e revisão dos cards (testado num Postgres de verdade, e rodar duas vezes não estraga nada).
+- **Aulas e traduções compartilhadas:** quando você (admin) prepara a aula ou a tradução de uma semana do curso, ela é publicada para todo mundo. Quem entra depois vê a aula completa na hora, sem gastar IA; e ao colar ou buscar a letra, as linhas iguais já vêm traduzidas. Botão "📤 Publicar para todos" na aba Aula para publicar aulas que você já tinha gerado.
+- As letras continuam sendo de cada pessoa (cada um busca ou cola a sua); o que é compartilhado é a aula e a tradução linha a linha.
+
 ## v29 — 2026-10-22 · Testar sem cadastro + plano Teste
 - **Entrar sem cadastro:** a tela de entrada pede só o nome e um toque em "Começar agora, sem cadastro" (conta anônima do Supabase). O login por e-mail continua lá, em "Já tem conta? Entrar com e-mail".
 - **Salvar a conta depois:** em Configurações → 🧪 Conta de teste, a pessoa coloca o e-mail, confirma pelo link e a conta vira normal, com todo o progresso.

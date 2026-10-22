@@ -1,4 +1,4 @@
-# Ascolto em Família · v28.5
+# Ascolto em Família · v29
 
 App para aprender idiomas com música, pelo método natural (Stephen Krashen). Italiano e alemão, com login, progresso sincronizado entre aparelhos, letras compartilhadas com a família e **Minha música**: estude com as músicas que você ama, com o nível medido pela IA.
 
@@ -62,6 +62,12 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 ## Atualizando da v9 para a v10
 1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
 2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
+
+## Testar sem cadastro (v29)
+1. Rode `supabase/migrations/0005_conta_teste.sql` no SQL Editor (depois do 0004).
+2. No Supabase: **Authentication → Sign In / Providers → Allow anonymous sign-ins** = ligado.
+3. Pronto: a tela de entrada passa a ter "Começar agora, sem cadastro". Toda conta nova entra no plano **Teste** (3 aulas geradas pela IA no total; o resto livre). Para liberar alguém: painel → Usuários → plano Grátis, Apoiador ou VIP.
+- Cuidado: contas anônimas podem ser criadas por robôs. O Supabase já limita por IP; se aparecer abuso, ligue o CAPTCHA em Authentication → Attack Protection.
 
 ## Painel administrativo e planos (v26)
 **Instalar (uma vez):** rode `supabase/migrations/0004_admin_planos.sql` no SQL Editor do Supabase. Ele cria as tabelas de planos e configuração, as funções do painel e cadastra **dnvz.jp@gmail.com** como admin. Para trocar ou acrescentar: `insert into public.admins (email) values ('outro@email.com');`.

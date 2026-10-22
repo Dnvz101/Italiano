@@ -6,7 +6,8 @@ export default function Login() {
   const sb = useMemo(() => (typeof window === 'undefined' ? (null as any) : createClient()), []);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
-  const [step, setStep] = useState<'email' | 'code'>('email');
+  const [step, setStep] = useState<'quick' | 'email' | 'code'>('quick');
+  const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -29,6 +30,25 @@ export default function Login() {
     setStep('code');
   };
 
+  // Teste sem cadastro: conta anônima do Supabase (dá para salvar com e-mail depois, em Configurações)
+  const quick = async () => {
+    const n = name.trim();
+    if (!n) return setMsg('Digite seu nome (é assim que o app vai te chamar).');
+    setBusy(true);
+    setMsg('');
+    const { error } = await sb.auth.signInAnonymously({ options: { data: { name: n } } });
+    setBusy(false);
+    if (error)
+      return setMsg(
+        /anonymous/i.test(error.message)
+          ? 'A entrada sem cadastro está desligada no momento. Use o seu e-mail.'
+          : error.message.includes('rate')
+            ? 'Muitas tentativas. Espere alguns minutos.'
+            : error.message
+      );
+    window.location.href = '/';
+  };
+
   const verify = async () => {
     setBusy(true);
     setMsg('');
@@ -46,7 +66,32 @@ export default function Login() {
         </h1>
         <p className="mut">Aprenda idiomas com música, pelo método natural.</p>
         <div className="card">
-          {step === 'email' ? (
+          {step === 'quick' ? (
+            <>
+              <label>Como você se chama?</label>
+              <input
+                autoComplete="given-name"
+                enterKeyHint="go"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && quick()}
+                placeholder="Seu nome"
+                maxLength={40}
+              />
+              <div style={{ marginTop: 12 }}>
+                <button className="btn" onClick={quick} disabled={busy}>
+                  {busy ? 'Entrando…' : 'Começar agora, sem cadastro'}
+                </button>
+              </div>
+              <p className="mut">Você testa tudo na hora. Se gostar, salva a conta com o seu e-mail depois, sem perder nada.</p>
+              <p className="mut" style={{ marginBottom: 0 }}>
+                Já tem conta?{' '}
+                <a href="#" onClick={(e) => (e.preventDefault(), setMsg(''), setStep('email'))}>
+                  Entrar com e-mail
+                </a>
+              </p>
+            </>
+          ) : step === 'email' ? (
             <>
               <label>Seu e-mail</label>
               <input
@@ -68,7 +113,10 @@ export default function Login() {
                 </button>
               </div>
               <p className="mut" style={{ marginBottom: 0 }}>
-                Sem senha: mandamos um link de acesso para o seu e-mail. Primeira vez? A conta é criada automaticamente.
+                Sem senha: mandamos um link de acesso para o seu e-mail. Primeira vez? A conta é criada automaticamente.{' '}
+                <a href="#" onClick={(e) => (e.preventDefault(), setMsg(''), setStep('quick'))}>
+                  Voltar
+                </a>
               </p>
             </>
           ) : (

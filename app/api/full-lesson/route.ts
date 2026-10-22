@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { serverAccess, testerBlocked, testerMsg } from '@/lib/plan-server';
 import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
@@ -108,6 +109,9 @@ Regras:
 ${JA_WRITING}` : ''}`;
 
   try {
+    const acc = await serverAccess(sb, user.id);
+    if (acc.tester && (await testerBlocked(sb, user.id, acc.limits.tester_lessons)))
+      return NextResponse.json({ error: testerMsg(acc.limits.tester_lessons), code: 'tester' }, { status: 402 });
     await checkQuota(sb, user.id);
     const model = process.env.AI_MODEL_ANALYZE || process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5';
     const { data: a, usage } = await callClaudeJSON<any>(prompt, LESSON_TOOL, 8000, model);

@@ -1,5 +1,12 @@
 # Histórico de versões — Ascolto em Família
 
+## v29 — 2026-10-22 · Testar sem cadastro + plano Teste
+- **Entrar sem cadastro:** a tela de entrada pede só o nome e um toque em "Começar agora, sem cadastro" (conta anônima do Supabase). O login por e-mail continua lá, em "Já tem conta? Entrar com e-mail".
+- **Salvar a conta depois:** em Configurações → 🧪 Conta de teste, a pessoa coloca o e-mail, confirma pelo link e a conta vira normal, com todo o progresso.
+- **Plano "Teste 🧪"** para toda conta nova (as que já existem não mudam): tudo liberado, menos as aulas geradas pela IA, que são **3 no total** (aula completa + análise de música própria). O bloqueio é no servidor, antes de chamar a IA. Conversa, tradução, pronúncia e o resto não têm limite extra.
+- Painel: plano "Teste" na lista, contagem de contas em teste e o número de aulas do tester editável em ☕ Planos. Para liberar alguém, é só mudar o plano dele.
+- Precisa: rodar `supabase/migrations/0005_conta_teste.sql` e ligar "Allow anonymous sign-ins" no Supabase.
+
 ## v28.5 — 2026-10-20 · Método no topo, aba Jogo reservada
 - "O método" saiu da barra de baixo e virou um botão redondo (💡) no topo, ao lado da bandeira. No computador, fica no rodapé do menu lateral.
 - No lugar dele, a barra de baixo ganhou a aba 🎮 **Jogo**, por enquanto com a vitrine "Em breve" da masmorra (exemplos de loot no idioma).

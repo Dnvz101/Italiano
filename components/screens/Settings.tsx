@@ -1,6 +1,7 @@
 'use client';
 import { PLAN_NAMES, planActive } from '@/lib/plan';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { useStore, OLD_KEY, importedKey } from '@/lib/store';
 import { useApp } from '@/lib/nav';
 import { currentVoice, setVoicePref, useVoices } from '@/lib/voice';
@@ -87,9 +88,10 @@ export default function Settings() {
         <label>Nome</label>
         <input defaultValue={s.profile.name} onBlur={(e) => e.target.value.trim() && s.setName(e.target.value.trim())} />
         <p className="mut" style={{ marginBottom: 0 }}>
-          Conta: {s.email}
+          Conta: {s.isAnon ? 'teste, sem e-mail' : s.email}
         </p>
       </div>
+      {(s.isAnon || s.plan?.plan === 'tester') && !s.isAdmin && <TesterCard />}
 
       <div className="card">
         <h3>👨‍👩‍👧 Família</h3>
@@ -227,7 +229,12 @@ export default function Settings() {
       )}
 
       <div className="card">
-        <button className="btn ghost" onClick={() => s.signOut()}>
+        <button
+          className="btn ghost"
+          onClick={() =>
+            (!s.isAnon || confirm('Sua conta de teste não tem e-mail: saindo, você perde o acesso a ela. Sair mesmo assim?')) && s.signOut()
+          }
+        >
           Sair da conta
         </button>
       </div>
@@ -235,5 +242,59 @@ export default function Settings() {
         Ascolto em Família · versão {APP_VERSION}
       </p>
     </>
+  );
+}
+
+/** Conta de teste: quantas aulas da IA ainda dá para gerar e, se entrou sem cadastro, salvar com e-mail. */
+function TesterCard() {
+  const s = useStore();
+  const sb = useMemo(() => createClient(), []);
+  const [used, setUsed] = useState<number | null>(null);
+  const [email, setEmail] = useState('');
+  const [sent, setSent] = useState('');
+  const [busy, setBusy] = useState(false);
+  const max = s.limits.tester_lessons;
+  useEffect(() => {
+    sb.from('ai_usage')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', s.userId)
+      .in('kind', ['full-lesson', 'analyze-song'])
+      .then(({ count }: any) => setUsed(count || 0));
+  }, [sb, s.userId]);
+  const save = async () => {
+    const e = email.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(e)) return alert('Digite um e-mail válido.');
+    setBusy(true);
+    const { error } = await sb.auth.updateUser({ email: e });
+    setBusy(false);
+    if (error) return alert(/already|registered|exists/i.test(error.message) ? 'Esse e-mail já tem uma conta. Saia e entre com ele.' : error.message);
+    setSent(e);
+  };
+  return (
+    <div className="card tester-card">
+      <h3>🧪 Conta de teste</h3>
+      {s.plan?.plan === 'tester' && (
+        <p className="mut">
+          Tudo liberado para testar. Aulas completas geradas pela IA (inclusive de músicas suas):{' '}
+          <b>{used == null ? '…' : `${Math.min(used, max)} de ${max}`}</b> usadas.
+        </p>
+      )}
+      {s.isAnon &&
+        (sent ? (
+          <p className="prep-ok" style={{ marginBottom: 0 }}>
+            Mandamos um link para <b>{sent}</b>. Toque nele para confirmar: sua conta e todo o progresso ficam salvos nesse e-mail.
+          </p>
+        ) : (
+          <>
+            <p className="mut">Você entrou sem cadastro. Salve a conta com o seu e-mail para não perder o progresso e entrar em outro aparelho.</p>
+            <div className="row">
+              <input type="email" inputMode="email" autoCapitalize="none" placeholder="voce@email.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <button className="btn sm" style={{ flex: 'none' }} onClick={save} disabled={busy}>
+                {busy ? '…' : 'Salvar'}
+              </button>
+            </div>
+          </>
+        ))}
+    </div>
   );
 }

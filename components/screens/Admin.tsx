@@ -200,7 +200,7 @@ export default function Admin() {
       {tab === 'geral' && (
         <>
           <div className="stats adm-stats">
-            {kpi('usuários', users.length, `${newMonth} novos no mês`)}
+            {kpi('usuários', users.length, `${newMonth} novos no mês · ${users.filter((u) => u.plan === 'tester').length} em teste`)}
             {kpi('ativos 7 dias', active7, `${active30} em 30 dias`)}
             {kpi('apoiadores', paid.length, limits.enabled ? 'limites ligados' : 'limites desligados')}
           </div>
@@ -319,14 +319,15 @@ function UserRow({ u, usd: spent, calls, fx, sb, onSaved }: { u: U; usd: number;
     onSaved();
   };
   const active = planActive(u);
+  const label = active ? PLAN_NAMES[u.plan] : u.plan === 'tester' ? PLAN_NAMES.tester : PLAN_NAMES.free;
   return (
     <details className="card adm-user">
       <summary>
         <span className="adm-u-t">
           <b>{u.name || '(sem nome)'}</b>
-          <span className="mut">{u.email}</span>
+          <span className="mut">{u.email || 'teste sem e-mail'}</span>
         </span>
-        <span className={`adm-plan ${active ? 'on' : ''}`}>{PLAN_NAMES[active ? u.plan : 'free']}</span>
+        <span className={`adm-plan ${active ? 'on' : ''}`}>{label}</span>
       </summary>
       <div className="adm-grid">
         <span className="mut">Família</span>
@@ -356,6 +357,7 @@ function UserRow({ u, usd: spent, calls, fx, sb, onSaved }: { u: U; usd: number;
         <label>Plano</label>
         <select value={plan} onChange={(e) => setPlan(e.target.value as Plan['plan'])}>
           <option value="free">Grátis</option>
+          <option value="tester">Teste 🧪</option>
           <option value="apoiador">Apoiador ☕</option>
           <option value="vip">Família / VIP</option>
         </select>
@@ -401,6 +403,8 @@ function LimitsForm({ limits, sb, onSaved }: { limits: Limits; sb: any; onSaved:
       {num('chat_per_day')}
       <label>Músicas próprias (favoritas)</label>
       {num('own_songs')}
+      <label>Conta de teste: aulas da IA por conta (vale sempre, mesmo com os limites desligados)</label>
+      {num('tester_lessons')}
       <label>Valor do apoio (¥, só para mostrar e calcular a receita)</label>
       {num('price_jpy')}
       <label>Link do &quot;pague um café&quot; (Ko-fi, Buy Me a Coffee, PayPay…)</label>

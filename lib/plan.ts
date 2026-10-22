@@ -6,6 +6,7 @@ export type Limits = {
   free_weeks: number; // semanas liberadas por idioma no plano grátis
   chat_per_day: number; // mensagens de conversa por dia
   own_songs: number; // músicas próprias (favoritas)
+  tester_lessons: number; // conta de teste: aulas geradas pela IA no total (aula completa + música própria)
   price_jpy: number; // valor sugerido do apoio, só para mostrar e calcular a receita no painel
   support_url: string; // link do "pague um café" (Ko-fi, Buy Me a Coffee, PayPay...)
   support_text: string;
@@ -15,6 +16,7 @@ export const DEFAULT_LIMITS: Limits = {
   free_weeks: 2,
   chat_per_day: 10,
   own_songs: 4,
+  tester_lessons: 3,
   price_jpy: 300,
   support_url: '',
   support_text: 'Pague um café ☕ e libere todas as semanas, a conversa sem limite e mais músicas.',
@@ -26,11 +28,11 @@ export const DEFAULT_PRICES: Prices = {
   models: { haiku: [1, 5], sonnet: [3, 15], opus: [5, 25], 'gemini-2.5-flash-lite': [0.3, 0.4], gemini: [1, 2.5] },
 };
 
-export type Plan = { plan: 'free' | 'apoiador' | 'vip'; until: string | null; note?: string };
-export const PLAN_NAMES: Record<string, string> = { free: 'Grátis', apoiador: 'Apoiador ☕', vip: 'Família / VIP' };
+export type Plan = { plan: 'free' | 'tester' | 'apoiador' | 'vip'; until: string | null; note?: string };
+export const PLAN_NAMES: Record<string, string> = { free: 'Grátis', tester: 'Teste 🧪', apoiador: 'Apoiador ☕', vip: 'Família / VIP' };
 
 export const planActive = (p: Plan | null | undefined) =>
-  !!p && p.plan !== 'free' && (!p.until || p.until >= new Date().toLocaleDateString('sv'));
+  !!p && (p.plan === 'apoiador' || p.plan === 'vip') && (!p.until || p.until >= new Date().toLocaleDateString('sv'));
 
 /** O que a pessoa pode usar agora. */
 export function access(limits: Limits, plan: Plan | null, isAdmin: boolean) {

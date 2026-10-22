@@ -55,6 +55,7 @@ export default function Songs() {
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) {
+        if (d.code === 'tester') throw new Error(d.error);
         if (d.code === 'limit') {
           setFull(true);
           setBusy(false);

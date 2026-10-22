@@ -28,6 +28,7 @@ type Data = {
   plan: Plan | null;
   limits: Limits;
   isAdmin: boolean;
+  isAnon: boolean; // entrou sem cadastro (conta de teste)
 };
 
 type Store = Data & {
@@ -212,6 +213,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         plan: (planRow as Plan) || null,
         limits: mergeLimits((limRow as any)?.value),
         isAdmin: adm === true,
+        isAnon: !!(user as any).is_anonymous,
       };
       latest.current = d;
       setData(d);

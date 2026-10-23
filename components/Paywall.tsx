@@ -9,12 +9,17 @@ export function useAccess() {
 }
 
 /** Aviso de conteúdo do plano apoiador, com o botão do "pague um café". */
-export default function Paywall({ title, text }: { title: string; text?: string }) {
+export default function Paywall({ title, text, onClose }: { title: string; text?: string; onClose?: () => void }) {
   const s = useStore();
   const L = s.limits;
-  if (access(s.limits, s.plan, s.isAdmin).tester) return <TesterAsk title={title} text={text} />;
+  if (access(s.limits, s.plan, s.isAdmin).tester) return <TesterAsk title={title} text={text} onClose={onClose} />;
   return (
     <div className="card paywall" role="note">
+      {onClose && (
+        <button className="pw-x" onClick={onClose} aria-label="Fechar">
+          ✕
+        </button>
+      )}
       <div className="pw-lock" aria-hidden="true">
         🔒
       </div>
@@ -32,12 +37,17 @@ export default function Paywall({ title, text }: { title: string; text?: string 
 }
 
 /** Conta de teste: pedir a liberação (sem custo). O pedido aparece no painel do admin. */
-export function TesterAsk({ title, text }: { title: string; text?: string }) {
+export function TesterAsk({ title, text, onClose }: { title: string; text?: string; onClose?: () => void }) {
   const s = useStore();
   const [busy, setBusy] = useState(false);
   const asked = !!s.requestedAt;
   return (
     <div className="card paywall tester-ask" role="note">
+      {onClose && (
+        <button className="pw-x" onClick={onClose} aria-label="Fechar">
+          ✕
+        </button>
+      )}
       <div className="pw-lock" aria-hidden="true">
         🧪
       </div>

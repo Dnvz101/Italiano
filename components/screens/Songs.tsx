@@ -167,11 +167,13 @@ export default function Songs() {
           {full && (
             acc.tester ? (
               <Paywall
+                onClose={() => setFull(false)}
                 title="Limite de músicas da conta de teste"
                 text={`Na conta de teste cabem ${s.limits.tester_songs} músicas suas.`}
               />
             ) : (
               <Paywall
+                onClose={() => setFull(false)}
                 title="Você chegou ao limite de músicas do plano grátis"
                 text={`No plano grátis cabem ${s.limits.own_songs} músicas suas. Apague uma que já estudou ou apoie para liberar mais.`}
               />

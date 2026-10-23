@@ -986,3 +986,9 @@ html .flash .btn.write-btn.ghost{background:var(--card);color:var(--mut);border-
 .tutor-in { display: flex; gap: 8px; padding: 8px 12px 12px; border-top: 1px solid var(--line, #eee); }
 .tutor-in input { flex: 1; font-size: 16px; }
 .tutor-in .btn { flex: none; width: auto; }
+
+/* v33.3 · fechar o aviso de plano/conta de teste */
+.paywall{position:relative}
+.pw-x{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:var(--bg2,#f2f4f5);color:var(--ink2,#555);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.pw-x:hover{background:var(--line,#e6e9ea)}
+.pw-x:active{transform:scale(.94)}

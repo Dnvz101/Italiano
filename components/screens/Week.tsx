@@ -132,11 +132,13 @@ export default function WeekView() {
           </div>
           {acc.tester ? (
             <Paywall
+              onClose={() => go('weeks', { open: mod?.key })}
               title={`A semana ${w.n} ainda não faz parte da conta de teste`}
               text={`Na conta de teste ficam abertas as ${s.limits.tester_weeks} primeiras semanas de música de cada idioma.`}
             />
           ) : (
             <Paywall
+              onClose={() => go('weeks', { open: mod?.key })}
               title={`A semana ${w.n} faz parte do plano apoiador`}
               text={`No plano grátis ficam liberadas as ${s.limits.free_weeks} primeiras semanas de cada idioma.`}
             />

@@ -1,5 +1,8 @@
 # Histórico de versões — Ascolto em Família
 
+## v33.3 — 2026-10-23 · Fechar o aviso
+- Os avisos de semana bloqueada e de limite de músicas (conta de teste e plano grátis) ganharam um **✕** redondo no canto, no mesmo estilo do professor. Na semana bloqueada, fechar volta para a Trilha; nas músicas, só fecha o aviso.
+
 ## v33.2 — 2026-10-23 · Professor: resposta cortada
 - Corrigido o erro "A resposta da IA ficou grande demais e foi cortada" no professor: mais espaço para a resposta e pedido para ir direto ao ponto. A conversa ganhou a mesma folga. O custo continua pelo tamanho real da resposta.
 

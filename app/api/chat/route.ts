@@ -102,7 +102,7 @@ Entregue a próxima fala chamando a ferramenta responder.`;
         );
     }
     const model = process.env.AI_MODEL_CHAT || MODEL();
-    const { data, usage } = await callClaudeJSON<any>(prompt, TOOL, 1500, model);
+    const { data, usage } = await callClaudeJSON<any>(prompt, TOOL, 3000, model);
     await logUsage(sb, user.id, 'chat', model, usage);
     const reply = clip(data?.reply, 800);
     if (!reply) throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);

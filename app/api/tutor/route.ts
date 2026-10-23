@@ -69,7 +69,7 @@ Regras:
 Conversa:
 ${history.map((m) => `${m.role === 'ai' ? 'PROFESSOR' : 'ALUNO'}: ${m.text}`).join('\n')}
 
-Responda chamando a ferramenta explicar.`;
+Chame a ferramenta explicar direto, sem escrever nada antes. Seja breve: a explicação inteira cabe em um parágrafo curto.`;
 
   try {
     await checkQuota(sb, user.id, 'chat');
@@ -89,7 +89,7 @@ Responda chamando a ferramenta explicar.`;
         );
     }
     const model = process.env.AI_MODEL_CHAT || MODEL();
-    const { data, usage } = await callClaudeJSON<any>(prompt, TOOL, 1200, model);
+    const { data, usage } = await callClaudeJSON<any>(prompt, TOOL, 4000, model);
     await logUsage(sb, user.id, 'tutor', model, usage);
     const reply = clip(data?.reply, 1500);
     if (!reply) throw new AiError('Resposta inesperada da IA. Tente de novo.', 502);

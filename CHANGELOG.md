@@ -1,5 +1,8 @@
 # Histórico de versões — Ascolto em Família
 
+## v33.2 — 2026-10-23 · Professor: resposta cortada
+- Corrigido o erro "A resposta da IA ficou grande demais e foi cortada" no professor: mais espaço para a resposta e pedido para ir direto ao ponto. A conversa ganhou a mesma folga. O custo continua pelo tamanho real da resposta.
+
 ## v33.1 — 2026-10-23 · Professor: primeira pergunta
 - O chat do professor agora começa com "Me explique de forma simplificada." (o jeito de explicar continua o mesmo: simples, curto e com exemplos).
 

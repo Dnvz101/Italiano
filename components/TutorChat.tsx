@@ -7,7 +7,7 @@ import Jt from './Jt';
 type Msg = { role: 'ai' | 'me'; text: string; examples?: { t: string; pt: string }[] };
 type Ctx = { line?: string; translation?: string; tip: string };
 
-const FIRST = 'Me explica isso como se eu tivesse 12 anos.';
+const FIRST = 'Me explique de forma simplificada.';
 const QUICK = ['Me dá mais exemplos', 'Quero praticar', 'Ainda não entendi'];
 
 /** Professor de bolso: um chat simples que explica a dica da aula como para uma criança. */

@@ -1,5 +1,8 @@
 # Histórico de versões — Ascolto em Família
 
+## v33.1 — 2026-10-23 · Professor: primeira pergunta
+- O chat do professor agora começa com "Me explique de forma simplificada." (o jeito de explicar continua o mesmo: simples, curto e com exemplos).
+
 ## v33 — 2026-10-23 · Professor de bolso ("Me explica")
 - Na aula completa, cada dica **M** (memorização) ganhou o botão **"🧑‍🏫 Me explica"**. Ele abre um chat simples, por cima da tela, com um professor que explica a dica **como se você tivesse 12 anos**: frases curtas, comparação com o português e nome de gramática sempre traduzido para o dia a dia ("imperativo = o jeito de pedir ou mandar: olha!, espera!").
 - Cada resposta traz até 3 frases novas de exemplo, com áudio e tradução (nunca versos da música).

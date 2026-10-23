@@ -803,6 +803,7 @@
     function speakText(entry, lang) {
       var n = entry.names[lang];
       if (lang === 'ja') return n.kana;
+      if (!n.article) return n.word;
       return n.article + (/['’]$/.test(n.article) ? '' : ' ') + n.word;
     }
 

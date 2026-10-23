@@ -1,5 +1,12 @@
 # Histórico de versões — Ascolto em Família
 
+## v32.1 — 2026-10-23 · Jogo só com as palavras da semana 1 e chefe de verdade
+- **Chefe sem modo teste:** saíram os botões "Falei bem / Mais ou menos / Errei". A nota vem da sua fala: pelo reconhecimento de voz do navegador ou, onde ele não existe, pela gravação avaliada pelo app (o mesmo avaliador do Shadowing).
+- **Só palavras da semana 1:** o jogo usa as 12 palavras que o app ensina na semana de Baciami ancora. Dia 1 (caça-palavras): baciami, ancora, mi, ti. Dia 3 (cards): abbracciami, guardami, dimmi, aspettami, chiamami, dammi un bacio, ti amo, per sempre.
+- Saíram as palavras que não são da semana (lua, mamma…) e o vocabulário fixo do jogo (chave, baú, poção, espada, mochila). Na história, essas coisas aparecem só em português.
+- Frases do chefe novas, curtas, só com palavras da semana: três já no dia 1 e as frases dos cards no dia 3.
+- As palavras usam emoji até chegarem os ícones desenhados.
+
 ## v32 — 2026-10-23 · Jogo (masmorra) na aba Jogo do italiano · passo 1
 - A aba **Jogo** do italiano abre o protótipo "Ascolto Masmorra" exatamente como ele é (regras, telas, arte e progresso no aparelho), em tela cheia entre o topo e a barra de baixo.
 - O jogo fica em `public/game/ascolto-masmorra/` e roda num iframe, sem misturar CSS ou scripts com o app. `?hud=1` no endereço do jogo mostra o cabeçalho de teste.

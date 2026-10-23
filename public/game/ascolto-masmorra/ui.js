@@ -71,9 +71,9 @@
         ? '<ruby class="ja">' + esc(n.kanji) + '<rt>' + esc(n.kana) + '</rt></ruby>'
         : '<span class="ja">' + esc(n.kana) + '</span>';
     }
-    var sp = /['’]$/.test(n.article) ? '' : ' ';
+    var sp = !n.article || /['’]$/.test(n.article) ? '' : ' ';
     var art = cap ? capFirst(n.article) : n.article;
-    return '<span class="art g-' + n.gender + '" title="' + GENDER[n.gender] + '">' + esc(art) + '</span>' + sp +
+    return (n.article ? '<span class="art g-' + n.gender + '" title="' + GENDER[n.gender] + '">' + esc(art) + '</span>' : '') + sp +
       '<span class="w">' + esc(n.word) + '</span>';
   }
   function romajiHtml(e, lang) {
@@ -280,7 +280,7 @@
       var pct = cur.total ? Math.round(cur.unlocked * 100 / cur.total) : 0, full = cur.unlocked >= cur.total;
       h += '<div class="ach' + (full ? ' full' : '') + '"><div class="ach-n"><b>' + cur.unlocked + '</b><span>/' + cur.total + '</span></div>' +
         '<div class="ach-b"><div class="ach-t">' + (full ? '🏆 ' : '♪ ') + esc(cur.song.title) + '</div>' +
-        '<div class="ach-bar"><i style="width:' + pct + '%"></i></div><div class="ach-s">' + (full ? 'Todas as palavras da música!' : 'palavras da música liberadas') + '</div></div></div>';
+        '<div class="ach-bar"><i style="width:' + pct + '%"></i></div><div class="ach-s">' + (full ? 'Todas as palavras da semana!' : 'palavras da semana liberadas') + '</div></div></div>';
     }
     $('regionBox').innerHTML = h;
   }
@@ -297,8 +297,8 @@
         return '<button class="core" data-say="' + it.id + '" aria-label="Ouvir ' + esc(it.pt) + '"><span class="core-e">' + ico(it) + '</span>' +
           '<span class="core-n">' + nameHtml(it, lang) + '</span><span class="core-p">' + esc(it.pt) + ' ' + romajiHtml(it, lang) + '</span></button>';
       }).join('') + '</div>' +
-      '<p class="eq-count">Toque numa palavra para ouvir. Estas cinco ficam sempre com você.</p>' +
-      '<button class="btn" data-act="teachok">Guardar na mochila e subir</button></div>';
+      (words.length ? '<p class="eq-count">Toque numa palavra para ouvir. Estas cinco ficam sempre com você.</p>' : '') +
+      '<button class="btn" data-act="teachok">' + (words.length ? 'Guardar na mochila e subir' : 'Subir a Torre') + '</button></div>';
     el.hidden = false;
   }
 
@@ -655,12 +655,7 @@
     } else {
       h += '<button class="btn ghost" data-act="say">🔊 Ouvir a frase</button>';
       if (hasMic()) h += '<button class="btn" data-act="sentmic">🎤 Falar a frase</button>';
-      if (!window.AscoltoEvaluator) {
-        h += '<p class="fsim-note">Modo teste: simule a nota do avaliador (no app, quem dá a nota é o seu avaliador de fala).</p><div class="fsim-row">' +
-          '<button class="btn sm" data-act="sentsim" data-s="93">Falei bem · 93%</button>' +
-          '<button class="btn sm ghost" data-act="sentsim" data-s="70">Mais ou menos · 70%</button>' +
-          '<button class="btn sm ghost" data-act="sentsim" data-s="35">Errei · 35%</button></div>';
-      }
+      else h += '<p class="fsim-note">Para enfrentar o chefe, libere o microfone para o app (o duelo é falando a frase).</p>';
     }
     return h + '</div>';
   }

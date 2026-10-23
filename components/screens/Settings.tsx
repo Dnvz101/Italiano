@@ -253,6 +253,7 @@ function TesterCard() {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState('');
   const [busy, setBusy] = useState(false);
+  const [asking, setAsking] = useState(false);
   const max = s.limits.tester_lessons;
   useEffect(() => {
     sb.from('ai_usage')
@@ -274,10 +275,20 @@ function TesterCard() {
     <div className="card tester-card">
       <h3>🧪 Conta de teste</h3>
       {s.plan?.plan === 'tester' && (
-        <p className="mut">
-          Tudo liberado para testar. Aulas completas geradas pela IA (inclusive de músicas suas):{' '}
-          <b>{used == null ? '…' : `${Math.min(used, max)} de ${max}`}</b> usadas.
-        </p>
+        <>
+          <p className="mut">
+            Na conta de teste você tem as primeiras <b>{s.limits.tester_weeks} semanas</b> de música de cada idioma
+             (no japonês, o kana é sempre liberado), até <b>{s.limits.tester_songs} músicas suas</b> e{' '}
+            <b>{used == null ? '…' : `${Math.min(used, max)} de ${max}`}</b> aulas completas da IA usadas.
+          </p>
+          {s.requestedAt ? (
+            <p className="prep-ok">✅ Pedido de liberação enviado. Assim que for aprovado, tudo abre sozinho.</p>
+          ) : (
+            <button className="btn sm" disabled={asking} onClick={async () => { setAsking(true); await s.requestUpgrade(); setAsking(false); }}>
+              {asking ? 'Enviando…' : '🙋 Pedir conta normal (grátis)'}
+            </button>
+          )}
+        </>
       )}
       {s.isAnon &&
         (sent ? (

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { serverAccess, testerBlocked, testerMsg } from '@/lib/plan-server';
+import { serverAccess, testerAsk, testerBlocked, testerMsg } from '@/lib/plan-server';
 import { LANGS as ALL_LANGS, JA_WRITING } from '@/lib/langs';
 import { createClient } from '@/lib/supabase/server';
 import { AiError, callClaudeJSON, checkQuota, logUsage } from '@/lib/ai';
@@ -133,6 +133,14 @@ ${JA_WRITING}` : ''}`;
     const acc = await serverAccess(sb, user.id);
     if (acc.tester && (await testerBlocked(sb, user.id, acc.limits.tester_lessons)))
       return NextResponse.json({ error: testerMsg(acc.limits.tester_lessons), code: 'tester' }, { status: 402 });
+    if (acc.tester) {
+      const { count } = await sb.from('user_songs').select('id', { count: 'exact', head: true }).eq('user_id', user.id);
+      if ((count || 0) >= acc.limits.tester_songs)
+        return NextResponse.json(
+          { error: `Na conta de teste cabem ${acc.limits.tester_songs} músicas suas. ${testerAsk}`, code: 'tester' },
+          { status: 402 }
+        );
+    }
     if (acc.free) {
       const { count } = await sb.from('user_songs').select('id', { count: 'exact', head: true }).eq('user_id', user.id);
       if ((count || 0) >= acc.limits.own_songs)

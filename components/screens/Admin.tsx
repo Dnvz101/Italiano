@@ -30,6 +30,8 @@ type U = {
   plan: Plan['plan'];
   until: string | null;
   note: string;
+  requested_at?: string | null;
+  anonymous?: boolean;
 };
 type Use = { user_id: string; day: string; kind: string; model: string; calls: number; input_tokens: number; output_tokens: number; cost_usd: number | null };
 
@@ -68,6 +70,7 @@ export default function Admin() {
   const [prices, setPrices] = useState<Prices>(mergePrices(null));
   const [err, setErr] = useState('');
   const [q, setQ] = useState('');
+  const [flt, setFlt] = useState<'all' | 'tester' | 'req'>('all');
 
   useEffect(() => {
     try {
@@ -199,6 +202,11 @@ export default function Admin() {
 
       {tab === 'geral' && (
         <>
+          {users.some((u) => u.requested_at && u.plan === 'tester') && (
+            <button className="card adm-alert" onClick={() => { setFlt('req'); setTab('users'); }}>
+              🙋 <b>{users.filter((u) => u.requested_at && u.plan === 'tester').length}</b> pedido(s) de liberação esperando. Toque para ver.
+            </button>
+          )}
           <div className="stats adm-stats">
             {kpi('usuários', users.length, `${newMonth} novos no mês · ${users.filter((u) => u.plan === 'tester').length} em teste`)}
             {kpi('ativos 7 dias', active7, `${active30} em 30 dias`)}
@@ -250,7 +258,19 @@ export default function Admin() {
       {tab === 'users' && (
         <>
           <input placeholder="Buscar por nome, e-mail ou família…" value={q} onChange={(e) => setQ(e.target.value)} style={{ marginBottom: 10 }} />
+          <div className="adm-chips" role="group" aria-label="Filtro">
+            {([
+              ['all', `Todos (${users.length})`],
+              ['tester', `Em teste (${users.filter((u) => u.plan === 'tester').length})`],
+              ['req', `Pediram liberação (${users.filter((u) => u.requested_at && u.plan === 'tester').length})`],
+            ] as const).map(([k, t]) => (
+              <button key={k} className={flt === k ? 'on' : ''} onClick={() => setFlt(k)}>
+                {t}
+              </button>
+            ))}
+          </div>
           {users
+            .filter((u) => flt === 'all' || (u.plan === 'tester' && (flt === 'tester' || !!u.requested_at)))
             .filter((u) => !q || `${u.name} ${u.email} ${u.household}`.toLowerCase().includes(q.toLowerCase()))
             .map((u) => (
               <UserRow key={u.id} u={u} usd={byUser.get(u.id)?.usd || 0} calls={byUser.get(u.id)?.calls || 0} fx={prices.usd_jpy} sb={sb} onSaved={load} />
@@ -318,6 +338,14 @@ function UserRow({ u, usd: spent, calls, fx, sb, onSaved }: { u: U; usd: number;
     if (error) return alert(error.message);
     onSaved();
   };
+  const quick = async (p: Plan['plan']) => {
+    setBusy(true);
+    const { error } = await sb.rpc('admin_set_plan', { p_user: u.id, p_plan: p, p_until: null, p_note: note });
+    setBusy(false);
+    if (error) return alert(error.message);
+    setPlan(p);
+    onSaved();
+  };
   const active = planActive(u);
   const label = active ? PLAN_NAMES[u.plan] : u.plan === 'tester' ? PLAN_NAMES.tester : PLAN_NAMES.free;
   return (
@@ -325,7 +353,13 @@ function UserRow({ u, usd: spent, calls, fx, sb, onSaved }: { u: U; usd: number;
       <summary>
         <span className="adm-u-t">
           <b>{u.name || '(sem nome)'}</b>
-          <span className="mut">{u.email || 'teste sem e-mail'}</span>
+          <span className="mut">{u.email || 'sem e-mail'}</span>
+          {(u.anonymous || (u.requested_at && u.plan === 'tester')) && (
+            <span>
+              {u.requested_at && u.plan === 'tester' && <span className="adm-req">🙋 pediu liberação</span>}
+              {u.anonymous && <span className="adm-anon">anônimo</span>}
+            </span>
+          )}
         </span>
         <span className={`adm-plan ${active ? 'on' : ''}`}>{label}</span>
       </summary>
@@ -353,8 +387,23 @@ function UserRow({ u, usd: spent, calls, fx, sb, onSaved }: { u: U; usd: number;
           {calls} chamadas · {'¥' + Math.round(spent * fx).toLocaleString('ja-JP')}
         </span>
       </div>
+      {u.plan === 'tester' && (
+        <div className="adm-quick">
+          <p className="mut" style={{ margin: '0 0 6px' }}>
+            Conta de teste{u.requested_at ? `: pediu liberação em ${br(u.requested_at)}` : ''}. Liberar troca o plano na hora:
+          </p>
+          <div className="row">
+            <button className="btn sm" disabled={busy} onClick={() => quick('free')}>
+              ⬆ Liberar (conta normal)
+            </button>
+            <button className="btn ghost sm" disabled={busy} onClick={() => quick('vip')}>
+              Família / VIP
+            </button>
+          </div>
+        </div>
+      )}
       <div className="adm-edit">
-        <label>Plano</label>
+        <label>Plano (troque e toque em Salvar)</label>
         <select value={plan} onChange={(e) => setPlan(e.target.value as Plan['plan'])}>
           <option value="free">Grátis</option>
           <option value="tester">Teste 🧪</option>
@@ -405,6 +454,10 @@ function LimitsForm({ limits, sb, onSaved }: { limits: Limits; sb: any; onSaved:
       {num('own_songs')}
       <label>Conta de teste: aulas da IA por conta (vale sempre, mesmo com os limites desligados)</label>
       {num('tester_lessons')}
+      <label>Conta de teste: semanas de música liberadas por idioma (kana não conta)</label>
+      {num('tester_weeks')}
+      <label>Conta de teste: músicas próprias</label>
+      {num('tester_songs')}
       <label>Valor do apoio (¥, só para mostrar e calcular a receita)</label>
       {num('price_jpy')}
       <label>Link do &quot;pague um café&quot; (Ko-fi, Buy Me a Coffee, PayPay…)</label>

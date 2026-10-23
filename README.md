@@ -63,6 +63,11 @@ A segurança fica no banco (Row Level Security): mesmo que alguém mexa no app, 
 1. Supabase → **SQL Editor** → cole `supabase/migrations/0002_minha_musica.sql` → **Run** (só esse; o 0001 já foi).
 2. Suba os arquivos no GitHub. A Vercel faz o deploy sozinha.
 
+## Conta de teste com limites (v31)
+1. Rode `supabase/migrations/0007_tester_limites.sql` (depois do 0006). Pode rodar de novo sem problema.
+2. Contas novas continuam entrando como Teste: 2 semanas de música por idioma, 2 músicas próprias e 3 aulas da IA (mude os números em Painel → ☕ Planos).
+3. Quem pedir liberação aparece no Painel → 👥 Usuários → "Pediram liberação". Toque na pessoa e em "⬆ Liberar (conta normal)".
+
 ## Aulas compartilhadas (v30)
 1. Rode `supabase/migrations/0006_aulas_compartilhadas.sql` (depois do 0004 e 0005) e cole o `supabase/seed.sql` novo.
 2. Entre com a conta de admin, abra a semana, busque ou cole a letra e toque em "✨ Salvar e preparar a aula" (gera a tradução e a aula na sua conta).

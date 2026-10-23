@@ -55,6 +55,11 @@ export default function Songs() {
       });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) {
+        if (d.code === 'tester' && /m[úu]sica/i.test(d.error || '')) {
+          setFull(true);
+          setBusy(false);
+          return;
+        }
         if (d.code === 'tester') throw new Error(d.error);
         if (d.code === 'limit') {
           setFull(true);
@@ -160,10 +165,17 @@ export default function Songs() {
             </button>
           </div>
           {full && (
-            <Paywall
-              title="Você chegou ao limite de músicas do plano grátis"
-              text={`No plano grátis cabem ${s.limits.own_songs} músicas suas. Apague uma que já estudou ou apoie para liberar mais.`}
-            />
+            acc.tester ? (
+              <Paywall
+                title="Limite de músicas da conta de teste"
+                text={`Na conta de teste cabem ${s.limits.tester_songs} músicas suas.`}
+              />
+            ) : (
+              <Paywall
+                title="Você chegou ao limite de músicas do plano grátis"
+                text={`No plano grátis cabem ${s.limits.own_songs} músicas suas. Apague uma que já estudou ou apoie para liberar mais.`}
+              />
+            )
           )}
           {busy && (
             <AiProgress

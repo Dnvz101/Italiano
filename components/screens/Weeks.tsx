@@ -74,8 +74,11 @@ export default function Weeks() {
         const done = m.weeks.filter((w) => isComplete(p, w.n)).length;
         const first = m.weeks[0];
         const last = m.weeks[m.weeks.length - 1];
+        const modLocked = m.weeks.every((w) => acc.weekLocked(w.n, course.weeks));
         return (
           <Disc
+            className={modLocked ? 'mod-locked' : ''}
+            badge={modLocked ? <span className="lock-tag">🔒 {acc.tester ? 'conta de teste' : 'bloqueado'}</span> : undefined}
             key={m.key}
             id={m.key}
             open={open.includes(m.key)}

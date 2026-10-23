@@ -11,6 +11,8 @@ export default function Disc({
   done,
   total,
   tone = 'trail',
+  className = '',
+  badge,
   children,
 }: {
   id: string;
@@ -21,17 +23,20 @@ export default function Disc({
   done: number;
   total: number;
   tone?: 'trail' | 'fav';
+  className?: string;
+  badge?: ReactNode;
   children: ReactNode;
 }) {
   const pct = total ? done / total : 0;
   return (
-    <section className={`disc disc-${tone} ${open ? 'open' : ''}`}>
+    <section className={`disc disc-${tone} ${open ? 'open' : ''} ${className}`}>
       <button className="disc-head" onClick={onToggle} aria-expanded={open} aria-controls={`disc-${id}`}>
         <span className="disc-art" aria-hidden="true">
           <span className="disc-label" />
         </span>
         <span className="disc-text">
           <b>{title}</b>
+          {badge}
           <span className="mut">{subtitle}</span>
           <span className="disc-bar" aria-hidden="true">
             <i style={{ transform: `scaleX(${pct})` }} />

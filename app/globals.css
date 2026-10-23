@@ -926,3 +926,22 @@ html .flash .btn.write-btn.ghost{background:var(--card);color:var(--mut);border-
 .tester-card{border:1.5px solid var(--mint-2)}
 .tester-card .row input{flex:1}
 .btn.pub-all{width:100%;margin:2px 0 10px}
+
+/* v31 · conta de teste: semanas e módulos fora do teste ficam levemente borrados */
+.track.locked .track-t,
+.track.locked .track-s { filter: blur(1.1px); opacity: .75; }
+.track.locked .track-n { opacity: .8; }
+.disc.mod-locked .disc-art,
+.disc.mod-locked .disc-text > .mut,
+.disc.mod-locked .disc-bar { filter: blur(1px); opacity: .7; }
+.lock-tag { display: inline-block; align-self: flex-start; width: auto; margin: 2px 0; font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px;
+  background: var(--soft, #f2f2f2); color: var(--ink2, #555); vertical-align: middle; }
+.tester-ask .pw-lock { font-size: 28px; }
+.adm-chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px; }
+.adm-chips button { border: 1px solid var(--line, #ddd); background: transparent; border-radius: 999px; padding: 4px 10px; font-size: 13px; }
+.adm-chips button.on { background: var(--ink, #111); color: #fff; border-color: var(--ink, #111); }
+.adm-req { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #fff3cd; color: #7a5b00; margin: 3px 6px 0 0; }
+.adm-anon { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: #eee; color: #555; margin: 3px 6px 0 0; }
+.adm-alert { display: block; width: 100%; text-align: left; background: #fff8e1; border: 1px solid #f1d27a; cursor: pointer; font: inherit; }
+.adm-quick { padding: 10px 0 4px; border-top: 1px solid var(--line, #eee); margin-top: 8px; }
+.adm-quick .row { gap: 8px; }

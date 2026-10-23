@@ -32,7 +32,8 @@ export default function WeekView() {
   const next = course.weeks[idx + 1];
   const kana = w.kind === 'kana';
   const [tab, setTab] = useSection(kana ? ['plan', 'letters', 'lesson', 'practice'] : ['plan', 'lyrics', 'lesson', 'cards'], 'plan');
-  const locked = useAccess().weekLocked(w.n, course.weeks);
+  const acc = useAccess();
+  const locked = acc.weekLocked(w.n, course.weeks);
   // japonês: as músicas começam depois do hiragana e do katakana
   const kanaLeft = course.weeks.filter((x) => x.kind === 'kana' && x.n < w.n && (p.checks[x.n] || []).filter(Boolean).length < 7);
 
@@ -129,10 +130,17 @@ export default function WeekView() {
           <div className="locked-preview" aria-hidden="true">
             <CardList title="🗂️ Expressões da semana" cards={w.cards.slice(0, 4)} />
           </div>
-          <Paywall
-            title={`A semana ${w.n} faz parte do plano apoiador`}
-            text={`No plano grátis ficam liberadas as ${s.limits.free_weeks} primeiras semanas de cada idioma.`}
-          />
+          {acc.tester ? (
+            <Paywall
+              title={`A semana ${w.n} ainda não faz parte da conta de teste`}
+              text={`Na conta de teste ficam abertas as ${s.limits.tester_weeks} primeiras semanas de música de cada idioma.`}
+            />
+          ) : (
+            <Paywall
+              title={`A semana ${w.n} faz parte do plano apoiador`}
+              text={`No plano grátis ficam liberadas as ${s.limits.free_weeks} primeiras semanas de cada idioma.`}
+            />
+          )}
         </div>
       ) : (
       <>

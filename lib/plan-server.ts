@@ -12,10 +12,10 @@ export async function serverAccess(sb: SupabaseClient, userId: string) {
     const limits = mergeLimits(cfg.error ? null : cfg.data?.value);
     const p = (plan.error ? null : (plan.data as Plan)) || null;
     const isAdmin = !adm.error && adm.data === true;
-    return { limits, ...access(limits, p, isAdmin), tester: !isAdmin && p?.plan === 'tester' };
+    return { limits, ...access(limits, p, isAdmin) };
   } catch {
     const limits = mergeLimits(null);
-    return { limits, ...access(limits, null, false), tester: false };
+    return { limits, ...access(limits, null, false) };
   }
 }
 
@@ -30,3 +30,4 @@ export async function testerBlocked(sb: SupabaseClient, userId: string, max: num
 }
 export const testerMsg = (max: number) =>
   `Na conta de teste dá para gerar ${max} aulas com a IA, e você já usou todas. As aulas que você gerou continuam aqui, e todo o resto do app segue liberado.`;
+export const testerAsk = 'Esta é uma conta de teste. Peça a liberação em Configurações: é grátis.';

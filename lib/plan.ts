@@ -7,6 +7,8 @@ export type Limits = {
   chat_per_day: number; // mensagens de conversa por dia
   own_songs: number; // músicas próprias (favoritas)
   tester_lessons: number; // conta de teste: aulas geradas pela IA no total (aula completa + música própria)
+  tester_weeks: number; // conta de teste: semanas de música liberadas por idioma (as de kana não contam)
+  tester_songs: number; // conta de teste: músicas próprias
   price_jpy: number; // valor sugerido do apoio, só para mostrar e calcular a receita no painel
   support_url: string; // link do "pague um café" (Ko-fi, Buy Me a Coffee, PayPay...)
   support_text: string;
@@ -17,6 +19,8 @@ export const DEFAULT_LIMITS: Limits = {
   chat_per_day: 10,
   own_songs: 4,
   tester_lessons: 3,
+  tester_weeks: 2,
+  tester_songs: 2,
   price_jpy: 300,
   support_url: '',
   support_text: 'Pague um café ☕ e libere todas as semanas, a conversa sem limite e mais músicas.',
@@ -36,18 +40,23 @@ export const planActive = (p: Plan | null | undefined) =>
 
 /** O que a pessoa pode usar agora. */
 export function access(limits: Limits, plan: Plan | null, isAdmin: boolean) {
-  const free = limits.enabled && !isAdmin && !planActive(plan);
+  // conta de teste: vale sempre, mesmo com os limites do plano grátis desligados
+  const tester = !isAdmin && plan?.plan === 'tester';
+  const free = !tester && limits.enabled && !isAdmin && !planActive(plan);
+  const maxWeeks = tester ? limits.tester_weeks : free ? limits.free_weeks : Infinity;
+  const maxSongs = tester ? limits.tester_songs : free ? limits.own_songs : Infinity;
   return {
     free,
-    // semanas de kana (japonês) são sempre grátis e não contam no limite
+    tester,
+    // semanas de kana (japonês) são sempre liberadas e não contam no limite
     weekLocked: (n: number, weeks?: { n: number; kind?: string }[]) => {
-      if (!free) return false;
-      if (!weeks) return n > limits.free_weeks;
+      if (maxWeeks === Infinity) return false;
+      if (!weeks) return n > maxWeeks;
       const w = weeks.find((x) => x.n === n);
       if (w?.kind === 'kana') return false;
-      return weeks.filter((x) => x.kind !== 'kana' && x.n <= n).length > limits.free_weeks;
+      return weeks.filter((x) => x.kind !== 'kana' && x.n <= n).length > maxWeeks;
     },
-    songsFull: (mine: number) => free && mine >= limits.own_songs,
+    songsFull: (mine: number) => mine >= maxSongs,
   };
 }
 

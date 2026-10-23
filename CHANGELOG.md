@@ -1,5 +1,13 @@
 # Histórico de versões — Ascolto em Família
 
+## v31 — 2026-10-23 · Conta de teste com limites e pedido de liberação
+- **Conta de teste:** abre as 2 primeiras semanas de música de cada idioma (no japonês o módulo de kana é sempre liberado e não conta) e até 2 músicas próprias, além das 3 aulas da IA que já existiam.
+- O resto da trilha aparece levemente borrado, com 🔒. Módulos inteiros fora do teste mostram a etiqueta "🔒 conta de teste".
+- Ao abrir uma semana bloqueada ou tentar trazer a 3ª música, o app avisa que é uma conta de teste e mostra o botão **"🙋 Pedir liberação (grátis)"**. O mesmo botão fica no cartão da conta de teste em Configurações.
+- O limite de músicas também vale no banco (o SQL `0007` atualiza a trava), não só na tela.
+- **Painel admin:** aviso na aba Geral quando há pedidos esperando; na aba Usuários, filtros "Todos / Em teste / Pediram liberação", etiquetas "🙋 pediu liberação" e "anônimo", e botões rápidos **"⬆ Liberar (conta normal)"** e **"Família / VIP"** na própria pessoa. Ao liberar, o pedido some sozinho.
+- Em ☕ Planos dá para mudar quantas semanas e quantas músicas a conta de teste recebe.
+
 ## v30.1 — 2026-10-22 · Publicar tudo para todos (manual)
 - Nada é publicado sozinho. Na aba Letra de uma semana do curso, só a conta admin vê o botão **"📤 Publicar para todos (letra, tradução e aula)"**, que publica a letra inteira, a tradução linha a linha (com a leitura no japonês) e a aula completa de uma vez. A aba Aula tem o mesmo botão.
 - Quem abrir a semana depois recebe a letra já traduzida na hora (sem buscar e sem gastar IA), com exercício, leitura e shadowing funcionando, e a aula completa pronta.

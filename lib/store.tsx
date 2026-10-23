@@ -29,6 +29,7 @@ type Data = {
   limits: Limits;
   isAdmin: boolean;
   isAnon: boolean; // entrou sem cadastro (conta de teste)
+  requestedAt: string | null; // conta de teste: quando pediu a liberação
   // aulas e traduções das semanas do curso, publicadas pelo admin para todos (chave `${lang}:${song_key}`)
   shared: Record<string, { lesson?: FullLesson | null; lines?: LyricLine[] }>;
 };
@@ -42,6 +43,7 @@ type Store = Data & {
   setLyricAi: (lyricId: string, ais: string[], kanas?: string[]) => Promise<void>;
   setLyricLesson: (lyricId: string, lesson: FullLesson) => Promise<void>;
   publishShared: (lang: string, key: string, part: { lesson?: FullLesson | null; lines?: LyricLine[] }) => Promise<boolean>;
+  requestUpgrade: () => Promise<boolean>;
   setAnswer: (lyricId: string, line: string, value: string) => void;
   setName: (name: string) => Promise<void>;
   setSetting: (k: keyof Profile['settings'], v: any) => void;
@@ -177,12 +179,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           return null;
         }
       };
-      const [planRow, limRow, adm, shLessons, shTr] = await Promise.all([
+      const [planRow, limRow, adm, shLessons, shTr, reqRow] = await Promise.all([
         safe(sb.from('user_plans').select('plan,until,note').eq('user_id', user.id).maybeSingle()),
         safe(sb.from('app_config').select('value').eq('key', 'limits').maybeSingle()),
         safe(sb.rpc('is_admin')),
         safe(sb.from('shared_lessons').select('lang,song_key,lesson')),
         safe(sb.from('shared_translations').select('lang,song_key,lines')),
+        safe(sb.from('plan_requests').select('created_at').eq('user_id', user.id).maybeSingle()),
       ]);
       const shared: Data['shared'] = {};
       ((shLessons as any[]) || []).forEach((r) => ((shared[`${r.lang}:${r.song_key}`] ||= {}).lesson = r.lesson));
@@ -223,6 +226,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         isAdmin: adm === true,
         isAnon: !!(user as any).is_anonymous,
         shared,
+        requestedAt: (reqRow as any)?.created_at || null,
       };
       latest.current = d;
       setData(d);
@@ -363,6 +367,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
     [sb, commit]
   );
+
+  // conta de teste pede para virar conta normal (aparece no painel do admin)
+  const requestUpgrade = useCallback(async () => {
+    const d = latest.current!;
+    const { error } = await sb.from('plan_requests').upsert({ user_id: d.userId, created_at: new Date().toISOString() });
+    if (error) {
+      report(error);
+      return false;
+    }
+    commit((x) => ({ ...x, requestedAt: new Date().toISOString() }));
+    return true;
+  }, [sb, commit]);
 
   // admin: publica a aula e/ou a tradução de uma semana do curso para todo mundo
   const publishShared = useCallback(
@@ -656,6 +672,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setLyricAi,
     setLyricLesson,
     publishShared,
+    requestUpgrade,
     setAnswer,
     setName,
     setSetting,

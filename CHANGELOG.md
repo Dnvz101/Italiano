@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v32 — 2026-10-23 · Jogo (masmorra) na aba Jogo do italiano · passo 1
+- A aba **Jogo** do italiano abre o protótipo "Ascolto Masmorra" exatamente como ele é (regras, telas, arte e progresso no aparelho), em tela cheia entre o topo e a barra de baixo.
+- O jogo fica em `public/game/ascolto-masmorra/` e roda num iframe, sem misturar CSS ou scripts com o app. `?hud=1` no endereço do jogo mostra o cabeçalho de teste.
+- Alemão e japonês continuam com "Em breve".
+- Ainda não muda: as palavras continuam as do `data.js` e o dia ainda é o seletor do protótipo. Isso vem nos próximos passos.
+
 ## v31 — 2026-10-23 · Conta de teste com limites e pedido de liberação
 - **Conta de teste:** abre as 2 primeiras semanas de música de cada idioma (no japonês o módulo de kana é sempre liberado e não conta) e até 2 músicas próprias, além das 3 aulas da IA que já existiam.
 - O resto da trilha aparece levemente borrado, com 🔒. Módulos inteiros fora do teste mostram a etiqueta "🔒 conta de teste".

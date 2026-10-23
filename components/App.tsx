@@ -203,7 +203,7 @@ export default function App() {
             </div>
           </aside>
         )}
-        <div className="content">
+        <div className={`content ${shown === 'game' && course?.meta.lang === 'it' ? 'game-mode' : ''}`}>
           <header className="topbar">
             <h1>
               <button className="brand-home" onClick={() => go('home')} aria-label="Início">

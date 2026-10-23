@@ -7,6 +7,7 @@ import Jt from './Jt';
 import AiProgress from './AiProgress';
 import Icon from './Icon';
 import { requestLesson } from '@/lib/lesson';
+import TutorChat from './TutorChat';
 
 /** Aula completa da música: trechos comentados (A.M.E.), sons e curiosidades. Uma chamada de IA, salva para a família. */
 export default function FullLessonCard({ songKey, title, artist }: { songKey: string; title: string; artist: string }) {
@@ -25,6 +26,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
   };
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [tutor, setTutor] = useState<{ line: string; translation: string; tip: string } | null>(null);
 
   const generate = async () => {
     if (!row || busy) return;
@@ -93,7 +95,12 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
               <dt>A</dt>
               <dd>{e.association}</dd>
               <dt>M</dt>
-              <dd>{e.memorize}</dd>
+              <dd>
+                {e.memorize}
+                <button className="tutor-btn" onClick={() => setTutor({ line: e.line, translation: e.translation, tip: e.memorize })}>
+                  🧑‍🏫 Me explica
+                </button>
+              </dd>
               <dt>E</dt>
               <dd>
                 {e.expand.map(([it, pt], j) => (
@@ -171,6 +178,7 @@ export default function FullLessonCard({ songKey, title, artist }: { songKey: st
           </span>
         )}
       </div>
+      {tutor && <TutorChat lang={lang} ctx={tutor} onClose={() => setTutor(null)} />}
     </>
   );
 }

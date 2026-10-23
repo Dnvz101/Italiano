@@ -1,5 +1,11 @@
 # Histórico de versões — Ascolto em Família
 
+## v33 — 2026-10-23 · Professor de bolso ("Me explica")
+- Na aula completa, cada dica **M** (memorização) ganhou o botão **"🧑‍🏫 Me explica"**. Ele abre um chat simples, por cima da tela, com um professor que explica a dica **como se você tivesse 12 anos**: frases curtas, comparação com o português e nome de gramática sempre traduzido para o dia a dia ("imperativo = o jeito de pedir ou mandar: olha!, espera!").
+- Cada resposta traz até 3 frases novas de exemplo, com áudio e tradução (nunca versos da música).
+- Atalhos: "Me dá mais exemplos", "Quero praticar" (ele propõe um desafio e corrige com carinho) e "Ainda não entendi". Dá para digitar qualquer pergunta.
+- O uso aparece no painel em 🤖 Gastos IA como "Professor (Me explica)". No plano grátis, conta junto com as mensagens de conversa do dia.
+
 ## v32.1 — 2026-10-23 · Jogo só com as palavras da semana 1 e chefe de verdade
 - **Chefe sem modo teste:** saíram os botões "Falei bem / Mais ou menos / Errei". A nota vem da sua fala: pelo reconhecimento de voz do navegador ou, onde ele não existe, pela gravação avaliada pelo app (o mesmo avaliador do Shadowing).
 - **Só palavras da semana 1:** o jogo usa as 12 palavras que o app ensina na semana de Baciami ancora. Dia 1 (caça-palavras): baciami, ancora, mi, ti. Dia 3 (cards): abbracciami, guardami, dimmi, aspettami, chiamami, dammi un bacio, ti amo, per sempre.

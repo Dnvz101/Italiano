@@ -37,6 +37,7 @@ type Use = { user_id: string; day: string; kind: string; model: string; calls: n
 
 const KINDS: Record<string, string> = {
   chat: '💬 Conversa',
+  tutor: '🧑‍🏫 Professor (Me explica)',
   stt: '🎙️ Pronúncia (Gemini)',
   translate: '🌐 Tradução de letras',
   'full-lesson': '🎓 Aula completa',

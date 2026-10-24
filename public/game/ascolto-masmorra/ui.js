@@ -138,6 +138,25 @@
 
   var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
+  // Microfone: guarda os reconhecimentos ativos para desligar tudo ao sair do jogo (aba, app ou tela)
+  var liveRecs = [];
+  function trackRec(r) {
+    liveRecs.push(r);
+    var drop = function () { liveRecs = liveRecs.filter(function (x) { return x !== r; }); };
+    r.addEventListener('end', drop);
+    r.addEventListener('error', drop);
+  }
+  function stopMic() {
+    liveRecs.forEach(function (r) { try { r.abort(); } catch (e) { /* já parou */ } });
+    liveRecs = [];
+    if (window.AscoltoStopRecording) window.AscoltoStopRecording();
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) { /* ok */ }
+    if (ui.speak && ui.speak.phase === 'listening') { ui.speak.phase = 'idle'; ui.speak.msg = ''; try { renderQuiz(); } catch (e) { /* ok */ } }
+  }
+  window.AscoltoStopMic = stopMic;
+  document.addEventListener('visibilitychange', function () { if (document.hidden) stopMic(); });
+  window.addEventListener('pagehide', stopMic);
+
   function resetSpeak() { ui.speak = { phase: 'idle', heard: '', msg: '', noMic: ui.speak.noMic }; }
 
   function startListening() {
@@ -154,7 +173,7 @@
       renderQuiz();
     }
     try {
-      rec = new SRClass();
+      rec = new SRClass(); trackRec(rec);
       rec.lang = LANG_BY[lang].tag;
       rec.interimResults = false;
       rec.maxAlternatives = 3;
@@ -687,7 +706,7 @@
       ui.speak.phase = 'idle'; ui.speak.msg = msg; if (noMic) ui.speak.noMic = true; renderQuiz();
     }
     try {
-      rec = new SRClass();
+      rec = new SRClass(); trackRec(rec);
       rec.lang = LANG_BY[lang].tag; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
       rec.onresult = function (ev) {
         if (done) return; done = true;

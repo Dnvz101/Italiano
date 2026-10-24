@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useStore, OLD_KEY, importedKey } from '@/lib/store';
 import { useApp } from '@/lib/nav';
+import { langPt } from '@/lib/langs';
 
 export default function ImportLocal() {
   const s = useStore();
@@ -18,7 +19,7 @@ export default function ImportLocal() {
           const parts = Object.entries(cs)
             .map(([l, c]: any) => {
               const n = Object.keys(c?.srs || {}).length;
-              return n ? `${l === 'de' ? 'alemão' : 'italiano'}: ${n} cards` : '';
+              return n ? `${langPt(l)}: ${n} cards` : '';
             })
             .filter(Boolean);
           return { name: p.name, summary: parts.join(' · ') || 'sem progresso' };

@@ -1,5 +1,19 @@
 # Histórico de versões — Ascolto em Família
 
+## v34 — 2026-10-24 · Inglês 🇺🇸
+- Novo idioma: **English**, com 12 semanas em 3 módulos, da mais lenta à mais rápida:
+  - Módulo 1 · Primeiros passos: Let It Be (The Beatles), Stand by Me (Ben E. King), Count on Me (Bruno Mars), Imagine (John Lennon)
+  - Módulo 2 · Do dia a dia: Perfect (Ed Sheeran), Someone Like You (Adele), Happy (Pharrell Williams), Fix You (Coldplay)
+  - Módulo 3 · No ritmo de verdade: Hello (Adele), Shallow (Lady Gaga & Bradley Cooper), Shape of You (Ed Sheeran), Blinding Lights (The Weeknd)
+- Cada semana tem tema, explicação, caça-palavras e 11 cards com frases de exemplo originais (nada de letra no conteúdo do app).
+- Alfabeto e sons difíceis para brasileiros: TH, H soprado, R americano, consoante final sem "i", -ed, ship × sheep, sílabas fracas (gonna, wanna), T/D sem "tchi", L no fim, W.
+- Explorar com a câmera em inglês (a / an, sem gênero), bandeira dos EUA e dicas de imersão (Peppa Pig, Bluey, 6 Minute English, Easy English, Friends).
+- O jogo continua só no italiano.
+- O app já mostra o inglês sem rodar nada. Para guardar no banco, cole o `supabase/seed.sql` novo no SQL Editor.
+
+## v33.4 — 2026-10-24 · Jogo: microfone desliga ao sair
+- Corrigido: o microfone do celular ficava ligado depois de sair da aba Jogo. Agora o jogo desliga o microfone (reconhecimento de voz e gravação do chefe) e a voz ao trocar de aba no app, ao trocar de app ou ao bloquear a tela.
+
 ## v33.3 — 2026-10-23 · Fechar o aviso
 - Os avisos de semana bloqueada e de limite de músicas (conta de teste e plano grátis) ganharam um **✕** redondo no canto, no mesmo estilo do professor. Na semana bloqueada, fechar volta para a Trilha; nas músicas, só fecha o aviso.
 

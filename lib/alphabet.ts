@@ -226,10 +226,53 @@ const JA_SOUNDS: Sound[] = [
   { id: 'pitch', title: 'Melodia (sobe e desce)', pt: 'O japonês não tem sílaba forte: a voz sobe ou desce. Ouça e imite a melodia, devagar.', ex: [['あめ', 'chuva / doce (ame)'], ['はし', 'pauzinhos / ponte (hashi)'], ['にほんご', 'japonês (nihongo)']] },
 ];
 
+const EN_LETTERS: Letter[] = [
+  { l: 'A', say: 'A', accept: ['a', 'ei', 'hey', 'eh'], pt: '"ei"', ex: ['apple', 'maçã'] },
+  { l: 'B', say: 'B', accept: ['b', 'be', 'bee', 'bi'], pt: '"bí"', ex: ['book', 'livro'] },
+  { l: 'C', say: 'C', accept: ['c', 'see', 'sea', 'si'], pt: '"sí"', ex: ['coffee', 'café'] },
+  { l: 'D', say: 'D', accept: ['d', 'dee', 'di'], pt: '"dí" (sem virar "dji")', ex: ['dog', 'cachorro'] },
+  { l: 'E', say: 'E', accept: ['e', 'ee', 'i'], pt: '"í"', ex: ['easy', 'fácil'] },
+  { l: 'F', say: 'F', accept: ['f', 'ef', 'eff'], pt: '"éf"', ex: ['friend', 'amigo'] },
+  { l: 'G', say: 'G', accept: ['g', 'gee', 'ji', 'jee'], pt: '"djí"', ex: ['good', 'bom'] },
+  { l: 'H', say: 'H', accept: ['h', 'aitch', 'age', 'eitch'], pt: '"eitch"; nas palavras, é um sopro (house = "háus")', ex: ['house', 'casa'] },
+  { l: 'I', say: 'I', accept: ['i', 'eye', 'ai', 'aye'], pt: '"ai"', ex: ['ice', 'gelo'] },
+  { l: 'J', say: 'J', accept: ['j', 'jay', 'jei'], pt: '"djêi"', ex: ['job', 'trabalho'] },
+  { l: 'K', say: 'K', accept: ['k', 'kay', 'okay', 'kei'], pt: '"kêi"', ex: ['key', 'chave'] },
+  { l: 'L', say: 'L', accept: ['l', 'el', 'elle', 'hell'], pt: '"él", com L de verdade no fim', ex: ['love', 'amor'] },
+  { l: 'M', say: 'M', accept: ['m', 'em'], pt: '"ém"', ex: ['music', 'música'] },
+  { l: 'N', say: 'N', accept: ['n', 'en', 'and'], pt: '"én"', ex: ['night', 'noite'] },
+  { l: 'O', say: 'O', accept: ['o', 'oh', 'owe'], pt: '"ôu"', ex: ['open', 'aberto'] },
+  { l: 'P', say: 'P', accept: ['p', 'pee', 'pea', 'pi'], pt: '"pí"', ex: ['people', 'pessoas'] },
+  { l: 'Q', say: 'Q', accept: ['q', 'queue', 'cue', 'kiu'], pt: '"kiú"', ex: ['question', 'pergunta'] },
+  { l: 'R', say: 'R', accept: ['r', 'are', 'ar'], pt: '"ar", com a língua enrolada para trás', ex: ['red', 'vermelho'] },
+  { l: 'S', say: 'S', accept: ['s', 'es', 'ess', 'yes'], pt: '"és"', ex: ['sun', 'sol'] },
+  { l: 'T', say: 'T', accept: ['t', 'tea', 'tee', 'ti'], pt: '"tí" (sem virar "tchi")', ex: ['time', 'tempo'] },
+  { l: 'U', say: 'U', accept: ['u', 'you', 'yu'], pt: '"iú"', ex: ['use', 'usar'] },
+  { l: 'V', say: 'V', accept: ['v', 'vee', 'vi', 'we'], pt: '"ví"', ex: ['voice', 'voz'] },
+  { l: 'W', say: 'W', accept: ['w', 'double you', 'double u', 'doubleyou'], pt: '"dábliu"; nas palavras soa "u" (water = "uóter")', ex: ['water', 'água'] },
+  { l: 'X', say: 'X', accept: ['x', 'ex', 'ecks'], pt: '"éks"', ex: ['taxi', 'táxi'] },
+  { l: 'Y', say: 'Y', accept: ['y', 'why', 'wai'], pt: '"uái"', ex: ['yes', 'sim'] },
+  { l: 'Z', say: 'Z', accept: ['z', 'zee', 'zed', 'zi'], pt: '"zí" (americano) ou "zéd" (britânico)', ex: ['zero', 'zero'] },
+];
+
+const EN_SOUNDS: Sound[] = [
+  { id: 'th', title: 'TH', pt: 'Ponta da língua entre os dentes e sopre. Sem som na garganta em "think"; com vibração em "this". Nunca vire "f", "t" ou "d".', ex: [['think', 'pensar'], ['three', 'três'], ['this', 'isto'], ['mother', 'mãe']] },
+  { id: 'h', title: 'H soprado', pt: 'O H é só um sopro leve, como embaçar um espelho. Não é o R de "rato": house = "háus", não "ráus".', ex: [['house', 'casa'], ['happy', 'feliz'], ['hello', 'olá']] },
+  { id: 'r', title: 'R americano', pt: 'A língua não encosta em nada: ela se enrola um pouco para trás, como o R caipira de "porta" no interior.', ex: [['red', 'vermelho'], ['right', 'certo'], ['car', 'carro']] },
+  { id: 'final', title: 'Consoante no fim', pt: 'Não coloque um "i" depois da última consoante: big é "big", não "bigui"; Facebook não é "Facebooki".', ex: [['big', 'grande'], ['good', 'bom'], ['stop', 'parar'], ['back', 'de volta']] },
+  { id: 'ed', title: '-ed (passado)', pt: 'Quase nunca é "éd". Depois de som surdo vira "t" (worked = "uôrkt"); depois de som sonoro, "d" (played = "plêid"); só depois de T ou D vira "id" (wanted).', ex: [['worked', 'trabalhou'], ['played', 'jogou / tocou'], ['wanted', 'quis']] },
+  { id: 'ii', title: 'i curto × i longo', pt: 'O "i" curto é relaxado, quase um "ê" fechado; o longo é esticado. Muda o sentido: ship (navio) × sheep (ovelha).', ex: [['ship', 'navio'], ['sheep', 'ovelha'], ['live', 'viver'], ['leave', 'sair']] },
+  { id: 'schwa', title: 'Sílabas fracas', pt: 'As palavrinhas sem força quase somem: to vira "tâ", of vira "âv", can vira "kân". É isso que deixa a música rápida.', ex: [['going to', 'vou (gonna)'], ['want to', 'quero (wanna)'], ['a cup of tea', 'uma xícara de chá']] },
+  { id: 'tidi', title: 'T e D', pt: 'T e D não viram "tchi" e "dji" como no Brasil: today é "tudêi", did é "did".', ex: [['today', 'hoje'], ['did', 'fez'], ['ticket', 'ingresso']] },
+  { id: 'l', title: 'L no fim', pt: 'O L no fim da palavra é um L "escuro", com a língua encostando atrás dos dentes. Não vire "u": people não é "pipou".', ex: [['people', 'pessoas'], ['feel', 'sentir'], ['all', 'tudo']] },
+  { id: 'w', title: 'W', pt: 'W soa como o nosso "u" rápido antes da vogal: we = "uí", water = "uóter".', ex: [['we', 'nós'], ['want', 'querer'], ['world', 'mundo']] },
+];
+
 export type AlphaSet = { label: string; short: string; letters: Letter[] };
 export const ALPHABET: Record<string, { letters: Letter[]; sounds: Sound[]; sets?: AlphaSet[] }> = {
   it: { letters: IT_LETTERS, sounds: IT_SOUNDS },
   de: { letters: DE_LETTERS, sounds: DE_SOUNDS },
+  en: { letters: EN_LETTERS, sounds: EN_SOUNDS },
   ja: {
     letters: HIRA.map(toLetter),
     sounds: JA_SOUNDS,

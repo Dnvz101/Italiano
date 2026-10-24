@@ -72,6 +72,12 @@ export function Flag({ lang, size = 26 }: { lang: string; size?: number }) {
   const bands =
     lang === 'ja'
       ? ['<rect width="26" height="18" fill="#ffffff"/>', '<circle cx="13" cy="9" r="5.2" fill="#d62839"/>']
+      : lang === 'en'
+      ? [
+          ...Array.from({ length: 13 }, (_, i) => `<rect y="${((i * 18) / 13).toFixed(2)}" width="26" height="1.44" fill="${i % 2 ? '#ffffff' : '#c8323c'}"/>`),
+          '<rect width="11.5" height="9.7" fill="#2b3f86"/>',
+          ...[0, 1, 2].flatMap((r) => [0, 1, 2].map((c) => `<circle cx="${(2 + c * 3.6 + (r % 2) * 1.2).toFixed(1)}" cy="${(1.9 + r * 2.9).toFixed(1)}" r=".6" fill="#fff"/>`)),
+        ]
       : lang === 'de'
       ? ['#1f1f1f', '#dd2f2f', '#f6c21c'].map((c, i) => `<rect y="${(i * 18) / 3}" width="26" height="6" fill="${c}"/>`)
       : ['#1f9d55', '#ffffff', '#e1393a'].map((c, i) => `<rect x="${(i * 26) / 3}" width="8.67" height="18" fill="${c}"/>`);

@@ -43,6 +43,16 @@
     });
   }
 
+  var live = null; // gravação em andamento: { stream, rec, timer }
+  window.AscoltoStopRecording = function () {
+    if (!live) return;
+    clearTimeout(live.timer);
+    live.cancel = true;
+    try { if (live.rec.state !== 'inactive') live.rec.stop(); } catch (e) { /* ok */ }
+    live.stream.getTracks().forEach(function (t) { t.stop(); });
+    live = null;
+  };
+
   window.AscoltoEvaluator = function (lang, text, words) {
     var ms = Math.max(2500, Math.min(8000, 1800 + words.length * 550));
     return navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
@@ -50,8 +60,12 @@
         var chunks = [], rec;
         try { rec = new MediaRecorder(stream); } catch (e) { stream.getTracks().forEach(function (t) { t.stop(); }); reject(e); return; }
         rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+        var me = { stream: stream, rec: rec, timer: 0, cancel: false };
+        live = me;
         rec.onstop = function () {
           stream.getTracks().forEach(function (t) { t.stop(); });
+          if (live === me) live = null;
+          if (me.cancel) { reject(new Error('cancelado')); return; }
           var blob = new Blob(chunks, { type: rec.mimeType || 'audio/webm' });
           b64(blob)
             .then(function (audio) {
@@ -66,7 +80,7 @@
             .catch(reject);
         };
         rec.start();
-        setTimeout(function () { try { rec.stop(); } catch (e) { /* já parou */ } }, ms);
+        me.timer = setTimeout(function () { try { rec.stop(); } catch (e) { /* já parou */ } }, ms);
       });
     });
   };

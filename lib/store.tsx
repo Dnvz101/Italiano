@@ -6,6 +6,7 @@ import { setVoicePref } from '@/lib/voice';
 import bundledIt from '@/content/it.json';
 import bundledDe from '@/content/de.json';
 import bundledJa from '@/content/ja.json';
+import bundledEn from '@/content/en.json';
 import { mergeLimits, type Limits, type Plan } from './plan';
 import type { Course, FullLesson, Household, Lyric, LyricLine, Phrase, Profile, Progress, Song, SongAnalysis } from '@/lib/types';
 
@@ -165,7 +166,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         weeks.data?.forEach((w: any) => cs[w.lang]?.weeks.push(w.data));
       }
       // idioma novo que ainda não está no banco (seed não rodado): usa o conteúdo embutido no app
-      [bundledIt, bundledDe, bundledJa].forEach((c: any) => {
+      [bundledIt, bundledDe, bundledJa, bundledEn].forEach((c: any) => {
         // (ou o banco ficou com uma versão antiga, com menos semanas que a do app)
         if (!cs[c.lang] || cs[c.lang].weeks.length < c.weeks.length) cs[c.lang] = c as Course;
       });

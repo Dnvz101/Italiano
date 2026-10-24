@@ -282,6 +282,10 @@ export default function Explore() {
           <>
             Japonês não tem artigo nem gênero 🎉 · a palavra e, ao lado, <span className="g-j">a leitura em kana</span>
           </>
+        ) : lang === 'en' ? (
+          <>
+            Inglês não tem gênero 🎉 · <span className="g-n">a / an</span> antes da palavra (an antes de som de vogal)
+          </>
         ) : lang === 'de' ? (
           <>
             <span className="g-m">der</span> masculino · <span className="g-f">die</span> feminino ·{' '}

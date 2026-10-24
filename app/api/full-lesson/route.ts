@@ -11,6 +11,7 @@ const LANGS: Record<string, string> = Object.fromEntries(Object.entries(ALL_LANG
 const SOUND_HINTS: Record<string, string> = {
   it: 'gli, gn, consoantes dobradas (nonno × nono), c/ch, g/gh, sc/sci, z, o "r" vibrante, vogais abertas e fechadas',
   de: 'ch (ich × ach), ü, ö, ä, ei × ie, o "r" alemão, sch, z, w, consoante final que ensurdece (Tag)',
+  en: 'TH (think × this), H aspirado (house, nunca "rouse"), R americano, consoante final sem "i" no fim (big, não "bigui"), -ed (worked × played × wanted), vogal curta × longa (ship × sheep), sílabas fracas e formas reduzidas (gonna, wanna, to = "tâ"), L no fim (people), T e D sem virar "tchi" e "dji"',
   ja: 'つ (tsu), o R japonês (ら・り・る), ふ (fu soprado), vogal longa (おばさん × おばあさん), っ pequeno (きて × きって), ん, vogais que quase somem (です = "dess"), きゃ/しゃ/ちょ',
 };
 const clip = (s: any, n: number) => String(s ?? '').trim().slice(0, n);

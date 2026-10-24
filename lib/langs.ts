@@ -4,6 +4,7 @@ export const LANGS: Record<string, { pt: string; native: string }> = {
   it: { pt: 'italiano', native: 'Italiano' },
   de: { pt: 'alemão', native: 'Deutsch' },
   ja: { pt: 'japonês', native: '日本語' },
+  en: { pt: 'inglês', native: 'English' },
 };
 
 export const isLang = (c: any): c is string => typeof c === 'string' && !!LANGS[c];

@@ -1,8 +1,8 @@
-// Os 80 objetos que o detector da câmera (COCO-SSD) reconhece, com o nome em italiano, alemão e japonês.
+// Os 80 objetos que o detector da câmera (COCO-SSD) reconhece, com o nome em italiano, alemão, japonês e inglês.
 // g: gênero da palavra no idioma (m, f, n, p = plural) — vira a cor da etiqueta.
 // Japonês não tem artigo nem gênero: no lugar do artigo vai a leitura em kana, e g = 'j'.
 export type Noun = [article: string, word: string, g: 'm' | 'f' | 'n' | 'p' | 'j'];
-export type ObjectName = { pt: string; it: Noun; de: Noun; ja: Noun };
+export type ObjectName = { pt: string; it: Noun; de: Noun; ja: Noun; en?: Noun };
 
 export const OBJECTS: Record<string, ObjectName> = {
   person: { pt: 'pessoa', it: ['la', 'persona', 'f'], de: ['die', 'Person', 'f'], ja: ['ひと', '人', 'j'] },
@@ -86,6 +86,17 @@ export const OBJECTS: Record<string, ObjectName> = {
   'hair drier': { pt: 'secador de cabelo', it: ["l'", 'asciugacapelli', 'm'], de: ['der', 'Föhn', 'm'], ja: ['ドライヤー', 'ドライヤー', 'j'] },
   toothbrush: { pt: 'escova de dente', it: ['lo', 'spazzolino', 'm'], de: ['die', 'Zahnbürste', 'f'], ja: ['はブラシ', '歯ブラシ', 'j'] },
 };
+
+// Inglês: o nome do detector já é inglês. Só ajusta alguns nomes e coloca a / an (sem gênero).
+const EN_NAME: Record<string, string> = {
+  tv: 'TV', 'dining table': 'table', 'hair drier': 'hair dryer', 'sports ball': 'ball', 'cell phone': 'cell phone',
+  remote: 'remote control', mouse: 'mouse', 'potted plant': 'plant', couch: 'couch', toilet: 'toilet',
+};
+const EN_PAIR = ['skis', 'scissors'];
+for (const k of Object.keys(OBJECTS)) {
+  const w = EN_NAME[k] || k;
+  OBJECTS[k].en = EN_PAIR.includes(k) ? ['a pair of', w, 'n'] : [/^[aeiou]/i.test(w) && !/^uni/i.test(w) ? 'an' : 'a', w, 'n'];
+}
 
 /** "il gatto", "l'aereo" (sem espaço depois do apóstrofo), "der Hund" */
 export const say = (n: Noun) => (n[2] === 'j' ? n[1] : n[0].endsWith("'") ? n[0] + n[1] : `${n[0]} ${n[1]}`);

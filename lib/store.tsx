@@ -361,7 +361,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const entry = Object.entries(d.lyrics).find(([, l]) => l.id === lyricId);
       if (!entry) return;
       const [k, l] = entry;
-      const lines = l.lines.map((ln, i) => ({ ...ln, ai: ais[i] ?? ln.ai, ...(kanas?.[i] ? { kana: kanas[i] } : {}) }));
+      const lines = l.lines.map((ln, i) => ({ ...ln, ai: ais[i] || ln.ai, ...(kanas?.[i] ? { kana: kanas[i] } : {}) }));
       commit((x) => ({ ...x, lyrics: { ...x.lyrics, [k]: { ...l, lines } } }));
       const { error } = await sb.from('lyrics').update({ lines, updated_at: new Date().toISOString() }).eq('id', lyricId);
       report(error);

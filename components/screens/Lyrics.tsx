@@ -161,6 +161,7 @@ export default function Lyrics({
       const d = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(d.error || 'Erro ' + r.status);
       await s.setLyricAi(row.id, d.translations, d.readings);
+      if (d.missing) alert(`${d.missing} linha(s) ficaram sem tradução. Toque em traduzir de novo para completar, ou digite.`);
 
     } catch (e: any) {
       alert(e.message);

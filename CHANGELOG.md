@@ -1,5 +1,10 @@
 # Histórico de versões — Ascolto em Família
 
+## v34.1 — 2026-10-24 · Tradução de letras mais firme
+- Corrigido o "Resposta inesperada da IA" ao traduzir letras (apareceu no inglês). A IA agora recebe só as linhas diferentes (o refrão repetido vai uma vez só): menos texto, mais rápido e mais barato.
+- Se a IA falhar com a letra inteira, o app tenta de novo sozinho em pedaços menores. Se algum pedaço ainda falhar, só aquelas linhas ficam em branco (o app avisa quantas) em vez de perder tudo.
+- Traduzir de novo não apaga as traduções que já existiam.
+
 ## v34 — 2026-10-24 · Inglês 🇺🇸
 - Novo idioma: **English**, com 12 semanas em 3 módulos, da mais lenta à mais rápida:
   - Módulo 1 · Primeiros passos: Let It Be (The Beatles), Stand by Me (Ben E. King), Count on Me (Bruno Mars), Imagine (John Lennon)
